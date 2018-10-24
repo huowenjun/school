@@ -1,0 +1,317 @@
+  <!-- Main Header -->
+  <include file="Public:header" title="代办事项"/>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+
+  <style type="text/css">
+    .bigimgbox{position: fixed; left: 0; right: 0; margin:0 auto; width: 512px; z-index:9999; border:#fff solid 10px;}
+    .bigimg{width:100%;position: relative; display: none; }
+    .mask{position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #000;opacity:0.5;filter: Alpha(opacity=50);z-index:999;transition:all 1s;display: none}
+    .smallimg:hover{cursor:zoom-in}
+    .mask:hover{cursor:zoom-out}
+    .mask>img{position: fixed; top:70px; right:40px; width: 60px;z-index: 9999}
+    .mask>img:hover{cursor:pointer}
+  </style>
+ 
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">代办事项</li>
+      </ol>
+    </section>
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <form class="form-inline navbar-form navbar-left">
+                <div class="form-group">
+                  <label for="username1">待审账号</label>
+                  <input id="username1" type="text" class="form-control" placeholder="待审账号" />
+                </div>
+                <div class="form-group">
+                  <label for="name1">待审人姓名</label>
+                  <input id="name1" type="text" class="form-control" placeholder="待审账号" />
+                </div>
+                <div class="form-group">
+                  <label for="agent_status1">审核状态：</label>
+                  <select id="agent_status1" class="form-control">
+                    <option value="">全部</option>
+                    <option value="1">通过</option>
+                    <option value="2">驳回</option>
+                    <option value="0">未审核</option> 
+                  </select>
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary query" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                  </button>
+                </div> 
+                <div class="form-group">
+                  <button type="button" class="btn btn-success passReply" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-ok-circle"></span> 通过
+                  </button>
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-danger rejectReply" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-ban-circle"></span> 驳回
+                  </button>
+                </div>            
+              </form>
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <table id="referrer_table" class="js-custom-table-data" data-click-to-select="true" data-select-item-name="radioName">
+                    <thead>  
+                      <tr>
+                        <th data-field="state" data-radio="true">选择</th>
+                        <th data-field="username" data-sortable="true" data-align="center">待审账号</th>
+                        <th data-field="name" data-sortable="true" data-align="center">待审人姓名</th>
+                        <th data-field="create_time" data-sortable="true" data-align="center">创建时间</th>
+                        <th data-field="modif_time" data-sortable="true" data-align="center">审核时间</th>
+                        <th data-field="status" data-sortable="true" data-align="center">审核状态</th>
+                        <th data-field="reply" data-sortable="true" data-align="center">审核状态原因</th>
+                        <th data-field="memo" data-sortable="true" data-align="center">升级原因</th>
+                        <th data-field="apply_images" data-sortable="true" data-align="center">审核储户图片</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <form id="searchForm" name="searchForm" action="">
+    <input type="hidden" name="username" id="username2" value="" />
+    <input type="hidden" name="name" id="name2" value="" />
+    <input type="hidden" name="agent_status" id="agent_status2" value="" />
+  </form>
+  <!-- /.content-wrapper -->
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+
+  <!-- bigimg -->
+<div class="bigimgbox">
+ <img src="" alt="" class="bigimg">
+</div>
+<div class="mask">
+    <img src="/Public/dist/img/close.png" alt="">
+</div>
+
+<!--add-start -->
+<div class="" style="display:none;" id="modalWindow">
+
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal"  action="" method="post" onsubmit="return false" id="formWindow">
+        <input type="hidden" class="primaryKey" name="id" id="id">
+         <input type="hidden" class="primaryKey" name="status" id="status">
+        <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="col-md-3 control-label" for="username">待审账号：</label>
+                <div class="col-md-9">
+                  <input type="text" placeholder="待审账号" id="username" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label" for="name">待审人姓名：</label>
+                <div class="col-md-9">
+                  <input type="text" placeholder="待审人姓名" id="name"   class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label" for="create_time">创建时间：</label>
+                <div class="col-md-9">
+                  <input type="text" placeholder="创建时间" id="create_time" class="form-control">
+                </div>
+              </div>
+              <div class="form-group" id="replyText">
+                <label class="col-md-3 control-label" for="reply"></label>
+                <div class="col-md-9">
+                  <textarea style="display: block;" class="form-control primaryKey" id="reply" name="reply" placeholder="请输入备注"></textarea>
+                </div>
+              </div> 
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer" style="text-align:center;">
+    <button type="button" class="btn btn-success save">
+        <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+     <button type="button" class="btn btn-default layui-layer-close">
+        <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+<input type="hidden" name="status1" id="status1">
+<!--add-end-->
+
+<!-- REQUIRED JS SCRIPTS -->
+<include file="Public:footer_js"/>
+
+<script type="text/javascript" src="/Public/plugins/zoom/zoom.js"></script>
+
+<script>
+// 实时处理树展开、折叠显示滚动条
+function bigImgScroll(){
+  var wrapperH = $('.wrapper').outerHeight(true);
+  var noneWrapperH = $('.main-header').outerHeight(true)+ $('.main-footer').outerHeight(true)+80;
+  var needH = wrapperH - noneWrapperH;
+  $(".bigimgbox").css("overflow-y","auto"); 
+  var bigimgH = $(".bigimg").height();
+  var topH= needH-bigimgH;
+  if(bigimgH>needH){
+    $(".bigimgbox").css({
+      'height': needH,
+      'overflow-y': "scroll",
+      'top':Math.abs(topH/2+150)
+    });
+  }else if(bigimgH<needH){
+    $(".bigimgbox").css({
+      'height': bigimgH,
+      'overflow-y': "hidden",
+      'top':Math.abs(topH/2+70)
+    });
+  }
+}    
+
+$(function() {
+  // 表格数据
+  var $table = $('#referrer_table');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",                   // 工具栏
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+   
+});
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  // 需要的数据
+  var url = "/index.php/Admin/Backlog/Backlog/query";
+  queryList1(url,params);
+  
+}
+
+function queryList1(url,params,fnn) {
+  $.ajax({
+    url:url,
+    data:params.data,
+    type:'get',
+    cache:false,
+    dataType:'json',
+    success:function(res) {
+      if (res.status == 1 ) {
+        params.success({
+          total: res.data.count,
+          rows: res.data.list,
+          data:res.data.list,
+          fixedScroll:true
+        });
+      } else {
+        dialog.error(res.info);  //message  20161130
+      }
+      if (!!fnn) { // 如果有ajax加载完之后需要执行的js 就回调此函数
+        fnn(res);
+      };
+    },
+    error : function() {
+      dialog.error("请求服务器异常！");
+    },
+    complete:function() {
+      fniframeHeight();
+       var  imgZoom= new zoom('mask', 'bigimg','smallimg');// 图片查看
+       imgZoom.init();
+    }
+  });
+}
+
+// 隐藏域赋值
+function searchForm() {
+  $("#username2").val($("#username1").val());
+  $("#name2").val($("#name1").val());
+  $("#agent_status2").val($("#agent_status1").val());
+}
+function search(){
+  searchForm();
+  // 需要的数据
+  var url = "/index.php/Admin/Backlog/Backlog/query?" + $("#searchForm").serialize();
+  $g_params.data.page = parseInt($('.pagination li.active a').text());
+  queryList(url,$g_params);
+}
+
+function edit(id,type_i){
+  var url = g_config.host + "/index.php/Admin/Backlog/Backlog/getDetail?id="+id;
+  custom_edit(id,url,{},'formWindow','modalWindow');
+}
+
+function reply(type_i){
+  $("#replyText label").text("审核通过原因：");
+   $("#replyText input").attr('placeholder','审核通过原因');
+   $("#status1").val(1);
+  if (type_i==2) {
+    $("#replyText label").text("审核驳回原因：");
+    $("#replyText input").attr('placeholder','审核驳回原因');
+    $("#status1").val(2);
+  };
+
+  var ids = getIdSelections($('.js-custom-table-data'),'id');
+  if(ids==""){
+     dialog.error("请选择列表项！");
+  }else{
+    edit(ids,type_i)
+  }
+}
+// 启动
+$('.passReply').click(function() {
+  reply(1);
+});
+
+// 禁用
+$('.rejectReply').click(function() {
+  reply(2);
+});
+
+//保存数据
+function save() {
+  var url = g_config.host + '/index.php/Admin/Backlog/Backlog/reply';
+  fpost(url,'formWindow',btnCallbackRefreshTable1);
+}
+
+//编辑状态(启用,禁止)特殊字段处理
+function setEditDataEx(data){
+  $("#username").val(data.username);
+  $("#name").val(data.name);
+  $("#id").val(data.id);
+  $("#status").val( $("#status1").val());
+};
+
+
+
+
+</script>
+</body>
+</html>

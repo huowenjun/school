@@ -1,0 +1,105 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors LJS (1114510520@qq.com)
+ * @date    2017-02-07 17:06:46
+ * @version $Id$
+ */
+
+/* tab */
+.weui_tabbar:before { border-top:none;}
+.weui_tabbar_item.weui_bar_item_on .weui_tabbar_label { color: #0073c6;}
+.weui_tabbar_label { text-align: center; color: #2f2f2f; font-size: 0.666667rem; }
+.weui_tabbar { box-shadow: 0 -0.253333rem 0.133333rem #efefef; background-color: #fff;}
+.weui_tabbar_icon { margin: 0 auto;  width: 1.146667rem; height: 1.146667rem;}
+
+/* 主页 */
+.banner img{ display: block; width: 20.0rem;}
+.home-list{ margin-bottom:2.666667rem;}
+.home-list img{width: 20.0rem; display: block;}
+
+/* 头像 */
+.head-portrait-box{ position: absolute; top: 2.27rem;  left:50%; width: 3.73rem; height: 3.73rem; border-radius: 3.733333rem; margin-left:-1.95rem;   border:solid 0.16rem #fff; }
+.head-portrait{ width: 3.73rem; height: 3.73rem; border-radius: 3.73rem;}
+
+/* 个人中心 */
+.percenter-list  img{width: 15.173333rem; display: block; margin:0 auto; }
+.per-info{ color:#fff; font-size: 0.8rem;}
+.per-info-bg{ width: 100%;background:#f7f7f7; position: relative; overflow: hidden;  display: block; }
+.per-phone{position: absolute; top:7.2rem; left:0;  right: 0;  text-align: center; font-weight: bold;}
+.per-type{position: absolute; top: 8.32rem;  left:0;  right: 0; text-align: center; }
+.per-address { position: absolute; top: 2.3rem; left:1rem;   }
+.member-data-list{ background:#fff; overflow: hidden; padding: 0.5rem 0; margin-bottom: 1.066667rem; border-bottom: 1px solid #efefef; }
+.member-data-list dl{ float: left;  text-align: center; font-size: 0.693333rem; border-right: 0.026667rem solid #efefef;  }
+.member-data-list dl:last-child{border-right:none}
+
+
+.member-data-list dl dt{ color: #0178ca; font-weight: bold;font-size: 0.8rem; }
+
+.group-con {background:#fff; overflow: hidden; padding: 0.746667rem 0; margin-bottom: 1.066667rem;}
+
+.depositor-group{  display:none;}
+.depositor-member{  display:none;}
+.depositor-group p{  color: #2f2f2f; font-size: 0.8rem; padding:0.5rem;  }
+.depositor-list .depositor-btn{  border:1px solid #3a99f7; display: block; width: 15rem; margin:1rem auto;  padding:0.3rem; border-radius: 0.2rem; overflow: hidden; text-align: center; color: #3a99f7; font-size: 0.9rem;}
+.depositor-list .depositor-btn:hover{ background:#3a99f7; color: #fff;}
+
+/* 邀请二维码 */
+.share-info{ background: #e60443; height:100%; color: #fff; font-weight: bold; }
+.share-info-bg{width:20.0rem;  display:block;  position: relative; }
+.share-info-bottom-bg {width:20.0rem; position: absolute; bottom: 0; left: 50%; margin-left:-10rem;  display:block;}
+.per-name{position: absolute; top: 7.093333rem; left:0;  right: 0;  text-align: center;  font-size: 0.96rem; }
+.twe-code img{position: absolute; bottom: 12.66rem; left:50%;  width: 6.29rem;  margin-left:-3.15rem;   }
+
+.twe-code-txt{position: absolute; bottom: 11.5rem; left:0;  right: 0;  text-align: center;  font-size: 0.6rem; color:#0178ca; }
+.share-txt{position: absolute; bottom: 6.31rem; left:0;  right: 0;  text-align: center;  font-size: 0.8rem; }
+.share-txt span{ margin-right:0.96rem;}
+.share-list img{ position: absolute; bottom: 2.67rem; left: 50%; width: 15.17rem; margin-left:-7.8rem;}
+.sharebg { background-color:#000; bottom: 0; height: 100%; opacity: 0; position: fixed; right: 0; top: 0; width: 20.0rem; display:none;z-index: 9999; }
+.sharebg img { position: absolute; top:0.266667rem; right: 1.333333rem; width: 5.066667rem;}
+.sharebg-active { opacity: .8; display:block; }
+
+/* 会员申请 */
+.depositor-info { background: #fff; padding:0.1rem; overflow: hidden; }
+.depositor-info dl{ border-bottom:0.026667rem solid #3a99f7;  overflow: hidden; padding:0.8rem;}
+.depositor-info dl dt{ border-left:0.6rem solid #3a99f7; color: #0178ca; font-weight: bold; font-size: 0.8rem; padding-left:0.8rem; margin-bottom:0.8rem; }
+.depositor-basic-info dl dd p{float: left; width: 6rem; color: #2f2f2f; font-size: 0.7rem; text-align: center;}
+
+.depositor-upload-info dl dd { border:1px solid #3a99f7;  padding:0.5rem; border-radius: 0.2rem; overflow: hidden;} 
+.depositor-upload-info dl dd p.instru{ clear: both; color: #2f2f2f; font-size: 0.7rem; }
+.depositor-upload-info dl dd p.instru-size{ clear: both; color: red; font-size: 0.8rem; padding:0.5rem 0 0 0; }
+
+.depositor-upload-info .check-info{color: red; font-size: 0.8rem; padding:0.5rem 0 0 0; }
+
+.depositor-upload-info .img-up-add { width: 5.1rem; height: 5.1rem; border: 1px dashed #E0E0E0; text-align: center;  }
+.depositor-upload-info .img-add-icon { display: table-cell; vertical-align:middle; color: #2f2f2f; font-size: 1rem; width:  5.1rem; height: 5.1rem;}
+
+.depositor-upload-info .img-remove { position: absolute; right: -0.4rem; top: -0.4rem; display: block; display: table-cell; vertical-align:middle; width: 0.8rem; height: 0.8rem; line-height: 0.8rem; border-radius: 0.8rem; background: #100f14; color: #fff; text-align: center; text-decoration: none; font-size: 0.65rem; z-index: 9999; }
+
+.depositor-upload-info .img-item { position: relative; float: left; margin-right: 0.4rem; width:  5.1rem; height:  5.1rem; margin-bottom: 0.5rem; }
+.depositor-upload-info .img-item:last-child{margin-right:0;}
+.depositor-upload-info .img-thumb { border: 1px solid #000; }
+.depositor-upload-info .thumb-icon { display: block; width: 100%; height: 100%; }
+
+#imgFileInput { display: none;}
+
+.depositor-upload-info .upload-submit{  border:1px solid #3a99f7; display: block; width: 10rem; margin:0.8rem auto 0;  padding:0.3rem; border-radius: 0.2rem; overflow: hidden; text-align: center; color: #3a99f7; font-size: 0.9rem;}
+.depositor-upload-info .upload-submit:hover{ background:#3a99f7; color: #fff;}
+
+.depositor-instru-info dl{ border-bottom:none;}
+.depositor-instru-info dl dd p{color: #999; font-size: 0.7rem; }
+
+
+
+/* 提示窗 */
+.hint-win{background: #fff; position: fixed; z-index:9999; top: 8rem;  left: 1rem; box-shadow: 1px 1px 50px rgba(0,0,0,.3); width: 18rem; border-radius: 0.2rem; margin:0 auto; overflow: hidden;  display: none; z-index: 9999;}
+.hint-win .hint-remove {position: absolute; right: 0.5rem; top: 0.5rem; display: block; display: table-cell; vertical-align:middle; width: 1rem; height: 1rem; line-height: 1rem; border-radius: 1rem; background: #cfcfcf; color: #fff; text-align: center; text-decoration: none; font-size: 0.8rem; z-index: 9999;}
+.hint-win .hint-diagram { display: block; width: 7rem;  padding:0.5rem 0 0.5rem 0.4rem; margin-right: 0.5rem;  float: left; }
+
+.hint-win .hint-text { float: left; width:10rem; padding: 2rem 0 0 0;  }
+.hint-win .hint-text dt{ text-align: center; color:red; font-weight: bold; font-size: 1rem; margin-bottom: 0.5rem;}
+.hint-win .hint-text dd{  font-weight: bold; font-size: 0.8rem; color: #6b6b6b;}
+
+.hint-win .confirm-btn{ clear:both; background: #00bbd4; display: block;   width: 18rem; color: #fff; font-size: 0.9rem; text-align: center; padding: 0.3rem 0;}
+
+.hint-shade {background-color:#000;opacity:0.3; filter:alpha(opacity=30); display: none; height: 100%;  position: fixed; right: 0; top: 0; width: 20.0rem; z-index: 9998;}

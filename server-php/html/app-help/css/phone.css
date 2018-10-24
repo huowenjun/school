@@ -1,0 +1,104 @@
+@charset "UTF-8";
+/**
+ *
+ * @authors LJS (1114510520@qq.com)
+ * @date    2017-02-17 14:41:56
+ * @version $Id$
+ */
+
+/*公共部分*/
+* { outline: none; box-sizing: border-box; -moz-box-sizing: border-box; /* Firefox */
+  -webkit-box-sizing: border-box; /* Safari */
+  -webkit-tap-highlight-color: rgba(0,0,0,0); }
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; }
+html{ font-size:100px;}
+body {  margin: 0 auto;  font-family: 'Microsoft YaHei', Arial, Helvetica, sans-serif;  /*-webkit-user-select: none; user-select: none;*/ /*禁止选中文本*/}
+ul,li { list-style: none; }
+em, b, strong { font-weight: normal; }
+i, em { font-style: normal; }
+u, s, ins, del, a { text-decoration: none; }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; }
+table { border-collapse: collapse; border-spacing: 0; }
+img, fieldset, iframe, input { border: none; }
+input, button, textarea, select { font-family: inherit; font-size: inherit; font-weight: inherit; *font-size:100%; }
+th, td { text-align: left; }
+.main{width: 7.2rem;}
+.header img{ margin: 0 auto; width: 7.2rem; margin-bottom: 0.5rem; display: block; } 
+.footer img{ margin: 0 auto; width: 7.2rem; display: block; } 
+.app-instruc-list1{clear: both; overflow: hidden; margin-bottom: 0.5rem;}
+.app-instruc-list1 li{width: 3.6rem; float: left; }
+.app-instruc-list1 dl dt{ font-size:0.22rem; line-height: 0.4rem; clear: both; overflow: hidden; }
+.app-instruc-list1 dl dt .icon1{ float: left; width:0.3rem; padding-top: 0.05rem; margin-right: 0.15rem;}
+.app-instruc-list1 dl dt span{ color: #11bcfb; padding-right: 0.2rem;}
+.app-instruc-list1 dl dt p{ float: left; width:3rem; margin-right:0.15rem; margin-bottom: 0.2rem;}
+.app-instruc-list1 dl dd  img{ display: block; width: 2.25rem; margin:0 auto;  }
+
+
+
+.app-instruc-list2{clear: both; overflow: hidden; margin-bottom: 0.5rem;}
+.app-instruc-list2 li{width: 7.2rem; float: left; }
+.app-instruc-list2 dl dt{ font-size:0.22rem; line-height: 0.4rem; }
+.app-instruc-list2 dl dt .icon1{ float: left; width:0.3rem; padding-top: 0.05rem; margin-right: 0.15rem;}
+.app-instruc-list2 dl dt span{ color: #11bcfb; padding-right: 0.2rem;}
+.app-instruc-list2 dl dt p{ float: left; width:6.4rem; margin-right:0.15rem; margin-bottom: 0.2rem; }
+.app-instruc-list2 dl dd  img{ display: block; width: 3.6rem; margin:0 auto;  }
+
+
+
+.app-instruc-list3{clear: both; overflow: hidden; margin-bottom: 0.5rem;}
+.app-instruc-list3 li{width: 3.6rem; float: left; }
+.app-instruc-list3 dl{ padding:0  0.3rem;  font-size:0.22rem; }
+.app-instruc-list3 dl dt{ clear: both; overflow: hidden; }
+.app-instruc-list3 dl dt .icon2{ float: left; width:0.3rem;  margin-right: 0.15rem;}
+.app-instruc-list3 dl dt span{ float: left; color: #11bcfb;}
+.app-instruc-list3 dl dd p{ width:3rem; line-height: 0.4rem; margin-bottom: 0.2rem; }
+.app-instruc-list3 dl dd img{ display: block; width: 2.25rem; margin:0 auto;}
+
+
+.app-instruc-list4{clear: both; overflow: hidden; margin-bottom: 0.5rem;}
+.app-instruc-list4 li{width: 7.2rem; }
+.app-instruc-list4 dl{float: left;  padding:0  0 0 0.3rem;  font-size:0.22rem; }
+.app-instruc-list4 dl dt{clear: both; overflow: hidden;}
+.app-instruc-list4 dl dt .icon2{ float: left; width:0.3rem;  margin-right: 0.15rem;}
+.app-instruc-list4 dl dt span{ float: left; color: #11bcfb;}
+.app-instruc-list4 dl dd p{ width:3.3rem; line-height: 0.4rem; margin-bottom: 0.2rem; }
+.app-instruc-list4 div.imgs{ width: 3.6rem; float: left;}
+.app-instruc-list4 div img {display: block; width: 2.25rem; margin:0 auto;} 
+
+.app-instruc-list5{clear: both; overflow: hidden; margin-bottom: 0.5rem;}
+.app-instruc-list5 li{width: 7.2rem; }
+.app-instruc-list5 dl{padding:0  0.3rem;  font-size:0.22rem;}
+.app-instruc-list5 dl dt{ clear: both; overflow: hidden; }
+.app-instruc-list5 dl dt .icon2{ float: left; width:0.3rem;  margin-right: 0.15rem;}
+.app-instruc-list5 dl dt span{ float: left; color: #11bcfb;}
+.app-instruc-list5 dl dd p{ width:6.9rem; line-height: 0.4rem; margin-bottom: 0.2rem; }
+.app-instruc-list5 dl dd img{ display: block; width: 5.5rem; margin:0 auto;  }
+
+
+
+
+.app-instruc-list6 {clear: both; overflow: hidden; width: 7.2rem;}
+.app-instruc-list6 h4{ font-size:0.22rem; line-height: 0.4rem; margin-bottom: 0.5rem; }
+.app-instruc-list6 h4 .icon1{ float: left; width:0.3rem; padding-top: 0.05rem; margin-right: 0.15rem;}
+.app-instruc-list6 dl dt span{ color: #11bcfb; padding-right: 0.2rem;}
+.app-instruc-list6 ul{ clear: both; overflow: hidden; margin:0   0.7rem 0  1.15rem; width:5.35rem; margin-bottom: 0.5rem; }
+.app-instruc-list6 ul li{ float: left; width: 2.45rem;  margin-right:0.45rem; overflow:hidden;}
+.app-instruc-list6 ul li.clear-margin{ margin-right:0rem;}
+.app-instruc-list6 ul li .imgs{display: block;  float: left; width:0.58rem; }
+.app-instruc-list6 ul li .imgs img{display: block; width: 0.27rem; }
+.app-instruc-list6 ul li p{  float: left;  width: 1.87rem;  font-size:0.14rem;}
+.app-instruc-list6 ul li p span{  font-weight: bold;}
+
+
+/*.app-instruc-list6 {clear: both; overflow: hidden;}
+.app-instruc-list6 li{width: 7.2rem;}
+.app-instruc-list6 dl dt{ font-size:0.22rem; line-height: 0.4rem; }
+.app-instruc-list6 dl dt .icon1{ float: left; width:0.3rem; padding-top: 0.05rem; margin-right: 0.15rem;}
+.app-instruc-list6 dl dt span{ color: #11bcfb; padding-right: 0.2rem;}
+.app-instruc-list6 dl dd .list { clear: both; overflow: hidden; padding:0  0.7rem; width:5.8rem; margin-bottom: 0.5rem;}
+.app-instruc-list6 dl dd .list .overs{ float: left; width: 2.6rem;  margin-right:0.5rem;}
+.app-instruc-list6 dl dd .list .overs .clear-margin{ margin-right:0;}
+.app-instruc-list6 dl dd .list .overs .imgs {display: block; float: left; width:0.75rem;}
+/*.app-instruc-list6 dl dd .list .overs .imgs img{ display: block; margin:0 auto; }*/
+/*.app-instruc-list6 dl dd .list .overs p{  float: left;  width: 1.85rem;  font-size:0.14rem;}*/
+

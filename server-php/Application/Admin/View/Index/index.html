@@ -1,0 +1,240 @@
+<!-- Main Header -->
+<include file="Public:header" title="信平台安防校园管理系统"/>
+<!--Main Sidebar-->
+<style type="text/css">
+  .tex{
+    width: 100%;height: 100%;text-align: center;margin-top: 18%;
+  }
+</style>
+<include file="Public:left_nav" />
+  <!-- Content Wrapper. Contains page content -->
+  <div id="content-wrapper" class="content-wrapper" >
+    <!-- Content Header (Page header) -->
+    <if condition="($user_type neq 9) ">  
+   
+      <section class="content-header">
+        <ol class="breadcrumb">
+          <li class="active"><i class="fa fa-home"></i> 首页</li>
+        </ol>
+      </section>
+
+    <!-- Main content -->
+      <section class="content"> 
+        <!-- Your Page Content Here -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title">安防校园</h3>
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-block btn-primary btn-sm js_edit">
+                    <i class="fa fa-edit"></i> 编辑
+                  </button>
+                </div>
+                <!-- /.box-tools -->
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body" id="modalWindow">
+                <form class="form-horizontal js_form_val" action="" method="post" onsubmit="return false" id="formWindow">
+                  <input class="js_txt" type="hidden" name="s_id" id="s_id" />
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="name" class="col-sm-4 control-label"><span class="xing">*</span> 学校名称：</label>
+                        <div class="col-sm-8 control-div">
+                          <input type="text" class="form-control js_val" id="name" name="name" value="{$School['name']}" placeholder="学校名称" />
+                          <div class="js_txt txt">{$School['name']}</div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="main_zrr" class="col-sm-4 control-label"><span class="xing">*</span> 主负责人：</label>
+                        <div class="col-sm-8 control-div">
+                          <input type="text" class="form-control js_val" id="main_zrr" name="main_zrr" value="{$School['main_zrr']}" placeholder="主负责人" />
+                          <div class="js_txt txt">{$School['main_zrr']}</div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="sub_zzr" class="col-sm-4 control-label"><span class="xing">*</span> 副负责人：</label>
+                        <div class="col-sm-8 control-div">
+                          <input type="text" class="form-control js_val" id="sub_zzr" name="sub_zzr" value="{$School['sub_zzr']}" placeholder="副负责人" />
+                          <div class="js_txt txt">{$School['sub_zzr']}</div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="tel" class="col-sm-4 control-label"><span class="xing">*</span> 电话（内线）：</label>
+                        <div class="col-sm-8 control-div">
+                          <input type="text" class="form-control js_val" id="tel" name="tel" value="{$School['tel']}" placeholder="格式：0427-43275670 或 010-23237788" />
+                          <div class="js_txt txt">{$School['tel']}</div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="memo" class="col-sm-4 control-label"><span class="xing"></span> 备注：</label>
+                        <div class="col-sm-8 control-div">
+                          <textarea class="form-control js_val" id="memo" name="memo" value="{$School['memo']}" placeholder="备注"></textarea>
+                          <div class="js_txt txt">{$School['memo']}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.col -->
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="build_time" class="col-sm-4 control-label"><span class="xing">*</span> 成立时间：</label>
+                        <div class="col-sm-8 control-div">
+                          <input type="text" class="form-control dataTime js_val" id="build_time" value="{$School['build_time']}" name="build_time" placeholder="成立时间" />
+                          <div class="js_txt txt">{$School['build_time']}</div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="main_phone" class="col-sm-4 control-label"><span class="xing">*</span> 主负责人电话：</label>
+                        <div class="col-sm-8 control-div">
+                          <input type="text" class="form-control js_val" id="main_phone" name="main_phone" value="{$School['main_phone']}" placeholder="主负责人电话" />
+                          <div class="js_txt txt">{$School['main_phone']}</div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="sub_phone" class="col-sm-4 control-label"><span class="xing">*</span> 副负责人电话：</label>
+                        <div class="col-sm-8 control-div">
+                          <input type="text" class="form-control js_val" id="sub_phone" name="sub_phone" value="{$School['sub_phone']}" placeholder="副负责人电话" />
+                          <div class="js_txt txt">{$School['sub_phone']}</div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="address" class="col-sm-4 control-label"><span class="xing">*</span> 地址：</label>
+                        <div class="col-sm-8 control-div">
+                          <input type="text" class="form-control js_val" id="address" name="address" value="{$School['address']}" placeholder="地址" />
+                          <div class="js_txt txt">{$School['address']}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.col -->
+                  </div>
+                </form>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer text-center" style="display:none">
+                <button type="button" class="btn btn-primary btn-sm save">
+                  <i class="fa fa-save"></i> 保存
+                </button>
+                <button type="button" class="btn btn-default btn-sm cancel">
+                  <i class="fa fa-close"></i> 取消
+                </button>
+              </div>
+              <!-- /.box-footer -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </if>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- Main Footer -->
+  <include file="Public:footer" />
+</div>
+<!-- ./wrapper -->
+<include file="Public:footer_js" />
+<script type="text/javascript">
+var user_type = "{$user_type}"; // 用户类型 1学校管理员 2系统用户 3老师 4家长 5省/直辖市教委 6 市教委 7 区/县教委  
+
+if (user_type != '9') {
+
+  // 根据登陆角色权限 展示相应按钮
+  if (user_type == '1' || user_type == '2') {
+    $('.js_edit').show();
+  } else {
+    $('.js_edit').hide();
+  }
+
+  $(function() {
+    $('.xing').hide();
+    // 表单
+    $('.js_form_val .js_val').hide();
+    // 编辑
+    $(document).delegate('.js_edit', 'click', function() {
+      $('.js_form_val .js_val').show().siblings('.js_txt').hide();
+      $('.box-footer, .xing').show();
+    });
+    // 取消
+    $('.cancel').click(function() {
+      $('.js_form_val .js_val').hide().siblings('.js_txt').show().parents('.box-body').siblings('.box-footer').hide();
+      $('.xing').hide();
+      fnAjax();
+    });
+
+    // 日期
+    $.datetimepicker.setLocale('ch'); // 设置中文
+    $('.dataTime').datetimepicker({
+      // lang:"ch",           // 语言选择中文
+      format:"Y-m-d",      // 格式化日期
+      timepicker:false,    // 关闭时间选项
+      yearStart:1800,      // 设置最小年份
+      yearEnd:2050,        // 设置最大年份
+      todayButton:true     // 关闭选择今天按钮
+    });
+  })
+
+  function fnAjax() {
+    // ajax请求
+    $.ajax({
+      url: '/index.php/Admin/School/SchInformation/query',
+      type: 'get',
+      dataType: 'json',
+      data: {},
+      success:function(msg) {
+        var obj = msg.data.list[0];
+        // console.log(obj)
+        for(var key in obj) {
+          $('#' + key).val(obj[key]).siblings('.js_txt').text(obj[key]);
+        }
+      },
+      error:function(msg) {
+        dialog.error('请求服务器异常！');
+      }
+    })
+  }
+  fnAjax();
+
+  //新增/编辑
+  function edit(id) {
+    var url = g_config.host + '/index.php/Admin/School/SchInformation/get';
+    custom_edit(id,url,{s_id:id},'formWindow','modalWindow');
+  }
+
+  //保存数据
+  function save() {
+    var url = g_config.host + '/index.php/Admin/School/SchInformation/edit';
+    fpost(url,'formWindow',btnCallbackRefresh);
+  }
+  // $(document).ready(function() {
+  //   var url  = "/Public/plugins/echarts/indexecharts.js";
+  //   var url1 = "/Public/plugins/echarts/indexecharts1.js";
+  //   $(document).delegate('#changeModel1', 'click', function() {
+  //     console.log($(this).hasClass('active'))
+  //     mySwiper.destroy(false);
+  //     if ($(this).hasClass('active')) {
+  //       $(this).removeClass('active');
+  //       jQuery.getScript(url, function(data, status, jqxhr) {});
+  //       // jQuery.ajax({
+  //       //   url: url,
+  //       //   dataType: "script",
+  //       //   cache: false
+  //       // })
+  //     } else {
+  //       $(this).addClass('active');
+  //       jQuery.getScript(url1, function(data, status, jqxhr) {});
+  //       // jQuery.ajax({
+  //       //   url: url1,
+  //       //   dataType: "script",
+  //       //   cache: false
+  //       // })
+  //     };
+  //   });
+  // })
+
+}else{
+  window.location.href='/index.php/Admin/Referrer/Referrer/index';
+}
+</script>
+</body>
+</html>

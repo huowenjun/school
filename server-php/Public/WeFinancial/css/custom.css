@@ -1,0 +1,81 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors LJS (1114510520@qq.com)
+ * @date    2017-02-07 17:06:46
+ * @version $Id$
+ */
+
+/* 登陆 + 注册 */
+.page { background-color: #f2f3f8; color: #333; }
+.image { width: 100%; height: 100%; }
+.bg_fff { background-color: #fff; }
+.hover-default { opacity: 0.8; }
+.button { position: relative; }
+.button button { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 1; opacity: 0; }
+/* 定位按钮 */
+.button.fixed { position: fixed; left: 0; bottom: 0; display: flex; align-items: center; justify-content: center; width: 100%; height: 3.093333rem; background: #00BED1; color: #fff; font-size: 0.96rem; z-index: 9; }
+/* 大长条按钮 */
+.button.big { display: flex; align-items: center; justify-content: center; width: 18.4rem; height: 2.88rem; background: #00BED1; color: #fff; font-size: 0.96rem; border-radius: 4px; }
+/* 小圆角按钮 */
+.button.small { display: flex; align-items: center; justify-content: center; height: 1.653333rem; background: #EB6160; color: #fff; font-size: 0.8rem; border-radius: 0.853333rem; }
+/* 小圆角按钮 */
+.button.small.disabled { background: #DFDFDF; }
+.f_l { float: left; }
+.f_r { float: right; }
+/* 文本溢出隐藏 */
+.txt_ov_h { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.2; }
+/* 转为弹性盒模型 */
+.flex { display: flex; }
+/* 转为弹性盒模型并自动换行 */
+.flex_wrap { display: flex; flex-wrap: wrap; }
+/* 垂直底部对齐 */
+.flex_b { display: flex; align-items: flex-end; }
+/* 转为行内弹性盒模型 */
+.flex_inline { display: inline-flex; }
+/* 垂直两端对齐 */
+.flex_line { display: flex; flex-direction: column; justify-content: space-between; }
+/* 多行垂直两端对齐，水平居中 */
+.flex_line_c { display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+/* 多行垂直居中，水平居中 */
+.flex_line_m { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+/* 多行垂直起点在下沿 */
+.flex_line_end { display: flex; flex-direction: column-reverse; }
+/* 水平两端对齐，剩余空间平均分布 */
+.flex_l_r { display: flex; justify-content: space-between; }
+/* 水平两端对齐，剩余空间平均分布，垂直居中 */
+.flex_l_r_c { display: flex; align-items: center; justify-content: space-between; }
+/* 垂直水平居中 */
+.flex_c_m { display: flex; align-items: center; justify-content: center; }
+/* 水平居中 */
+.flex_c { display: flex; justify-content: center; }
+/* 垂直居中 */
+.flex_m { display: flex; align-items: center; }
+/* 子元素不自动 */
+.flex_nosize { flex-shrink: 0; }
+/* 子元素自动宽度 */
+.flex_autosize { flex-grow: 1; }
+/* 标签 */
+.label { display: flex; align-items: center; height: 1.013333rem; padding: 0 0.16rem; margin: 0 0.533333rem 0.533333rem 0; border: 1px solid #00BED1; color: #00BED1; font-size: 0.746667rem; border-radius: 4px; }
+.label.gray { color: #666; border-color: #999; }
+.no_more { height: 2.666667rem; font-size: 0.64rem; color: #626463; }
+
+/* 登陆 + 注册 */
+.page_container { position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: #fff; z-index: 999; }
+.logo { width: 6.986667rem; height: 6.986667rem; margin: 3.733333rem 0 1.173333rem 1.253333rem; }
+.login_con { position: relative; background: #fff; width: 20.0rem; font-size: 0.746667rem; }
+.login_con .login_input { height: 2.346667rem; margin:0 1.066667rem 0.906667rem; border-bottom: 2px solid #eee; font-size: 0.746667rem; }
+.login_con input { color: #333333; width: 13.866667rem; }
+.login_con .code { color: #B1B1B1; }
+.tobinding { width: 17.866667rem; height: 2.133333rem; margin: 2.666667rem auto 3.946667rem; background: #0475c3; border-radius: 4px; color: #FFFFFF; font-size: 0.96rem; }
+
+/* 我的邀请页面 */
+.invitePage .header { background: #0475c3; padding: 0.625rem 0; text-align: center; }
+.invitePage .header .txt { color: #ffffff; font-size: 0.9375rem; }
+.invitePage .content { font-size: 0.625rem; }
+.invitePage .content .section { background: #ffffff; margin-bottom: 0.5625rem; }
+.invitePage .content .section .tit { font-size: 0.75rem; color: #333333; padding: 0.5625rem 0; margin: 0 0.75rem; border-bottom: 1px solid #e3e3e3; }
+.invitePage .content .section .tit .line { display: inline-block; position: relative; top: 0.09375rem; width: 0.1875rem; height: 0.75rem; background: #0475c3; margin-right: 0.375rem; }
+.invitePage .content .section .userInfo { padding: 0.625rem; font-size: 0.6875rem; }
+.invitePage .content .section .userInfo .phone { margin: 0 0.625rem; }
+

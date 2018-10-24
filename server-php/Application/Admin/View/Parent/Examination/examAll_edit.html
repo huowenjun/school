@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/Public/bootstrap/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/Public/dist/font/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/Public/dist/font/ionicons/2.0.1/css/ionicons.min.css" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/Public/dist/css/AdminLTE.min.css" />
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/_all-skins.min.css" />
+  <!-- AdminLTE皮肤默认选择的skin-blue。也可以选择其他的皮肤。确保你应用皮肤类body标签更改生效 -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/skin-blue.min.css" />
+  <!-- 自定义公共css -->
+  <link rel="stylesheet" href="/Public/dist/css/custom.css" />
+  <!-- 日期 时间 -->
+  <link rel="stylesheet" href="/Public/plugins/datetimepicker/jquery.datetimepicker.css" />
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="/Public/plugins/iCheck/all.css" />
+  <style type="text/css">
+    .custom-dis-inlineblock .form-control { display: inline-block; width: auto; vertical-align: middle; }
+    .rows { overflow: hidden; margin-bottom: 15px; }
+    .rows:last-of-type { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+<!-- 统考 添加/编辑 弹出层 -->
+<div class="shade" style="" id="modalWindow1">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal" action="" method="post" onsubmit="return false" id="formWindow1">
+        <input class="primaryKey" type="hidden" name="s_id" id="s_id" value="{$Think.get.s_id}" />
+        <input class="primaryKey" type="hidden" name="a_id" id="a_id" value="{$Think.get.a_id}" />
+        <input class="primaryKey" type="hidden" name="g_id" id="g_id" value="{$Think.get.g_id}" />
+        <input class="primaryKey" type="hidden" name="e_id" id="e_id" value="{$Think.get.e_id}" />
+        <div class="row">
+          <div class="col-md-12">
+            <div class="clearfix">
+              <p class="note pull-right">注：<span class="xing">*</span>标记为必填项</p>
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 control-label" for="name"><span class="xing">*</span> 考试名称：</label>
+              <div class="col-md-8">
+                <input type="text" id="name" name="name" class="form-control" placeholder="请输入统考名称" value="{$examall['name']}" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 control-label" for="exam_type"><span class="xing">*</span> 统考类型：</label>
+              <div class="col-md-8">
+                <select id="exam_type" name="exam_type" class="form-control">
+                <foreach name="examType" item="v" key="k">
+                  <option value="{$k}" <if condition="($examall['exam_type'] eq $k) "> selected </if>>{$v}</option>
+                </foreach>
+                </select>
+              </div>
+            </div>
+            <div class="form-group custom-dis-inlineblock">
+              <label class="col-md-3 control-label" for="start_date"><span class="xing">*</span> 统考日期：</label>
+              <div class="col-md-8">
+                <input type="text" id="start_date" name="start_date" class="form-control dataTime start_date" placeholder="开始日期" value="{$examall['start_date']}" />
+                <span>-</span>
+                <input type="text" id="end_date" name="end_date" class="form-control dataTime end_date" placeholder="结束日期" value="{$examall['end_date']}" />
+              </div>
+            </div>
+            <div class="form-group custom-dis-inlineblock">
+              <label class="col-md-3 control-label" for="crs_id"><span class="xing">*</span> 学科/时间：</label>
+              <div class="col-md-8 js_xueke">
+                <foreach name="courseInfo" item="vo">
+                  <div class="rows">
+                    <label class="col-md-2 checkbox-inline">
+                      <input type="checkbox" id="crs_id" name="crs_id[]" class="flat-red" value="{$vo.crs_id}" {$vo.check} /> {$vo.name}
+                    </label>
+                    <div class="col-md-10">
+                      <input type="text" id="start_time" name="start_time[]" class="form-control dataTime start_time" placeholder="开始时间" value="{$vo.sdate}" disabled />
+                      <span>-</span>
+                      <input type="text" id="end_time" name="end_time[]" class="form-control dataTime end_time" placeholder="结束时间" value="{$vo.edate}" disabled />
+                    </div>
+                  </div>
+                </foreach>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer" style="text-align:center;">
+    <button type="button" class="btn btn-success btn-sm save">
+      <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+    <button type="button" class="btn btn-default btn-sm layui-layer-close" onclick="closes();">
+      <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+
+<include file="Public:footer_js" />
+
+<script type="text/javascript">
+$(function() {
+
+  // 弹出层内容高度
+  function modalWindow1H() {
+    $('body').css({
+      height: $('.layui-layer-content',window.parent.document).height(),
+      overflow: 'auto'
+    });
+  }
+  modalWindow1H();
+  $(window).resize(function() {
+    modalWindow1H();
+  });
+
+  // 单选、复选
+  $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+    checkboxClass: 'icheckbox_flat-green',
+    radioClass: 'iradio_flat-green'
+  });
+
+  // 日期 时间插件转换为中文
+  $.datetimepicker.setLocale('ch'); // 设置中文
+
+  // 日期
+  $('.start_date, .end_date').datetimepicker({
+    format:"Y-m-d",       // 格式化日期 时间
+    timepicker:false,     // 时间选项
+    step:5,               // 分钟步数
+    yearStart:2000,       // 设置最小年份
+    yearEnd:2050,         // 设置最大年份
+    todayButton:true      // 选择今天按钮
+  });
+  $('.start_date').datetimepicker({
+    onShow:function(currentDate) {
+      this.setOptions({
+        maxDate:jQuery('.end_date').val()?jQuery('.end_date').val():false
+      })
+    }
+  });
+  jQuery('.end_date').datetimepicker({
+    onShow:function(currentDate) {
+      this.setOptions({
+        minDate:jQuery('.start_date').val()?jQuery('.start_date').val():false
+      })
+    }
+  });
+
+  // 日期 时间
+  $('.start_time, .end_time').datetimepicker({
+    showSecond: true,
+    format:'Y-m-d H:i:s',     // 日期/时间 格式
+    formatDate:'Y-m-d H:i:s',
+    timepicker:true,          // 时间选项
+    step:5,                   // 分钟步数
+    yearStart:2000,           // 设置最小年份
+    yearEnd:2050,             // 设置最大年份
+    todayButton:true          // 选择今天按钮
+  });
+  $('.start_time').focus(function() {
+    var end = $(this).siblings('.end_time');
+    $(this).datetimepicker({
+      onShow:function(ct) {
+        this.setOptions({
+          maxDate:end.val()?end.val():false
+        })
+      }
+    });
+  })
+  $('.end_time').focus(function() {
+    var start = $(this).siblings('.start_time');
+    $(this).datetimepicker({
+      onShow:function(ct) {
+        this.setOptions({
+          minDate:start.val()?start.val():false
+        })
+      }
+    });
+  })
+
+  // 选择学科
+  $('.js_xueke input[type="checkbox"]').on('ifChecked', function() { // 已勾选
+    $(this).parents('.rows').find('.dataTime').removeAttr('disabled');
+  })
+  $('.js_xueke input[type="checkbox"]').on('ifUnchecked', function() { // 去掉勾选
+    $(this).parents('.rows').find('.dataTime').val('').attr('disabled', true);
+  })
+
+  // 编辑时初始化已选中的学科/时间 是否可以操作
+  $('.js_xueke input[type="checkbox"]').each(function() {
+    if ($(this).attr('checked')) {
+      $(this).parents('.rows').find('.dataTime').removeAttr('disabled');
+    };
+  })
+})
+
+// 保存数据
+function save() {
+  // 验证被选中的学科是否选择了时间段
+  var bool   = true;
+  var titTxt = '';
+  $('.js_xueke .rows').each(function() {
+    titTxt = $(this).find('label').text();
+    if ($(this).find('.icheckbox_flat-green').hasClass('checked')) { // 判断学科是否被选中
+      if ($(this).find('.start_time').val() == '' || $(this).find('.end_time').val() == '') { // 如果学科已经被选中，那么此学科的开始时间和结束时间不能为空。
+        bool = false;
+        return false;
+      };
+    };
+  });
+  if (bool) {
+    // 保存
+    var url = g_config.host + '/index.php/Admin/Parent/Examination/examAll_edit_handle';
+    fpost(url,'formWindow1',btnCallbackRefreshWindowTopTable1);
+  } else {
+    dialog.error('请对已选中的"' + titTxt + '"学科完善考试时间！');
+  };
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/Public/bootstrap/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/Public/dist/font/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/Public/dist/font/ionicons/2.0.1/css/ionicons.min.css" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/Public/dist/css/AdminLTE.min.css" />
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/_all-skins.min.css" />
+  <!-- AdminLTE皮肤默认选择的skin-blue。也可以选择其他的皮肤。确保你应用皮肤类body标签更改生效 -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/skin-blue.min.css" />
+  <!-- 自定义公共css -->
+  <link rel="stylesheet" href="/Public/dist/css/custom.css" />
+</head>
+<body>
+<div class="shade" style="" id="modalWindow2">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="" action="" method="post" onsubmit="return false" id="formWindow2">
+        <!-- table -->
+        <div class="content-wrap">
+          <div class="custom-fixed-table-container">
+            <div class="row">
+              <div class="col-md-12">
+                <table class="custom_table_data js_table_data">
+                  <thead>
+                    <tr>
+                      <th class="text-center">学号</th>
+                      <th class="text-center">学生</th>
+                      <th class="text-center">科目</th>
+                      <th class="text-center">成绩</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <input type="hidden" name="stu_id" value="{$Think.get.stu_id}">
+                    
+                    <foreach name="results" item="vo">
+                      <tr>
+                        <td class="text-center">{$vo['stu_no']}</td>
+                        <td class="text-center">{$vo['stu_name']}</td>
+                        <td class="text-center">{$vo['crs_name']}</td>
+    	                  <td class="text-center">
+                          <input type="hidden" name="crs_id[]" value="{$vo['crs_id']}">
+                          <input type="text" name="scores[]" class="form-control input-sm scores" value="{$vo['scores']}">
+                        </td>
+                      </tr>
+                    </foreach>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer" style="text-align:center;">
+    <button type="button" class="btn btn-success btn-sm save2">
+      <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+    <button type="button" class="btn btn-default btn-sm layui-layer-close" onclick="closes();">
+      <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+
+<include file="Public:footer_js" />
+
+<script type="text/javascript">
+$(function() {
+  // 弹出层内容高度
+  function modalWindow2H() {
+    $('#modalWindow2 .modal-body').css({
+      height: $('.layui-layer-content',window.parent.document).height()-$('#modalWindow2 .modal-footer').outerHeight(),
+      overflow: 'auto'
+    });
+  }
+  modalWindow2H();
+  $(window).resize(function() {
+    modalWindow2H();
+  });
+})
+
+// 保存数据
+function save2() {
+  var scores_zt = 0;
+  $("input[name^=scores]").each(function(i, o) {
+    var scores   = $("input[name='scores[]']")[i].value;
+    var score_fs = /^(\d{0,3})([.]\d{0,2})?$/; // 验证成绩正则
+    console.log(scores)
+    console.log(score_fs.test(scores))
+    if (scores == '') {
+      i=i+1;
+      scores_zt = -1;
+      dialog.notify('第'+i+'行成绩不能为空');
+      return false;
+    } else {
+      if (!score_fs.test(scores)) {
+        i=i+1;
+        scores_zt = -1;
+        dialog.notify('第'+i+'行的成绩输入格式错误，请重新输入！');
+        return false;
+      };
+    };
+  });
+  if (scores_zt == 0) {
+    var url = g_config.host + '/index.php/Admin/Parent/Result/examAll_edit_handle';
+    fpost(url,'formWindow2',btnCallbackRefreshWindowTopTable1);
+  };
+}
+</script>
+</body>
+</html>

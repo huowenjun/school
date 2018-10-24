@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>缴费机构列表页</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="no">
+<link rel="stylesheet" type="text/css" href="/Public/AppHook/plugins/level-linkage/css/mpicker.css" />
+<link rel="stylesheet" type="text/css" href="/Public/AppHook/css/phone.css" />
+<script type="text/javascript" src="/Public/AppHook/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/AppHook/js/rem.js"></script>
+<style type="text/css">
+  .mPicker-header { font-size: 16px; }
+  .mPicker-content li, .mPicker-confirm, .mPicker-cancel { font-size: 14px!important; }
+  .mPicker-header { border-bottom: 1px solid #00bad2; color: #00bad2; }
+  .mPicker-active-box { border-top: 1px solid #00bad2; border-bottom: 1px solid #00bad2; }
+  .mPicker-content li { color: #00bad2; }
+  .mPicker-content li.active, .mPicker-cancel { color: #00bad2; }
+  .mPicker-confirm { background: #00bad2; }
+  .mPicker-confirm:active, .mPicker-confirm:hover, .mPicker-cancel:active, .mPicker-cancel:hover { background-color: #00bad2; }
+</style>
+</head>
+<body class="bg">
+<div class="main operatorList">
+	<!-- 内容 -->
+	<div class="content">
+    <div class="tit">
+      <label class="txt">所在地址：</label>
+      <input type="text" class="select-value form-control" id="select-value" value="" />
+    </div>
+
+    <!-- 缴费运营商列表 -->
+    <ul class="list js_list"></ul>
+  </div>
+</div>
+
+<!-- 地区二级联动 -->
+<script type="text/javascript" src="/Public/AppHook/plugins/level-linkage/js/json.js"></script>
+<script type="text/javascript" src="/Public/AppHook/plugins/level-linkage/js/jsonExchange.js"></script>
+<script type="text/javascript" src="/Public/AppHook/plugins/level-linkage/js/mPicker.min.js"></script>
+
+<!-- layer弹出层 -->
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript">
+// 两级联动选择插件调用
+$('#select-value').mPicker({
+  // 级别
+  level: 2,
+  // 需要渲染的json，二级联动的需要嵌套子元素，有一定的json格式要求
+  dataJson: dataJson,
+  // true: 联动
+  Linkage: true,
+  // 显示行数
+  rows: 6,
+  // 默认值填充
+  idDefault: true,
+  // 分割符号
+  splitStr: '-',
+  // 头部代码
+  header: '<div class="mPicker-header">请选择所在城市</div>',
+  confirm: function() {
+    var str  = $('#select-value').val();
+    // 方法一:转成数组获取
+    var arr  = str.split('-');
+    var prov = arr[0]; // 省
+    var city = arr[1]; // 市
+    // 方法二:截取方法
+    // var index = str.indexOf('-');
+    // var prov  = str.substring(0,str.indexOf('-')); // 省
+    // var city  = str.substring(index + 1, str.length); // 市
+
+    // 截去省、市、自治区(后台接收时不要省、市、自治区字样)
+    if (prov[prov.length-1] == '省' || prov[prov.length-1] == '市') {
+      prov = prov.slice(0,prov.length-1);
+    } else if (prov.substr(prov.length-3).toLowerCase() == '自治区') {
+      prov = prov.slice(0,prov.length-3);
+    } else if (prov.substr(prov.length-5).toLowerCase() == '特别行政区') {
+      prov = prov.slice(0,prov.length-5);
+    };
+    if (city[city.length-1] == '市') {
+      city = city.slice(0,city.length-1);
+    };
+
+    // ajax 数据请求
+    $.ajax({
+      url: '/index.php/Api/WaterElectric/getItemList',
+      type: 'post',
+      dataType: 'json',
+      data: {prov: prov, city: city},
+      success: function(msg) {
+        var html = '';
+        var obj  = msg.data;
+        for (var i = 0; i < obj.length; i++) {
+          if (getUrlParam('type_name') == '水费') {
+            if (obj[i].type == 'water') {
+              html += '<li itemId="' + obj[i].itemId + '">' + obj[i].itemName + '</li>'
+            };
+          }
+          if (getUrlParam('type_name') == '电费') {
+            if (obj[i].type == 'electric') {
+              html += '<li itemId="' + obj[i].itemId + '">' + obj[i].itemName + '</li>'
+            };
+          }
+          if (getUrlParam('type_name') == '燃气费') {
+            if (obj[i].type == 'gas') {
+              html += '<li itemId="' + obj[i].itemId + '">' + obj[i].itemName + '</li>'
+            };
+          }
+        };
+        $('.js_list').html(html);
+      },
+      error: function() {
+        dialog.error('请求服务器异常！')
+      }
+    })
+  },
+  cancel: function() {}
+})
+
+// 获取上一个链接地址
+var prevUrl = getUrlParam('url');
+
+// 选择缴费机构
+$('.js_list').delegate('li', 'click', function() {
+  var itemId   = $(this).attr('itemId');
+  var itemName = $(this).text();
+  window.location.href = prevUrl + '&type_name=' + getUrlParam('type_name') + '&item_id=' + itemId + '&item_name=' + itemName + '&user_num=' + getUrlParam('user_num');
+});
+
+// 获取当前页面网址参数
+function getUrlParam(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+  var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+  if (r != null) {
+    return decodeURI(r[2]);
+  };
+  return null; // 返回参数值
+}
+</script>
+</body>
+</html>

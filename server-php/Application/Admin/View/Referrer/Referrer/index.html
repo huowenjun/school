@@ -1,0 +1,246 @@
+  <!-- Main Header -->
+  <include file="Public:header" title="客户信息"/>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><i class="fa fa-home"></i> 客户信息</li>
+        <!-- <li class="active">客户信息</li> -->
+      </ol>
+    </section>
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <form class="form-inline navbar-form navbar-left">
+                <div class="form-group">
+                  <label for="username1">用户账号：</label>
+                  <input id="username1" type="text" class="form-control" placeholder="请输入账户" />
+                </div>
+                <div class="form-group">
+                  <label for="name1">用户名称：</label>
+                  <input id="name1" type="text" class="form-control" placeholder="请输入用户名称" />
+                </div>
+
+                <div class="form-group">
+                  <label for="user_type1">用户类型：</label>
+                  <select id="user_type1" class="form-control">
+                    <option value="">全部</option>
+                    <option value="0">会员</option>
+                    <option value="10">代理商</option> 
+                  </select>
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary query" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                  </button>
+                </div> 
+                <div class="form-group">
+                  <button type="button" class="btn btn-success" onclick="upgradeAgent()" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-ok-circle"></span> 升级为代理商
+                  </button>
+                </div>         
+              </form>
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <table id="referrer_table" class="js-custom-table-data" data-click-to-select="true" data-select-item-name="radioName">
+                    <thead>  
+                      <tr>
+                        <th data-field="state" data-radio="true">选择</th>
+                        <th data-field="username" data-sortable="true" data-align="center">用户账号</th>
+                        <th data-field="name" data-sortable="true" data-align="center">用户名称</th>
+                        <th data-field="user_type" data-sortable="true" data-align="center">用户类型</th>
+                        <th data-field="create_time" data-sortable="true" data-align="center">创建时间</th>
+                        <th data-field="agent_status" data-sortable="true" data-align="center">审核代理商状态</th>
+                        <th data-field="reply" data-sortable="true" data-align="center">审核状态原因</th>
+                        <th data-field="status" data-sortable="true" data-align="center">状态</th>
+                        <th data-field="info" data-sortable="false" data-align="center">统计信息</th>
+                        <th data-align="center" data-formatter="viewInviterFormatter" data-events="viewInviterEvents" name="viewInviterFormatter">查看</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <form id="searchForm" name="searchForm" action="">
+    <input type="hidden" name="username" id="username2" value="" />
+    <input type="hidden" name="name" id="name2" value="" />
+    <input type="hidden" name="user_type" id="user_type2" value="" />
+  </form>
+  <!-- /.content-wrapper -->
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+
+<!--add-start -->
+<div class="" style="display:none;" id="modalWindow">
+
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal"  action="" method="post" onsubmit="return false" id="formWindow">
+        <input type="hidden" class="primaryKey" name="user_id" id="user_id">
+         <input type="hidden" class="primaryKey" name="company_id" id="company_id">
+        <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="col-md-3 control-label" for="username">用户账号：</label>
+                <div class="col-md-9">
+                  <input type="text" placeholder="用户账号" id="username" class="form-control" readonly="">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label" for="name">用户名称：</label>
+                <div class="col-md-9">
+                  <input type="text" placeholder="用户名称" id="name" name="name"  class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label" for="memo">备注：</label>
+                <div class="col-md-9">
+                  <textarea style="display: block;" class="form-control" id="memo" name="memo" placeholder="请输入备注"></textarea>
+                </div>
+              </div> 
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer" style="text-align:center;">
+    <button type="button" class="btn btn-success save">
+        <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+     <button type="button" class="btn btn-default layui-layer-close">
+        <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+<!--add-end-->
+
+<!-- REQUIRED JS SCRIPTS -->
+<include file="Public:footer_js"/>
+<script>
+
+
+ 
+
+
+$(function() {
+  // 表格数据
+  var $table = $('#referrer_table');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",                   // 工具栏
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+});
+
+
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  // 需要的数据
+  var url = "/index.php/Admin/Referrer/Referrer/query";
+  queryList(url,params);
+}
+
+// 隐藏域赋值
+function searchForm() {
+  $("#username2").val($("#username1").val());
+  $("#name2").val($("#name1").val());
+  $("#user_type2").val($("#user_type1").val());
+}
+function search(){
+  searchForm();
+  // 需要的数据
+  var url = "/index.php/Admin/Referrer/Referrer/query?" + $("#searchForm").serialize();
+  $g_params.data.page = parseInt($('.pagination li.active a').text());
+  queryList(url,$g_params);
+}
+
+function edit(id){
+  var url = g_config.host + "/index.php/Admin/Referrer/Referrer/getUser?user_id="+id;
+  custom_edit(id,url,{},'formWindow','modalWindow');
+}
+
+function upgradeAgent(){
+  var ids = getIdSelections($('.js-custom-table-data'),'user_id');
+  if(ids==""){
+     dialog.error("请选择列表项！");
+  }else{
+    edit(ids)
+  }
+}
+
+//保存数据
+function save() {
+  if($("#name").val()=="") {
+    dialog.error("请完善用户名称！");
+    return false;
+  };
+  var url = g_config.host + '/index.php/Admin/Referrer/Referrer/apply';
+  fpost(url,'formWindow',btnCallbackRefreshTable1);
+}
+
+//编辑状态(启用,禁止)特殊字段处理
+function setEditDataEx(data){
+  $("#username").val(data.username);
+  $("#name").val(data.name);
+  $("#user_id").val(data.user_id);
+  $("#company_id").val(data.company_id);
+};
+
+
+// 自定义查看表格中的操作内容
+function viewInviterFormatter(value, row, index) {
+  if(row.type==10){
+    return [
+      '<button type="button" class="btn btn-primary table-btn viewInviter" style="margin:0 10px 0 0;" data-color="#39B3D7" data-opacity="0.95">',
+      '<i class="fa fa-eye"></i> 查看邀请人',
+      '</button>'
+    ].join('');
+  }
+}
+
+//获取用户id
+window.viewInviterEvents = {
+  'click .viewInviter': function (e, value, row, index) {   
+    viewInviteretails(row.user_id)
+  }
+};
+
+// 跳转到展示邀请人页面及传值
+function viewInviteretails(id) {
+  layer.open({
+    type: 2,
+    title: '查看邀请人',
+    shadeClose: true,
+    shade: 0.2,
+    area: ['70%', '70%'],
+    content: "/index.php/Admin/Referrer/Referrer/showUserList?user_id="+id
+  });
+}
+</script>
+</body>
+</html>

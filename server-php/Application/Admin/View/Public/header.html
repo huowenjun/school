@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>[title]</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/Public/bootstrap/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/Public/dist/font/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/Public/dist/font/ionicons/2.0.1/css/ionicons.min.css" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/Public/dist/css/AdminLTE.min.css" />
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/_all-skins.min.css" />
+  <!-- AdminLTE皮肤默认选择的skin-blue。也可以选择其他的皮肤。确保你应用皮肤类body标签更改生效 -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/skin-blue.min.css" />
+  <!-- 自定义公共css -->
+  <link rel="stylesheet" href="/Public/dist/css/custom.css" />
+  <!-- 表格 css -->
+  <link rel="stylesheet" href="/Public/plugins/bootstrap-table/bootstrap-table.css" />
+  <!-- 开关按钮 css -->
+  <link rel="stylesheet" href="/Public/plugins/switch/bootstrap-switch.css" />
+  <!-- ztree -->
+  <link rel="stylesheet" href="/Public/plugins/ztree/zTreeStyle.css" />
+  <!-- 日期 时间 -->
+  <link rel="stylesheet" href="/Public/plugins/datetimepicker/jquery.datetimepicker.css" />
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="/Public/plugins/iCheck/all.css" />
+</head>
+<body class="skin-blue sidebar-mini">
+<div class="wrapper">
+  <!-- Main Header -->
+  <header class="main-header">
+
+    <!-- Logo -->
+    <a href="index.html" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>安防校园</b>管理系统</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>安防校园</b>管理系统</span>
+    </a>
+
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-static-top" role="navigation">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">切换导航</span>
+      </a>
+      <!-- Navbar Right Menu -->
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- Messages: style can be found in dropdown.less-->
+          <!-- <li class="dropdown messages-menu"> -->
+            <!-- Menu toggle button -->
+            <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-envelope-o"></i>
+              <span class="label label-success">4</span>
+            </a>
+          </li> -->
+          <!-- /.messages-menu -->
+
+          <!-- Notifications Menu -->
+          <!-- <li class="dropdown notifications-menu"> -->
+            <!-- Menu toggle button -->
+            <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-bell-o"></i>
+              <span class="label label-warning">10</span>
+            </a>
+          </li> -->
+          <!-- Tasks Menu -->
+          <!-- <li class="dropdown tasks-menu"> -->
+            <!-- Menu Toggle Button -->
+            <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-flag-o"></i>
+              <span class="label label-danger">9</span>
+            </a>
+          </li> -->
+          <!-- User Account Menu -->
+          <li class="dropdown user user-menu">
+            <!-- Menu Toggle Button -->
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <!-- The user image in the navbar-->
+              <img src="/Public/dist/img/user.png" class="user-image" alt="User Image" />
+              <!-- hidden-xs hides the username on small devices so only the image appears. -->
+              <span class="hidden-xs">{$name}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- The user image in the menu -->
+              <li class="user-header">
+                <img src="/Public/dist/img/user.png" class="img-circle" alt="User Image" />
+                <p>
+                  {$username} - {$name}
+                  <!-- <small>11111111@qq.com</small> -->
+                </p>
+              </li>
+              <!-- Menu Body -->
+
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                <input type="hidden" name="userid" id="userid" value="{$userid}">
+                  <a href="#" class="btn btn-default btn-flat" id="changePassword">修改密码</a>
+                </div>
+                <div class="pull-right">
+                  <a href="#" class="btn btn-default btn-flat" onclick="logout();">退出</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <!-- Control Sidebar Toggle Button -->
+          <li>
+           <a href="/index.php/Admin/Help/Index"  target="_black">帮助中心</a>
+          </li>
+          <li>
+            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 修改密码 弹出层 -->
+<!--   <div class="shade" style="" id="modalPassword">
+    <div class="modal-body">
+      <div class="container-fluid">
+        <form class="form-horizontal" action="" method="post" onsubmit="return false" id="">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="col-md-3 control-label" for=""><span class="xing">*</span> 原密码：</label>
+                <div class="col-md-8">
+                  <input type="text" placeholder="请输入原密码" id="" name="" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label" for=""><span class="xing">*</span> 新密码：</label>
+                <div class="col-md-8">
+                  <input type="text" placeholder="请输入新密码" id="" name="" class="form-control" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer" style="text-align:center;">
+      <button type="button" class="btn btn-success btn-sm save">
+        <span class="glyphicon glyphicon-save"></span> 保存
+      </button>
+      <button type="button" class="btn btn-default btn-sm layui-layer-close">
+        <span class="glyphicon glyphicon-remove"></span> 取消
+      </button>
+    </div>
+  </div>
+ -->

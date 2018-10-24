@@ -1,0 +1,87 @@
+
+  <div class="myMessage">
+    <!-- Main Header -->
+    <include file="Public:header" title="消息详情" />
+    <!--Main Sidebar-->
+    <include file="Public:left_nav" />
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <ol class="breadcrumb">
+          <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+          <li class="active">我的消息</li>
+        </ol>
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <!-- Your Page Content Here -->
+        <div class="nav-tabs-custom">
+          <!-- /#tab1 -->
+          <div class="tab-pane active">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="box box-primary" style="margin-bottom: 0;">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">信息详情</h3>
+                    <div class="box-tools pull-right">
+                      <a href="{:U('Admin/Parent/MyMessage/index')}?m_id={$detail.m_id}" class="btn btn-block btn-default btn-sm js_edit">
+                        <i class="glyphicon glyphicon-chevron-left"></i> 返回
+                      </a>
+                    </div>
+                    <!-- /.box-tools -->
+                  </div>
+                  <!-- /.box-header -->
+                  <div class="box-body chat" id="chat-box">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <hr style="border-color: #FFF; margin-top: 0;" />
+                        <!-- chat item -->
+                        <div class="user-block item">
+                          <img class="img-circle" src="/Public/dist/img/users.png" alt="User Image">
+                          <div class="username">
+                            <!-- <a href="javascript:;"> -->
+                              <small class="label bg-yellow tag">{$detail.m_type}</small>
+                              <span class="tit">
+                                <if condition="$detail.m_type neq '公告' ">{$detail.user_id}<else />{$detail.title}</if>
+                              </span>
+                            <!-- </a> -->
+                          </div>
+                          <div class="description">{$detail.create_time} &nbsp;&nbsp;&nbsp;&nbsp;发布者：{$detail.user_id}</div>
+                          <div class="message">
+                            <div class="text">
+                              {$detail.content}
+                            </div>
+                          </div>
+                          <div class="direct-chat-info clearfix">
+                            <span class="direct-chat-timestamp pull-left">{$detail.user_id}</span>
+                          </div><br /><hr style="border-color: #FFF;" />
+                        </div>
+                        <!-- /.item -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.box-body -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.nav-tabs-custom -->
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <include file="Public:footer" />
+  </div>
+</div>
+<!-- ./wrapper -->
+
+<include file="Public:footer_js" />
+
+</body>
+</html>

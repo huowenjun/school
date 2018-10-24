@@ -1,0 +1,942 @@
+  <!-- Main Header -->
+  <include file="Public:header" title="GPS考勤设置"/>
+  <!-- 滑动块  -->
+  <link rel="stylesheet" href="http://cdn.bootcss.com/jquery-nstslider/1.0.13/jquery.nstSlider.css" />
+  <!-- 地图 -->
+  <script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=pObgXUnySvcX39VAqroiOt6xqUrNoOzK"></script>
+   <!-- 地图 鼠标绘制 -->
+  <link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+  <script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+  <!-- 加载检索信息窗口 -->
+  <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css" />
+  <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script>
+  <script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
+  <script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
+  <style>
+  .red{
+    color:red;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  .play-control .nstSlider{ 
+    background-color: #ebedf3;
+    height: 10px;
+    margin-top: 11px;
+    width: 100%;
+  }
+  .play-control .leftGrip{
+    background-color: #42aeed ;
+    height: 14px;
+    top: -2px;
+    width: 14px;
+  }
+  .radiusValue { margin-top: 4px;} 
+  .map-search{
+    left: 640px;
+    position: absolute;
+    top: 107px;
+    transition: all 0.3s ease 0s;
+    width: 233px;
+  }
+  .BMapLib_Drawing_panel{position: absolute; width: 260px; top:43px; right: 5px; }
+  .BMapLib_Drawing .BMapLib_box {
+    background-image: url("/Public/dist/img/map/draw-map.jpg");
+    border-right: 1px solid #d2d2d2;
+    cursor: pointer;
+    float: left;
+    height: 100%;
+    width: 64px;
+  }
+  .BMapLib_Drawing .BMapLib_last {
+    border-right: 0 none;
+  } 
+  .BMapLib_Drawing .BMapLib_del {
+    background-position: -324px 0;
+  }
+  .BMapLib_Drawing .BMapLib_dis {
+    background-position: -194px 0;
+  }
+  .add-fence { width: 100%;}
+
+  .list-group-item { overflow:hidden; height:40px; padding:0;}
+  .atnd-list-left { overflow:hidden; float:left; width:80%; margin-right:10px; cursor: pointer; padding:10px 0 20px; }
+  .atnd-name { float:left;}
+  .atnd-see-btn { float:right;}
+  .atnd-del-btn {float:right;  padding:10px 10px 20px;  cursor: pointer;}
+  </style>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">GPS考勤设置</li>
+      </ol>
+    </section>
+    <section class="oh" id="mapBox">
+      <div class="map-left">
+        <span class="side-icon"><i class="fa fa-chevron-left"></i></span>
+        <div class="box " style="border-top-color: #fff;box-shadow:none;">
+          <div class="box-header with-border">
+            <h3 class="box-title">学校名称：<span id="schoolName"></span></h3>
+          </div>
+          <div class="box-body">
+            <div class="tree-search">
+              <i class="tree-search-icon" id="searchNodeBtn"></i> 
+              <input type="text" placeholder="搜索关键字" id="searchNodeVal" value="" class="empty fs-12" />
+            </div>   
+            <div id="fileTreeScroll">
+              <ul id="fileTree" class="ztree"></ul>
+            </div>
+            <ul class="list-group list-group-unbordered" style="padding:15px 0 0 0;">
+            </ul>
+            <a href="#" class="btn btn-success add-fence" onclick="addGpsAtndAreaAdd()"><span class="glyphicon glyphicon-plus"></span>新建GPS考勤围栏</a>
+          </div>
+        </div>
+      </div>    
+      <div id="allmap"></div>
+      <div class="map-search">
+        <div class="input-group js-map-search">
+          <div class="input-group-addon" id="masearchdiv">
+            <i class="fa fa-search"></i>
+          </div>
+          <input placeholder="搜索" id="suggestId" class="form-control" autocomplete="off" type="text">
+        </div>
+        <div id="searchResultPanel"style="border: 1px solid #C0C0C0; width: 150px; height: auto; display: none;"></div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+
+<!-- 设置GPS考勤围栏弹框 -->
+<div class="" style="display:none;" action="" method="post" onsubmit="return false" id="modalWindow">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal"  id="formWindow">
+        <input type="hidden" name="point" id="point" value="" />
+        <input type="hidden" class="primaryKeys s_id_hide" id="s_id" name="s_id" value="" placeholder="学校" />
+        <input type="hidden" class="primaryKeys a_id_hide" id="a_id" name="a_id" value="" placeholder="校区" />
+        <div class="row">
+          <div class="col-md-12">
+            <div class="clearfix">
+              <p class="note pull-right">注：<span class="xing">*</span>标记为必填项</p>
+            </div>
+            <div class="form-group">
+              <label class="col-md-3 control-label" for=""><span class="xing">*</span>GPS考勤围栏名称：</label>
+              <div class="col-md-9">
+                <input id="name" name="name" class="form-control" type="text"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer" style="text-align:center;">
+      <button type="button" class="btn btn-success" onclick="fenceSave()">
+          <span class="glyphicon glyphicon-save"></span> 保存
+      </button>
+       <button type="button" class="btn btn-default layui-layer-close">
+          <span class="glyphicon glyphicon-remove"></span> 取消
+      </button>
+    </div>
+  </div>
+</div>
+<!--view-end-->
+<input type="hidden" name="latitude" id="latitude" />
+<input type="hidden" name="longitude" id="longitude" />
+<!-- REQUIRED JS SCRIPTS -->
+<!-- jQuery 2.2.3 -->
+<include file="Public:footer_js"/>
+<!-- 文件树搜索 -->
+<script type="text/javascript" src="/Public/dist/js/jquery.ztree.exhide.min.js"></script>
+<!-- 滑动块 -->
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery-nstslider/1.0.13/jquery.nstSlider.js"></script>
+<script>
+// 实时处理树展开、折叠显示滚动条
+function fileTreeScroll(){
+  var mapLeftHh = $('.map-left').outerHeight(true);
+  var nonFileTreeHh = $('.add-fence').outerHeight(true) + $('.list-group').outerHeight(true)+ $('.tree-search').outerHeight(true)+ $('.box-header').outerHeight(true)+40;
+  var fileTreeHh = mapLeftHh - nonFileTreeHh;
+  $("#fileTreeScroll").css("overflow-y","auto");  
+  if($("#fileTree").height()>fileTreeHh){
+    $("#fileTreeScroll").css({
+      'height': fileTreeHh,
+      'overflow-y': "scroll"
+    });
+  }else if($("#fileTree").height()<fileTreeHh){
+    $("#fileTreeScroll").css({
+      'height': $("#fileTree").height(),
+      'overflow-y': "hidden"
+    });
+  }
+}
+
+// 地图
+var map = new BMap.Map("allmap"); 
+var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+// var bottom_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_BOTTOM_LEFT});// 左上角，添加比例尺
+// map.addControl(bottom_left_control);   //添加添加比例尺
+map.addControl(top_left_navigation);//设置导航条 （左上角，添加默认缩放平移控件）
+map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+var fenceDis = new BMapLib.DistanceTool(map); // 围栏测距
+// 根据IP定位
+var localCity = new BMap.LocalCity();
+localCity.get(myFun);  
+ function myFun(result) {  
+  var cityName = result.name;  
+  map.centerAndZoom(cityName,12)  
+}  
+
+// 绘制工具
+$(".BMapLib_Drawing").css('top', '43px'); 
+// 安全区域列表
+
+function gpsAtndAreaList(){
+  var gpsAtndAreaValue="";
+  var gpsAtndAreaName="";
+  $('.list-group').html("");
+  var url = '/index.php/Admin/Atnd/GpsAtndSet/query';
+  dpost(url,{a_id: $("#a_id").val()},function(res){
+    if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+    g_loadingIndex = -1;
+    if(res.status==1){
+      if(res.data.length!=0){
+        $('.list-group').html("");
+        $.each(res.data, function(key, value) {
+          gpsAtndAreaValue=value.ga_id; 
+          gpsAtndAreaName=value.name;
+        })
+        $('.list-group').html('<li class="list-group-item"><div class="atnd-list-left"  onclick="vievGpsAtndArea('+gpsAtndAreaValue+')"><span class="atnd-name">'+gpsAtndAreaName+'</span><span class="glyphicon glyphicon-eye-open atnd-see-btn" ></span></div><span class="glyphicon glyphicon-trash atnd-del-btn" onclick="deleteGpsAtndArea('+gpsAtndAreaValue+')"></span></li>'); 
+        fileTreeScroll();
+      }
+      else{
+        $('.list-group').html('<i class="fa fa-bell-o" style=" display:block; text-align:center;">没有GPS考勤围栏数据</i>'); 
+      };
+    }else{
+      dialog.error(res.info);
+    } 
+  })
+}
+ // $('.list-group').html('<li class="list-group-item"><div class="atnd-list-left"  onclick="vievGpsAtndArea('+gpsAtndAreaValue+')"><span class="atnd-name">'+gpsAtndAreaName+'</span><span class="glyphicon glyphicon-eye-open atnd-see-btn" ></span></div><span class="glyphicon glyphicon-trash atnd-del-btn" onclick="deleteGpsAtndArea('+gpsAtndAreaValue+')"></span></li>'); 
+// $('.list-group').html('<li class="list-group-item"><div class="list-left">'+gpsAtndAreaName+'</div><b class="pull-right"><span class="glyphicon glyphicon-eye-open" style="cursor: pointer; padding:0 10px 0 0;" onclick="vievGpsAtndArea('+gpsAtndAreaValue+')"></span> <span class="glyphicon glyphicon-trash" style="cursor: pointer;" onclick="deleteGpsAtndArea('+gpsAtndAreaValue+')"></span></b></li>'); 
+// 获取学校信息
+function getSchoolInfo(schoolId){
+  $("#schoolName").html("");
+  $("#a_id").val(schoolId);
+  map.clearOverlays();  //清除地图上所有覆盖物
+  var url = '/index.php/Admin/Atnd/GpsAtndSet/get';
+  fget(url,{a_id:schoolId},function(res){
+    if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+    g_loadingIndex = -1;
+    if(res.status==1){
+      $("#schoolName").html(res.data.name);
+      gpsAtndAreaList();
+    }else{
+      dialog.error(res.info);
+    }
+  })
+} 
+
+
+
+// 搜索关键字获取GPS考勤围栏定位点
+function G(id) {
+  return document.getElementById(id);
+}
+var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+  {"input" : "suggestId"
+  ,"location" : map
+});
+
+ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+var str = "";
+  var _value = e.fromitem.value;
+  var value = "";
+  if (e.fromitem.index > -1) {
+    value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+  }    
+  str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+  
+  value = "";
+  if (e.toitem.index > -1) {
+    _value = e.toitem.value;
+    value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+  }    
+  str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+  G("searchResultPanel").innerHTML = str;
+});
+var myValue;
+ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+var _value = e.item.value;
+  myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+  G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+  setPlace();
+});
+function setPlace(){
+  map.clearOverlays();    //清除地图上所有覆盖物
+  function circleFun(){
+    centerPoint  = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+    $("#latitude").val(centerPoint.lat.toFixed(6));
+    $("#longitude").val(centerPoint.lng.toFixed(6)); 
+    marker=new BMap.Marker(centerPoint);
+    map.addOverlay(marker);    //增加点
+    map.centerAndZoom(centerPoint,17);
+  }
+  var local = new BMap.LocalSearch(map, { //智能搜索
+    onSearchComplete: circleFun
+  });
+  local.search(myValue);
+}
+
+// 多边形绘制
+var bmap = {
+  num : 0,
+  clearnum : 0,
+  drawingPoints : [],
+  polyPoints : [],
+  overlays : [],
+  poly:[],
+  drawingManager : "",
+  styleOptions : {
+    strokeColor:"red",    //边线颜色。
+    fillColor:"red",      //填充颜色。当参数为空时，圆形将没有填充效果。
+    strokeWeight: 3,       //边线的宽度，以像素为单位。
+    strokeOpacity: 0.8,    //边线透明度，取值范围0 - 1。
+    fillOpacity: 0.4,      //填充的透明度，取值范围0 - 1。
+    strokeStyle: 'solid' //边线的样式，solid或dashed。
+  }, 
+  init: function () {
+    var styleOptions = this.styleOptions;
+    this.drawingManager = new BMapLib.DrawingManager(map, {
+      isOpen: false, //是否开启绘制模式
+      // enableCalculate :true,
+      enableDrawingTool: true, //是否显示工具栏
+      drawingToolOptions: {
+          anchor: BMAP_ANCHOR_TOP_RIGHT, //位
+          offset: new BMap.Size(5, 5), //偏离值
+          drawingModes : [BMAP_DRAWING_POLYGON],
+          drawingTypes : [
+              BMAP_DRAWING_POLYGON,
+          ]
+      },
+      polygonOptions: styleOptions, //多边形的样式
+    });
+    this.drawingManager.addEventListener('overlaycomplete', bmap.overlaycomplete);
+  },
+  overlaycomplete : function(e){
+    bmap.overlays.push(e.overlay);
+    bmap.drawingPoints.push(e.overlay.getPath());
+    if(bmap.num==0){
+      if(bmap.clearnum==0){
+        bmap.styleOptions.strokeColor="blue";
+        bmap.styleOptions.fillColor="blue";
+        dialog.notify('请绘制GPS考勤外围栏一<br>边距距离正常围栏为10-30米');  
+        bmap.num=1;
+        bmap.clearnum=1;
+      }else if(bmap.clearnum==1){
+        bmap.styleOptions.strokeColor="red";
+        bmap.styleOptions.fillColor="red";
+        dialog.notify('请重新绘制正常GPS考勤围栏');  
+        bmap.num=0;
+        bmap.clearnum=0;
+      }
+    }
+    else if(bmap.num==1){
+      for(var i=0; i<bmap.drawingPoints[1].length;i++){
+        var curpoint = new BMap.Point(bmap.drawingPoints[1][i].lng,bmap.drawingPoints[1][i].lat);
+        var res = bmap.geoUtils(curpoint,bmap.overlays[0]); 
+      }
+      for(var i=0; i<bmap.drawingPoints[0].length;i++){
+        var curpoint = new BMap.Point(bmap.drawingPoints[0][i].lng,bmap.drawingPoints[0][i].lat);
+        var res1 = bmap.geoUtils(curpoint,bmap.overlays[1]); 
+      }
+      if(!res&&res1){
+        if(bmap.clearnum==1){
+          bmap.styleOptions.strokeColor="green";
+          bmap.styleOptions.fillColor="green";   
+          dialog.notify('请绘制GPS考勤外围栏二<br>边距距离正常围栏为100-300米');
+          bmap.num=2;
+          bmap.clearnum=2;
+        }else if(bmap.clearnum==2){
+          bmap.styleOptions.strokeColor="blue";
+          bmap.styleOptions.fillColor="blue";
+          dialog.notify('请重新GPS考勤外围栏一<br>边距距离正常围栏为10-30米');
+          bmap.num=1;
+          bmap.clearnum=1;
+
+        }
+      }else{
+        map.removeOverlay(bmap.overlays[1]); 
+        map.removeOverlay(bmap.drawingPoints[1]);
+        bmap.overlays.pop();
+        bmap.drawingPoints.pop();
+        dialog.notify('<div class="red">绘制错误，请重新绘制GPS考勤外围栏一<br>边距距离正常围栏为10-30米</div>');  
+        bmap.num=1;
+      }
+    }
+    else if(bmap.num==2){
+      for(var i=0; i<bmap.drawingPoints[2].length;i++){
+        var curpoint = new BMap.Point(bmap.drawingPoints[2][i].lng,bmap.drawingPoints[2][i].lat);
+        var res = bmap.geoUtils(curpoint,bmap.overlays[1]); 
+      }
+      for(var i=0; i<bmap.drawingPoints[1].length;i++){
+        var curpoint = new BMap.Point(bmap.drawingPoints[1][i].lng,bmap.drawingPoints[1][i].lat);
+        var res1 = bmap.geoUtils(curpoint,bmap.overlays[2]); 
+      }
+      if(!res&&res1){  
+        if(bmap.clearnum==2){
+          bmap.clearnum=3;
+          for(var i=0; i<bmap.drawingPoints.length;i++){
+            bmap.polyPoints=[];
+            for(var j=0; j<bmap.drawingPoints[i].length;j++){
+              bmap.polyPoints.push(bmap.drawingPoints[i][j].lng, bmap.drawingPoints[i][j].lat);
+            }
+            bmap.poly.push(bmap.polyPoints+'|');
+          }
+          var polystr =bmap.poly.join();
+          var polystrcut =polystr.substr(0,polystr.length - 1).replace('|,','|').replace('|,','|');  
+          // console.log(polystrcut);
+          $("#point").val(polystrcut);
+          addGpsAtndAreaEdit('formWindow','modalWindow'); 
+
+        }else if(bmap.clearnum==3){
+          bmap.styleOptions.strokeColor="green";
+          bmap.styleOptions.fillColor="green";
+          dialog.notify('请重新GPS考勤外围栏一<br>边距距离正常围栏为10-30米');
+          bmap.num=1;
+          bmap.clearnum=2;
+        }
+
+      }else{
+        map.removeOverlay(bmap.overlays[2]); 
+        map.removeOverlay(bmap.drawingPoints[2]);
+        bmap.overlays.pop();
+        bmap.drawingPoints.pop();
+        dialog.notify('<div class="red">绘制错误,请重新绘制GPS考勤外围栏二<br>边距距离正常围栏为100-300米</div>');
+        bmap.num=2;  
+      }
+    }
+  },
+  geoUtils : function(point, polygon){
+    var result=BMapLib.GeoUtils.isPointInPolygon(point, polygon);  
+    return result;
+  },
+  fenceDisFun: function(){
+    fenceDis.open();
+    $(".BMapLib_Drawing_panel a:eq(0)").removeClass( "BMapLib_hander_hover" ).addClass("BMapLib_hander");
+    $(".BMapLib_Drawing_panel a:eq(1)").removeClass( "BMapLib_polygon_hover" ).addClass("BMapLib_polygon");
+    $(".BMapLib_Drawing .BMapLib_dis").css("background-position"," -194px -52px");
+    fenceDis.addEventListener("ondrawend", function(e) { 
+      $(".BMapLib_Drawing .BMapLib_dis").css("background-position"," -194px 0");
+      $(".BMapLib_Drawing_panel a:eq(0)").removeClass( "BMapLib_hander" ).addClass("BMapLib_hander_hover");
+      $(".BMapLib_Drawing_panel a:eq(1)").removeClass( "BMapLib_hander" );
+      fenceDis.close(); 
+    })
+  },
+  clearFun : function(clearTpye){
+    if(clearTpye==0){
+      if(bmap.clearnum==1){
+        map.removeOverlay(bmap.overlays[0]); 
+        map.removeOverlay(bmap.drawingPoints[0]);
+        bmap.overlays.pop();
+        bmap.drawingPoints.pop();
+        bmap.styleOptions.strokeColor="red";
+        bmap.styleOptions.fillColor="red";
+        dialog.notify('请重新绘制正常GPS考勤围栏');  
+        bmap.clearnum=0;
+        bmap.num=0;
+      }else if(bmap.clearnum==2){
+        map.removeOverlay(bmap.overlays[1]); 
+        map.removeOverlay(bmap.drawingPoints[1]);
+        bmap.overlays.pop();
+        bmap.drawingPoints.pop();
+        bmap.styleOptions.strokeColor="blue";
+        bmap.styleOptions.fillColor="blue";
+        dialog.notify('请重新GPS考勤外围栏一<br>边距距离正常围栏为10-30米'); 
+        bmap.clearnum=1;
+        bmap.num=1;
+      }else if(bmap.clearnum==3){
+        map.removeOverlay(bmap.overlays[2]); 
+        map.removeOverlay(bmap.drawingPoints[2]);
+        bmap.overlays.pop();
+        bmap.drawingPoints.pop();
+        bmap.styleOptions.strokeColor="green";
+        bmap.styleOptions.fillColor="green";
+        dialog.notify('请重新绘制GPS考勤外围栏二<br>边距距离正常围栏为100-300米'); 
+        bmap.num=2;
+        bmap.clearnum=2;
+      }
+    }else if(clearTpye==1){
+      map.removeOverlay(bmap.overlays[2]); 
+      map.removeOverlay(bmap.drawingPoints[2]);
+      bmap.overlays.pop();
+      bmap.drawingPoints.pop();
+      bmap.styleOptions.strokeColor="green";
+      bmap.styleOptions.fillColor="green";
+      dialog.notify('请重新绘制GPS考勤外围栏二<br>边距距离正常围栏为100-300米'); 
+      bmap.num=2;
+      bmap.clearnum=2;
+      clearTpye=0;
+    }else if(clearTpye==2){
+      bmap.styleOptions.strokeColor="red";
+      bmap.styleOptions.fillColor="red";
+      bmap.num=0
+      bmap.clearnum=0;
+      clearTpye=0;
+      bmap.overlays =[];
+      bmap.drawingPoints=[];
+      bmap.polyPoints=[];
+      bmap.polyPoints = [];
+      bmap.poly=[];
+      for(var i = 0; i < bmap.overlays.length; i++){
+        map.removeOverlay(bmap.overlays[i]); 
+      }
+      bmap.overlays.length = 0;
+      map.clearOverlays();    // 清除地图上所有覆盖物
+    }
+  }
+}
+bmap.init();
+
+// 定义多边形按钮及清除多边形
+$(".BMapLib_Drawing_panel").append('<a class="BMapLib_box BMapLib_dis BMapLib_last" href="javascript:void(0)" title="测距" onclick="bmap.fenceDisFun()"></a>');
+$(".BMapLib_Drawing_panel").append('<a class="BMapLib_box BMapLib_del BMapLib_last" href="javascript:void(0)" title="删除" onclick="bmap.clearFun(0)"></a>');
+$(".BMapLib_Drawing_panel").hide();
+
+
+
+//点击查看安全区域
+function vievGpsAtndArea(id){
+  $(".BMapLib_Drawing_panel").show();
+  $(".BMapLib_Drawing_panel").css('width', '130px');
+  $(".BMapLib_Drawing_panel .BMapLib_dis").siblings("a").hide();
+  $(".BMapLib_Drawing_panel a").eq(0).show();
+  $(".BMapLib_Drawing_panel a:eq(0)").removeClass( "BMapLib_hander" ).addClass("BMapLib_hander_hover");
+  var pointArr=[];
+  var pointArrs=[];
+  var points;
+  map.clearOverlays();    //清除地图上所有覆盖物
+  var url = '/index.php/Admin/Atnd/GpsAtndSet/query';
+  fget(url,{ga_id:id},function(res){
+    if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+    g_loadingIndex = -1;
+    if(res.status==1){
+      $.each(res.data, function(key, value) {
+        points=value.point;
+      })
+      pointArrs=points.split("|");
+      pointArr1=pointArrs[0].split(",");
+      pointArr2=pointArrs[1].split(",");
+      pointArr3=pointArrs[2].split(",");
+      var strokePoint1=[];
+      var strokePoint2=[];
+      var strokePoint3=[];
+      for (var i = 0; i < pointArr1.length; i++) { 
+        strokePoint1.push(new BMap.Point(pointArr1[i],pointArr1[i+1]));
+        i++
+      };
+      for (var i = 0; i < pointArr2.length; i++) { 
+        strokePoint2.push(new BMap.Point(pointArr2[i],pointArr2[i+1]));
+        i++
+      };
+      for (var i = 0; i < pointArr3.length; i++) { 
+        strokePoint3.push(new BMap.Point(pointArr3[i],pointArr3[i+1]));
+        i++
+      };
+      var polygon1 = new BMap.Polygon(strokePoint1,{fillColor:"red",strokeColor:"red", strokeWeight:3, strokeOpacity:0.8, fillOpacity: 0.4});
+      var polygon2 = new BMap.Polygon(strokePoint2,{fillColor:"blue",strokeColor:"blue", strokeWeight:3, strokeOpacity:0.8, fillOpacity: 0.4});
+      var polygon3 = new BMap.Polygon(strokePoint3,{fillColor:"green",strokeColor:"green", strokeWeight:3, strokeOpacity:0.8, fillOpacity: 0.4});
+      map.addOverlay(polygon1);
+      map.addOverlay(polygon2);
+      map.addOverlay(polygon3);
+      map.centerAndZoom(strokePoint1[0],15); 
+      map.centerAndZoom(strokePoint1[0],map.getZoom()); 
+    }else{
+      dialog.error(res.info);
+    }
+  }); 
+}
+
+
+//新建GPS考勤围栏
+function addGpsAtndAreaAdd(){
+  bmap.clearFun(2);
+  $("#suggestId").val(""); // 清除搜索框
+  map.clearOverlays();    // 清除地图上所有覆盖物
+  if($("#a_id").val()!=""&&$("#schoolName").html()!=""){
+    if($('.list-group li').length==1){
+      dialog.error('最多新建1组GPS考勤围栏');
+    }else{
+      $(".BMapLib_Drawing_panel").show();
+      $(".BMapLib_Drawing_panel a").show();
+      $(".BMapLib_Drawing_panel").css('width', '260px');
+      $(".BMapLib_Drawing_panel a:eq(0)").removeClass( "BMapLib_hander" ).addClass("BMapLib_hander_hover");
+      dialog.notify('请先绘制正常GPS考勤围栏');  
+    }
+  }else{
+    dialog.error('请先选择学校！');
+  }
+}
+
+function addGpsAtndAreaEdit(form_id,modal_id){
+  $("#" + form_id)[0].reset();
+  layer.open({
+    type: 1,
+    title: '新增设备GPS考勤围栏信息',
+    shadeClose: false,
+    shade: false,
+    area: ['600px', 'auto'],
+    offset : ['250px',"50%"],
+    content:$('#'+modal_id),
+    cancel : function(){
+      bmap.clearFun(1);
+    },//销毁层的
+  });
+}
+
+//保存GPS考勤围栏数据
+function fenceSave() {
+  var url = g_config.host + '/index.php/Admin/Atnd/GpsAtndSet/edit';
+  fpost(url,'formWindow',addGpsAtndAreaUpdateList);
+}
+
+//删除
+function deleteGpsAtndArea(id){
+  var url = g_config.host + "/index.php/Admin/Atnd/GpsAtndSet/del";
+  var data   = {};
+  data.ga_id  = id;
+  dialog.confirm('您确定要删除当前选项吗？',function(){dpost(url,data,deleteaddGpsAtndAreaUpdateList);});
+}
+
+
+
+// 新增保存后安全区域列表异步从新加载
+function addGpsAtndAreaUpdateList(data) {
+  if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+  g_loadingIndex = -1;
+   map.clearOverlays();   // 清除地图上所有覆盖物
+  if( data.status == 1 ) {
+    dialog.success2(data.info,function(){gpsAtndAreaList()});
+      $("#latitude").val("");
+      $("#longitude").val("");
+      layer.closeAll('page'); //关闭所有页面层
+      $(".BMapLib_Drawing_panel").hide();
+      fileTreeScroll();
+  } else {
+    dialog.error(data.info);
+  }
+}
+
+
+
+// 删除后安全区域列表异步从新加载
+function deleteaddGpsAtndAreaUpdateList(data) {
+  if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+  g_loadingIndex = -1;
+  if( data.status == 1) {
+    dialog.success2(data.info,function(){
+      gpsAtndAreaList();
+      fileTreeScroll();
+    }); 
+    map.clearOverlays();    //清除地图上所有覆盖物
+  } else {
+    dialog.error(data.info);
+  }
+}
+
+// 文件树
+var setting = {
+  check: {
+    enable: false,
+    chkStyle: "radio",
+    radioType: "all" // 在整棵树范围内当做一个分组
+  },
+  view: {
+    dblClickExpand: true
+  },
+  data: {
+    simpleData: {
+      enable: true
+    }
+  },
+  callback: {
+    // beforeClick: beforeClick,
+    beforeExpand: beforeExpand,
+    onExpand: onExpand,
+    onCollapse: onCollapse,
+    onClick: zTreeOnClick
+  }
+};
+
+// 保持展开单一路径 start
+var curExpandNode = null;
+function beforeExpand(treeId, treeNode) {
+  var pNode     = curExpandNode ? curExpandNode.getParentNode():null;
+  var treeNodeP = treeNode.parentTId ? treeNode.getParentNode():null;
+  var zTree     = $.fn.zTree.getZTreeObj("fileTree");
+  for(var i=0, l=!treeNodeP ? 0:treeNodeP.children.length; i<l; i++ ) {
+    if (treeNode !== treeNodeP.children[i]) {
+      zTree.expandNode(treeNodeP.children[i], false);
+    }
+  }
+  while (pNode) {
+    if (pNode === treeNode) {
+      break;
+    }
+    pNode = pNode.getParentNode();
+  }
+  if (!pNode) {
+    singlePath(treeNode);
+  }
+}
+function singlePath(newNode) {
+  if (newNode === curExpandNode) return;
+
+  var zTree = $.fn.zTree.getZTreeObj("fileTree"),
+    rootNodes, tmpRoot, tmpTId, i, j, n;
+
+  if (!curExpandNode) {
+    tmpRoot = newNode;
+    while (tmpRoot) {
+      tmpTId = tmpRoot.tId;
+      tmpRoot = tmpRoot.getParentNode();
+    }
+    rootNodes = zTree.getNodes();
+    for (i=0, j=rootNodes.length; i<j; i++) {
+      n = rootNodes[i];
+      if (n.tId != tmpTId) {
+        zTree.expandNode(n, false);
+      }
+    }
+  } else if (curExpandNode && curExpandNode.open) {
+    if (newNode.parentTId === curExpandNode.parentTId) {
+      zTree.expandNode(curExpandNode, false);
+    } else {
+      var newParents = [];
+      while (newNode) {
+        newNode = newNode.getParentNode();
+        if (newNode === curExpandNode) {
+          newParents = null;
+          break;
+        } else if (newNode) {
+          newParents.push(newNode);
+        }
+      }
+      if (newParents!=null) {
+        var oldNode = curExpandNode;
+        var oldParents = [];
+        while (oldNode) {
+          oldNode = oldNode.getParentNode();
+          if (oldNode) {
+              oldParents.push(oldNode);
+          }
+        }
+        if (newParents.length>0) {
+          zTree.expandNode(oldParents[Math.abs(oldParents.length-newParents.length)-1], false);
+        } else {
+          zTree.expandNode(oldParents[oldParents.length-1], false);
+        }
+      }
+    }
+  }
+  curExpandNode = newNode;
+}
+function onExpand(event, treeId, treeNode) {
+  curExpandNode = treeNode;
+  fileTreeScroll();
+}
+function onCollapse(event, treeId, treeNode) {
+  curExpandNode = treeNode;
+  fileTreeScroll();
+}
+
+// 请求树
+$.ajax({
+  type: "get",
+  url: "/index.php/Admin/index/get_tree?type=area",
+  dataType : 'json',
+  success: function(msg) {
+    var groupNodes = msg.data;
+    $.fn.zTree.init($("#fileTree"), setting, groupNodes);
+    fileTreeScroll();
+  },
+  error: function(msg) {
+    dialog.error("请求服务器异常！");
+  }
+});
+// 保持展开单一路径 end
+
+var user_type = "{$user_type}"; // 用户类型 1学校管理员 2系统用户 3老师 4家长 5省/直辖市教委 6 市教委 7 区/县教委  
+//点击
+function zTreeOnClick(event, treeId, treeNode) {
+  var treeObj = $.fn.zTree.getZTreeObj("fileTree");
+  var nodes   = treeObj.getSelectedNodes();
+  for (var i=0, l=nodes.length; i < l; i++) {
+    treeObj.checkNode(nodes[i], true, true);
+  } 
+  if (user_type == '1') {
+    // 点击选择
+    if(treeNode.typeFlag == 'school') {
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+      getSchoolInfo(treeNode.id);
+    };
+  };
+  if (user_type == '2'||user_type == '5') {
+    // 点击选择
+    if(treeNode.typeFlag == 'prov') {
+      $(".prov_id_hide").val(treeNode.id); // 省/直辖市
+      $(".city_id_hide").val(''); // 市
+      $(".county_id_hide").val(''); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'city') {
+      $(".prov_id_hide").val(treeNode.getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.id); // 市
+      $(".county_id_hide").val(''); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'county') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.id); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'school') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+      getSchoolInfo(treeNode.id);
+    };
+    
+  };
+
+  if (user_type == '6') {
+    // 点击选择
+    if(treeNode.typeFlag == 'city') {
+      $(".city_id_hide").val(treeNode.id); // 市
+      $(".county_id_hide").val(''); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'county') {
+      $(".city_id_hide").val(treeNode.getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.id); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'school') {
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+       getSchoolInfo(treeNode.id);
+    };
+
+  };
+  if (user_type == '7') {
+    // 点击选择
+    if(treeNode.typeFlag == 'county') {
+      $(".county_id_hide").val(treeNode.id); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'school') {
+      $(".county_id_hide").val(treeNode.getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+       getSchoolInfo(treeNode.id);
+    };
+  };
+
+}
+
+// 左侧文件树搜索
+$('#searchNodeBtn').click(function() {
+  searchNodeAll('fileTree',$('#searchNodeVal'));
+  fileTreeScroll();
+});
+$('#searchNodeVal').on('input', function() {
+  searchNodeAll('fileTree',$('#searchNodeVal'));
+  fileTreeScroll();
+});
+</script>
+</body>
+</html>

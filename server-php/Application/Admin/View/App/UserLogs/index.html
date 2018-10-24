@@ -1,0 +1,289 @@
+<!-- Main Header -->
+<include file="Public:header" title="信平台安防校园管理系统"/>
+<!-- 地图 -->
+<!-- <script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=pObgXUnySvcX39VAqroiOt6xqUrNoOzK"></script> -->
+<script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+<link rel="stylesheet" href="/Public/plugins/swiper/swiper-3.4.2.min.css" />
+<link rel="stylesheet" href="/Public/plugins/swiper/animate.min.css" />
+<link rel="stylesheet" href="/Public/plugins/echarts/style.css" />
+
+<!--Main Sidebar-->
+<style type="text/css">
+  .tex{
+    width: 100%;height: 100%;text-align: center;margin-top: 18%;
+  }
+</style>
+<include file="Public:left_nav" />
+  <!-- Content Wrapper. Contains page content -->
+  <div id="content-wrapper" class="content-wrapper" >
+    <!-- Content Header (Page header) -->
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <div class="page page-one" style="margin-top:0;">
+           <div style="width:40px; height:40px;"  id="changeModel1"></div> 
+            <div class="page-left page-one-left">
+              <div class="con">
+                <div class="num-box">
+                  <h3>学生卡发卡总数<span>单位(张)</span></h3>
+                  <p></p>
+                </div>
+                <div id="chart1"></div>
+              </div>
+            </div>
+            <div class="page-right page-one-right">
+              <div class="con" >
+                <div class="num-box">
+                  <h3>各省发卡数量统计<span>单位(张)</span></h3>
+                </div>
+                <div id="chart2" class="areaChart"></div>
+                <div id="chart3" class="areaChart"></div>
+                <div id="chart4" class="areaChart"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="swiper-slide">
+          <div class="page">
+            <div class="con" >
+              <div class="num-box">
+                <h3>当前学生卡正在定位</h3>
+                <div id="monitorMap"></div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <div class="swiper-slide">
+          <div class="page page-two">
+            <div class="page-left page-two-left app-page-left">
+              <div class="con">
+                <div class="num-box">
+                  <h3>APP老师用户数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div>
+                <div class="num-box">
+                  <h3>APP老师在线数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div> 
+                <div class="num-box">
+                  <h3>APP家长用户数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div> 
+                <div class="num-box">
+                  <h3>APP家长在线数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div>  
+              </div>
+            </div>
+            <div class="page-right page-two-right">
+              <div class="con">
+                <div class="num-box">
+                  <h3>当前学生卡正在进校数量<span>单位(张)</span></h3>
+                </div>
+                <div id="chart6" class="lineChart"></div>
+              </div>
+              <div class="con">
+                <div class="num-box">
+                  <h3>当前学生卡正在出校数量<span>单位(张)</span></h3>
+                </div>
+                <div id="chart7" class="lineChart"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="page page-three">
+            <div class="page-left page-three-left app-page-left">
+              <div class="con" >
+                <div class="num-box">
+                  <h3>APP老师用户数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div>
+                <div class="num-box">
+                  <h3>APP老师在线数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div> 
+                <div class="num-box">
+                  <h3>APP家长用户数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div> 
+                <div class="num-box">
+                  <h3>APP家长在线数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div>  
+              </div>
+            </div>
+            <div class="page-right page-three-right">
+              <div class="con">
+                <div class="num-box">
+                  <h3>老师端APP使用次数<span>单位(次)</span></h3>
+                </div>
+                <div id="chart8" class="lineChart"></div>
+              </div>
+              <div class="con">
+                <div class="num-box">
+                  <h3>家长端APP使用次数<span>单位(次)</span></h3>
+                </div>
+                <div id="chart9" class="lineChart"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="page page-four">
+            <div class="page-left page-four-left app-page-left">
+              <div class="con">
+                <div class="num-box">
+                  <h3>APP老师用户数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div>
+                <div class="num-box">
+                  <h3>APP老师在线数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div> 
+                <div class="num-box">
+                  <h3>APP家长用户数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div> 
+                <div class="num-box">
+                  <h3>APP家长在线数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div>  
+              </div>
+            </div>
+            <div class="page-right page-four-right">
+              <div class="con">
+                <div class="num-box">
+                  <h3>老师端使用部分功能次数<span>单位(次)</span></h3>
+                </div>
+                <div id="chart10"  class="lineChart"></div>
+              </div>
+              <div class="con">
+                <div class="num-box">
+                  <h3>家长端使用部分功能次数<span>单位(次)</span></h3>
+                </div>
+                <div id="chart11" class="lineChart"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="page page-five">
+            <div class="page-left page-five-left app-page-left">
+              <div class="con">
+                <div class="num-box">
+                  <h3>APP老师用户数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div>
+                <div class="num-box">
+                  <h3>APP老师在线数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div> 
+                <div class="num-box">
+                  <h3>APP家长用户数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div> 
+                <div class="num-box">
+                  <h3>APP家长在线数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div>  
+              </div>
+            </div>
+            <div class="page-right page-five-right ">
+              <div class="con">
+                <div class="num-box">
+                  <h3>老师和家长沟通次数<span>单位(次)</span></h3>
+                </div>
+                <div id="chart12" class="lineChart"></div>
+              </div>
+              <div class="con">
+                <div class="num-box">
+                  <h3>教育/电商第三方广告点击数量<span>单位(次)</span></h3>
+                </div>
+                <div id="chart13" class="lineChart"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="page page-six">
+            <div class="page-left page-six-left app-page-left">
+              <div class="con">
+                <div class="num-box">
+                  <h3>APP老师用户数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div>
+                <div class="num-box">
+                  <h3>APP老师在线数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div> 
+                <div class="num-box">
+                  <h3>APP家长用户数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div> 
+                <div class="num-box">
+                  <h3>APP家长在线数量<span>单位(位)</span></h3>
+                  <p></p>
+                </div>  
+              </div>
+            </div>
+            <div class="page-right page-six-right">
+              <div class="con">
+                <div class="num-box">
+                  <h3>当前学生卡正在消费数量<span>单位(次)</span></h3>
+                </div>
+                <div id="chart14" class="lineCharts"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pagination">
+        </div>
+
+    </div>
+    </if>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- Main Footer -->
+  <include file="Public:footer" />
+</div>
+<!-- ./wrapper -->
+<include file="Public:footer_js" />
+<script type="text/javascript" src="/Public/plugins/echarts/echarts.js"></script>
+<script type="text/javascript" src="/Public/plugins/swiper/swiper-3.4.2.jquery.min.js"></script>
+<script type="text/javascript" src="/Public/plugins/swiper/swiper.animate1.0.2.min.js"></script>
+<script type="text/javascript">
+var user_type = "{$user_type}"; // 用户类型 1学校管理员 2系统用户 3老师 4家长 5省/直辖市教委 6 市教委 7 区/县教委  
+</script>
+<script id="indexecharts" type="text/javascript" src="/Public/plugins/echarts/indexecharts.js"></script>  
+<script type="text/javascript">
+  $(document).ready(function() {
+    var url  = "/Public/plugins/echarts/indexecharts.js";
+    var url1 = "/Public/plugins/echarts/indexecharts1.js";
+    $(document).delegate('#changeModel1', 'click', function() {
+      console.log($(this).hasClass('active'))
+      mySwiper.destroy(false);
+      if ($(this).hasClass('active')) {
+        $(this).removeClass('active');
+        jQuery.getScript(url, function(data, status, jqxhr) {});
+        // jQuery.ajax({
+        //   url: url,
+        //   dataType: "script",
+        //   cache: false
+        // })
+      } else {
+        $(this).addClass('active');
+        jQuery.getScript(url1, function(data, status, jqxhr) {});
+        // jQuery.ajax({
+        //   url: url1,
+        //   dataType: "script",
+        //   cache: false
+        // })
+      };
+    });
+  })
+</script>
+</body>
+</html>

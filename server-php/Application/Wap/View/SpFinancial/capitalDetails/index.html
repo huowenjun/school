@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>我的邀请页面</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="no">
+<link rel="stylesheet" type="text/css" href="/Public/SpFinancial/css/phone.css" />
+<link rel="stylesheet" type="text/css" href="/Public/SpFinancial/css/custom.css" />
+<script type="text/javascript" src="/Public/SpFinancial/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/SpFinancial/js/rem.js"></script>
+</head>
+<body class="bg">
+<div class="main invitePage">
+  <div class="header">
+    <div class="cont">
+      <span class="txt">我的邀请</span>
+    </div>
+  </div>
+  <!-- 内容 -->
+  <div class="content">
+    <div class="section">
+      <h2 class="tit"><span class="line"></span>基本信息</h2>
+      <div class="userInfo">
+        <span class="phone js_phone"></span>
+        <span class="type js_type"></span>
+      </div>
+    </div>
+    <div class="section">
+      <h2 class="tit"><span class="line"></span>邀请人员统计信息</h2>
+      <div id="personnel" style="width: 20.0rem; height: 10.9375rem;"></div>
+    </div>
+    <div class="section">
+      <h2 class="tit"><span class="line"></span>邀请人员地域统计信息</h2>
+      <div id="region" style="width: 20.0rem; height: 10.9375rem;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 统计图 -->
+<script type="text/javascript" src="/Public/SpFinancial/js/echarts.min.js"></script>
+
+<script type="text/javascript">
+var user_id = getUrlParam('user_id');
+
+// 数据请求
+$.ajax({
+  url: '/index.php/wap/SpFinancial/userAccount',
+  type: 'post',
+  dataType: 'json',
+  // data: {user_id: user_id},
+  // data: {user_id: '415328'},
+  data: {user_id: '5094'},
+  success: function(msg) {
+    console.log(msg)
+    $('.js_phone').text(msg.data.userInfo.username);
+    $('.js_type').text(msg.data.userInfo.type);
+    
+    // 基于准备好的dom，初始化echarts
+    var myChart1 = echarts.init(document.getElementById('personnel'));
+    // 邀请人员统计信息（指定图表的配置项和数据）
+    var scale = 1;
+    var echartData = msg.data.num;
+    var rich = {
+        yellow: {
+            color: "#ffc72b",
+            fontSize: 10 * scale, // 百分率数
+            padding: [5, 4],
+            align: 'center'
+        },
+        total: {
+            color: "#ffc72b",
+            fontSize: 20 * scale, // 总数
+            align: 'center'
+        },
+        white: {
+            color: "#fff",
+            align: 'center',
+            fontSize: 10 * scale, // 标注名
+            padding: [8, 0]
+        },
+        hr: {
+            borderColor: '#0b5263',
+            width: '100%',
+            borderWidth: 1,
+            height: 0,
+        }
+    }
+    option1 = {
+        backgroundColor: '#031f2d',
+        title: {
+            text: '总人数',
+            left: 'center',
+            top: '43%',
+            padding: [24, 0],
+            textStyle: {
+                color: '#fff',
+                fontSize: 12 * scale,
+                align: 'center'
+            }
+        },
+        legend: {
+            selectedMode: false,
+            formatter: function(name) {
+                var total = 0; // 各科正确率总和
+                var averagePercent; // 综合正确率
+                echartData.forEach(function(value, index, array) {
+                    total += value.value;
+                });
+                return '{total|' + total + '}';
+            },
+            data: [echartData[0].name],
+            // data: ['高等教育学'],
+            // itemGap: 50,
+            left: 'center',
+            top: 'center',
+            icon: 'none',
+            align: 'center',
+            textStyle: {
+                color: "#fff",
+                fontSize: 16 * scale,
+                rich: rich
+            },
+        },
+        series: [{
+            name: '总数量',
+            type: 'pie',
+            radius: ['42%', '50%'],
+            hoverAnimation: false,
+            color: ['#c487ee', '#deb140', '#49dff0', '#034079', '#6f81da', '#00ffb4'],
+            label: {
+                normal: {
+                    formatter: function(params, ticket, callback) {
+                        var total = 0; // 人员总数量
+                        var percent = 0; // 人员占比
+                        echartData.forEach(function(value, index, array) {
+                            total += value.value;
+                        });
+                        percent = ((params.value / total) * 100).toFixed(1);
+                        return '{white|' + params.name + '}\n{hr|}\n{yellow|' + params.value + '}\n{blue|' + percent + '%}';
+                    },
+                    rich: rich
+                },
+            },
+            labelLine: {
+                normal: {
+                    length: 55 * scale,
+                    length2: 0,
+                    lineStyle: {
+                        color: '#0b5263'
+                    }
+                }
+            },
+            data: echartData
+        }]
+    };
+    // 使用刚指定的配置项和数据显示图表
+    myChart1.setOption(option1);
+
+    // 柱状图
+    var myChart2 = echarts.init(document.getElementById('region'));
+    option2 = {
+        color: ['#3398DB'],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                data: msg.data.barGraph.province,
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '直接访问',
+                type: 'bar',
+                barWidth: '60%',
+                // data:[10, 52, 200, 334, 390, 330, 220]
+                data: msg.data.barGraph.num
+            }
+        ]
+    };
+    myChart2.setOption(option2);
+  },
+  error: function() {
+    alert('请求服务器异常！')
+  }
+})
+
+$('.js_list li').each(function(index, el) {
+  var href = $(this).find('a').data('href');
+  $(this).find('a').attr('href', href + '&user_id=' + getUrlParam('user_id') + '&prov=' + getUrlParam('province') + '&city=' + getUrlParam('city'));
+});
+
+// 获取当前页面网址参数
+function getUrlParam(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+  var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+  if (r != null) {
+    return decodeURI(r[2]);
+  };
+  return null; // 返回参数值
+}
+</script>
+</body>
+</html>

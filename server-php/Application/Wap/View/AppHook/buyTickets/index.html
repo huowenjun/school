@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>淘票</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="no">
+<link rel="stylesheet" type="text/css" href="/Public/AppHook/css/phone.css" />
+<!-- 日历 -->
+<link rel="stylesheet" href="/Public/Wechat/css/weui.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui2.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui3.css" />
+
+<script type="text/javascript" src="/Public/AppHook/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/AppHook/js/rem.js"></script>
+</head>
+<body class="buyTicketsBg">
+<div class="main buyTickets">
+  <!-- 内容 -->
+	<div class="contents">
+    <div class="topInfo">
+      <ul class="tab js_tab">
+        <li class="active" orderType="7">国内|国际机票</li>
+        <li orderType="6">火车票</li>
+      </ul>
+      <div class="address">
+        <span id="from" class="from js_addr" addrType="1" infoCode="PEK" infoName="北京">北京</span>
+        <img class="js_switch" src="/Public/AppHook/img/icon_switch.png" alt="" />
+        <span id="to" class="to js_addr" addrType="2" infoCode="SZX" infoName="深圳">深圳</span>
+      </div>
+      <div class="dates">
+        <span class="date"><input id="date" type="text" value="" placeholder="请选择日期" /></span>
+        <!-- <span class="more">&gt;</span> -->
+      </div>
+      <a class="subBtn2 js_subBtn" href="javascript:void(0);">开始搜索</a>
+    </div>
+    <!-- 火车票/飞机票列表 -->
+    <div class="infoList js_infoList"></div>
+
+    <!-- 加载动画 -->
+    <div class="spinner js_spinner" style="display: none">
+      <div class="spinner-container spinner-container1">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+      </div>
+      <div class="spinner-container spinner-container2">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+      </div>
+      <div class="spinner-container spinner-container3">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 搜索弹出层 -->
+  <div class="mask js_mask">
+    <div class="tit">
+      <div class="search">
+        <img class="icon_search" src="/Public/AppHook/img/icon_search.png" alt="" />
+        <input type="text" class="searchInfo form-control" id="searchInfo" addrType="" value="" />
+        <img class="icon_del js_icon_del" src="/Public/AppHook/img/icon_del.png" alt="" />
+      </div>
+      <span class="txt js_cancel">取消</span>
+    </div>
+    <!-- 筛选城市 -->
+    <ul class="list js_city_list"></ul>
+  </div>
+</div>
+
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<!-- 自定义js文件 -->
+<script type="text/javascript" src="/Public/Wechat/js/phone.js"></script>
+<!-- 选择日期时间 -->
+<script type="text/javascript" src="/Public/Wechat/js/picker.js"></script>
+
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<!-- layer弹出层 -->
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript">
+// 日历 初始化
+$("#date").datetimePicker({title:"选择日期",m:1});
+
+// 地址切换
+$('.js_switch').click(function() {
+  var from = $('#from').text();
+  var to   = $('#to').text();
+  $('#from').text(to);
+  $('#to').text(from);
+})
+
+// 点击始发地/目的地
+$('#from, #to').click(function() {
+  var addrType = $(this).attr('addrType');
+  $('#searchInfo').attr('addrType', addrType);
+  // js顺序不能变
+  $('.js_mask').show();
+  var windowH = $(window).height();
+  var titH    = $('.js_mask .tit').outerHeight();
+  var listH   = windowH - titH;
+  $('.js_city_list').css('height', listH);
+})
+
+// 清空
+$('.js_icon_del').click(function() {
+  $('#searchInfo').val('');
+  $(this).hide();
+  $('.js_city_list').html('');
+})
+
+// 点击取消
+$('.js_cancel').click(function() {
+  $('.js_mask').hide();
+  $('#searchInfo').val('');
+  $('.js_city_list').html('');
+})
+
+// 选择城市 赋值
+$('.js_city_list').delegate('.js_select', 'click', function() {
+  var infoName = $(this).find('.js_infoName').text();
+  var infoCode = $(this).find('.js_infoCode').text();
+  $('.js_addr[addrType=' + $("#searchInfo").attr("addrType") + ']').attr({'infoCode': infoCode, 'infoName': infoName}).text(infoName);;
+  $('.js_mask').hide();
+  $('#searchInfo').val('');
+  $('.js_city_list').html('');
+});
+
+// 筛选城市
+$('#searchInfo').on('input',function() {
+  var activeType = $('.js_tab .active').attr('orderType');
+  var thisVal    = $(this).val();
+  if (thisVal == '') {
+    $('.js_icon_del').hide();
+    $('.js_city_list').html('');
+  } else {
+    $('.js_icon_del').show();
+    // ajax 数据请求
+    $.ajax({
+      url: '/index.php/wap/TrainTickets/associateTrainTickets',
+      type: 'post',
+      dataType: 'json',
+      data: {addr: thisVal, type: activeType},
+      success: function(msg) {
+        var html = '';
+        var obj  = msg.data;
+        if (obj == null || obj == '') {
+          $('.js_city_list').html('<div class="null">搜索无结果！</div>');
+        } else {
+          for (var i = 0; i < obj.length; i++) {
+            html += '<li class="js_select">' +
+                      '<span class="info info1">城市</span>' +
+                      '<span class="info info2 js_infoName">' + obj[i].name + '</span>' +
+                      '<span class="info info3 js_infoCode">' + obj[i].code + '</span>' +
+                    '</li>'
+          };
+          $('.js_city_list').html(html);
+        };
+      },
+      error: function() {
+        dialog.error('请求服务器异常！')
+      }
+    })
+  };
+})
+
+// tab切换 飞机票/火车票
+$('.js_tab li').click(function() {
+  $('.js_infoList').html('');
+  $(this).addClass('active').siblings('li').removeClass('active');
+});
+
+// 点击搜索
+$('.js_subBtn').click(function() {
+  if ($('#date').val() == '') {
+    dialog.notify('请选择日期！');
+  } else {
+    $('.js_infoList').html('');
+    $('.js_spinner').show();
+    if ($('.js_tab .active').attr('orderType') == '6') {
+      trainTickets();
+    } else {
+      airTicket();
+    };
+  };
+});
+
+// 显示隐藏
+$('.js_infoList').delegate('.js_expand', 'click', function() {
+  $(this).find('.js_showHideBtn').toggleClass('active');
+  $(this).siblings('.js_submenu').toggleClass('active');
+});
+
+// 预约购买地址
+$('body').delegate('.js_appointmentBuy', 'click', function() {
+  var _thisA      = $(this).parents('.js_list');
+  var _thisB      = $(this).parents('.js_submenuList');
+  var userId      = getUrlParam('user_id');
+  var date        = $('#date').val();
+  var startTime   = _thisA.find('.js_startTime').text();
+  var startName   = _thisA.find('.js_currentStartStationName').text();
+  var trainNumber = _thisA.find('.js_trainNumber').text();
+  var runTime     = _thisA.find('.js_runTime').text();
+  var endTime     = _thisA.find('.js_endTime').text();
+  var endName     = _thisA.find('.js_currentEndStationName').text();
+  var seat        = _thisB.find('.js_seat').text();
+  var price       = _thisB.find('.js_price').text();
+  var activeType  = $('.js_tab .active').attr('orderType');
+  var typeName;
+  var flightCompanyCode;
+  var seatCode;
+  var orgCity;
+  var dstCity;
+  if (activeType == '6') {
+    typeName = '火车票';
+    window.location.href = '/index.php/Wap/AppHook/order?user_id=' + userId + '&date=' + date + '&startTime=' + startTime + '&startName=' + startName + '&trainNumber=' + trainNumber + '&runTime=' + runTime + '&endTime=' + endTime + '&endName=' + endName + '&seat=' + seat + '&price=' + price + '&activeType=' + activeType + '&typeName=' + typeName;
+  } else {
+    orgCity           = _thisA.find('.js_currentStartStationName').attr('from');
+    dstCity           = _thisA.find('.js_currentEndStationName').attr('to');
+    typeName          = '飞机票';
+    flightCompanyCode = _thisA.attr('flightCompanyCode');
+    seatCode          = $(this).attr('seatCode');
+    window.location.href = '/index.php/Wap/AppHook/order?user_id=' + userId + '&date=' + date + '&startTime=' + startTime + '&startName=' + startName + '&trainNumber=' + trainNumber + '&runTime=' + runTime + '&endTime=' + endTime + '&endName=' + endName + '&seat=' + seat + '&price=' + price + '&activeType=' + activeType + '&typeName=' + typeName + '&flightCompanyCode=' + flightCompanyCode + '&seatCode=' + seatCode + '&orgCity=' + orgCity + '&dstCity=' + dstCity;
+  };
+});
+
+function secondToDate(msd) {
+  var time = msd;
+  if (null != time && "" != time) {
+    if (time > 60 && time < 60 * 60) {
+      time = parseInt(time / 60.0) + "分" + parseInt((parseFloat(time / 60.0) -
+      parseInt(time / 60.0)) * 60) + "秒";
+    }
+    else if (time >= 60 * 60 && time < 60 * 60 * 24) {
+      time = parseInt(time / 3600.0) + "小时" + parseInt((parseFloat(time / 3600.0) -
+      parseInt(time / 3600.0)) * 60) + "分" +
+      parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
+      parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + "秒";
+    } else if (time >= 60 * 60 * 24) {
+      time = parseInt(time / 3600.0/24) + "天" +parseInt((parseFloat(time / 3600.0/24)-
+      parseInt(time / 3600.0/24))*24) + "小时" + parseInt((parseFloat(time / 3600.0) -
+      parseInt(time / 3600.0)) * 60) + "分" +
+      parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
+      parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + "秒";
+    } else {
+      time = parseInt(time) + "秒";
+    }
+  }
+  return time;
+}
+
+// 获取火车票信息列表
+function trainTickets() {
+  var from = $('#from').attr('infoName');
+  var to   = $('#to').attr('infoName');
+  var date = $('#date').val();
+  // ajax 数据请求
+  $.ajax({
+    url: '/index.php/wap/TrainTickets/startSearch',
+    type: 'post',
+    dataType: 'json',
+    data: {from: from, to: to, date: date},
+    success: function(msg) {
+      if(msg != 0) {
+        $('.js_spinner').hide();
+      }
+      var html = '';
+      if (msg.data == null || msg.data == '') {
+        $('.js_infoList').html('<div class="null">抱歉，当前铁路线路不存在！</div>');
+      } else {
+        var obj = msg.data.trainline;
+        for (var i = 0; i < obj.length; i++) {
+          var obj2 = obj[i].trainSeats.trainSeat;
+            html += '<div class="list js_list">' +
+                      '<div class="rows">' +
+                        '<div class="row row1">' +
+                          '<span class="top js_startTime">' + obj[i].startTime + '</span>' +
+                          '<span class="bottom js_currentStartStationName" from="' + obj[i].currentStartStationName + '">' + obj[i].currentStartStationName + '</span>' +
+                        '</div>' +
+                        '<div class="row row2">' +
+                          '<span class="top js_trainNumber">' + obj[i].trainNumber + '</span>' +
+                          '<span class="bottom js_runTime">' + secondToDate(obj[i].runTime) + '</span>' +
+                        '</div>' +
+                        '<div class="row row3">' +
+                          '<span class="top js_endTime">' + obj[i].endTime + '</span>' +
+                          '<span class="bottom js_currentEndStationName" to="' + obj[i].currentEndStationName + '">' + obj[i].currentEndStationName + '</span>' +
+                        '</div>';
+                      if (obj2 != null) {
+              html +=   '<div class="row row4">' +
+                          '<span class="top">' + '￥<em class="js_startPrice"></em> <span class="txt">起</span>' + '</span>' +
+                        '</div>';
+                      }
+              html += '</div>' +
+                      '<div class="submenu js_submenu">';
+            if (obj2 != null) {
+              for (var j = 0; j < obj2.length; j++) {
+                html += '<div class="submenuList js_submenuList">' +
+                          '<span class="row js_seat">' + obj2[j].seatName + '</span>' +
+                          '<span class="row">' + obj2[j].remainderTrainTickets + '</span>' +
+                          '<span class="row row3">￥<em class="price js_price">' + obj2[j].seatPrice + '</em> <a class="btn js_appointmentBuy">预约购买</a></span>' +
+                        '</div>';
+              }
+            }
+              html += '</div>' +
+                      '<div class="expand js_expand">';
+            if (obj2 == null) {
+              html +=   '<span style="color: #999;">无票</span>';
+            } else {
+              html +=   '<span>预约购买</span> <img class="showHideBtn js_showHideBtn" src="/Public/AppHook/img/icon_arrow2.png" alt="" />';
+            }
+              html += '</div>' +
+                    '</div>'
+        };
+        $('.js_infoList').html(html);
+        $('.js_infoList .js_list').each(function(index, el) {
+          if ($(this).find('.js_price').length > 0) {
+            $(this).find('.js_startPrice').text($(this).find('.js_price').eq(0).text());
+          };
+        });
+      };
+    },
+    error: function() {
+      dialog.error('请求服务器异常！')
+    }
+  })
+}
+
+// 获取飞机票信息列表
+function airTicket() {
+  var from = $('#from').attr('infoCode');
+  var to   = $('#to').attr('infoCode');
+  var date = $('#date').val();
+  // ajax 数据请求
+  $.ajax({
+    url: '/index.php/Wap/Plane/getLineList',
+    type: 'post',
+    dataType: 'json',
+    data: {from: from, to: to, date: date},
+    success: function(msg) {
+      if(msg != 0) {
+        $('.js_spinner').hide();
+      }
+      var html = '';
+      var obj  = msg.data.info;
+      if (obj == null || obj == '') {
+        $('.js_infoList').html('<div class="null">抱歉，当前线路航班不存在！</div>');
+      } else {
+        for (var i = 0; i < obj.length; i++) {
+          var obj2 = obj[i].airSeats.airSeat;
+            html += '<div class="list airTicket js_list" flightCompanyCode="' + obj[i].flightCompanyCode + '">' +
+                      '<div class="rows">' +
+                        '<div class="row row1">' +
+                          '<span class="top js_startTime">' + obj[i].depTime + '</span>' +
+                          '<span class="bottom js_currentStartStationName" from="' + obj[i].orgCity + '">' + obj[i].orgCityName + '</span>' +
+                        '</div>' +
+                        '<div class="row row2">' +
+                          '<span class="top js_trainNumber">' + obj[i].flightNo + '</span>' +
+                          '<span class="bottom js_runTime">' + obj[i].flightCompanyName + '</span>' +
+                        '</div>' +
+                        '<div class="row row3">' +
+                          '<span class="top js_endTime">' + obj[i].arriTime + '</span>' +
+                          '<span class="bottom js_currentEndStationName" to="' + obj[i].dstCity + '">' + obj[i].dstCityName + '</span>' +
+                        '</div>';
+                      if (obj2 != null) {
+              html +=   '<div class="row row4">' +
+                          '<span class="top">' + '￥<em class="js_startPrice"></em> <span class="txt">起</span>' + '</span>' +
+                        '</div>';
+                      }
+              html += '</div>' +
+                      '<div class="submenu js_submenu">';
+            if (obj2 != null) {
+              for (var j = 0; j < obj2.length; j++) {
+                html += '<div class="submenuList js_submenuList">' +
+                '<span class="row row1">' + obj2[j].discount + '折<em class="js_seat">' + obj2[j].seatMsg + '</em></span>' +
+                          '<span class="row row2">' + obj2[j].seatStatus + '</span>' +
+                          '<span class="row row3">折后价￥<em class="price js_price">' + obj2[j].parPrice + '</em> <a class="btn js_appointmentBuy" seatCode="' + obj2[j].seatCode + '">订</a></span>' +
+                        '</div>';
+              }
+            }
+              html += '</div>' +
+                      '<div class="expand js_expand">';
+            if (obj2 == null) {
+              html +=   '<span style="color: #999;">无票</span>';
+            } else {
+              html +=   '<span>预约购买</span> <img class="showHideBtn js_showHideBtn" src="/Public/AppHook/img/icon_arrow2.png" alt="" />';
+            }
+              html += '</div>' +
+                    '</div>'
+        };
+        $('.js_infoList').html(html);
+        $('.js_infoList .js_list').each(function(index, el) {
+          if ($(this).find('.js_price').length > 0) {
+            $(this).find('.js_startPrice').text($(this).find('.js_price').eq(0).text());
+          };
+        });
+      };
+    },
+    error: function() {
+      dialog.error('请求服务器异常！')
+    }
+  })
+}
+
+// 获取当前页面网址参数
+function getUrlParam(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+  var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+  if (r != null) {
+    return decodeURI(r[2]);
+  };
+  return null; // 返回参数值
+}
+</script>
+</body>
+</html>

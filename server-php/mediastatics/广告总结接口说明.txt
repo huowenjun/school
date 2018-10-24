@@ -1,0 +1,23 @@
+移动端广告统计接口说明：
+
+ntime 当前时间
+adid  当前展示 / 点击 的广告ID
+region_id 地区ID : 省-市-区
+sid  学校ID
+type  统计类型：当前是 1 展示统计 还是 2 点击统计 3 按天统计
+mac 当前手机的MAC地址 
+mobile 当前登录的账号
+rand 	随机数  不限位数
+token  adid + regionid + sid + school.xinpingtai.com + ntime + rand 的MD5值 
+
+接口地址：
+http://school.xinpingtai.com/getadstatics.php? 
+
+DEMO：
+http://school.xinpingtai.com/getadstatics.php?ntime=2017-10-10 12:43:58&adid=163&region_id=151515&sid=010123&type=2&mac=00-11-22-33-44&mobile=15652933152&rand=168&token=a7692b67e177df28e54644155e0c0dba
+
+http://school.xinpingtai.com/getadstatics.php?ntime=2017-10-10 12:43:58&adid=163&region_id=151515&sid=010123&type=2&mac=00-11-22-33-44&mobile=15652933152&rand=170&token=7b23c8d346d5b5ecfee363928ed12e23
+
+
+表名：
+sch_statics_uion

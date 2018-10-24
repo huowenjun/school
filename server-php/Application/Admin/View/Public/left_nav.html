@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+      <!-- Sidebar user panel (optional) -->
+      <!-- <div class="user-panel">
+        <div class="pull-left image">
+          <img src="/Public/dist/img/user.png" class="img-circle" alt="User Image" />
+        </div>
+        <div class="pull-left info">
+          <p>{$name}</p>
+          <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+        </div>
+      </div> -->
+
+      <!-- search form (Optional) -->
+      <!-- <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="搜索...">
+          <span class="input-group-btn">
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+      </form> -->
+      <!-- /.search form -->
+
+      <!-- Sidebar Menu -->
+      <div class="slimScroll js_slimScroll">
+      {$ruleList}
+        <!-- <ul class="sidebar-menu">
+          <li class="header">校务管理</li>
+          <li>
+            <a href="/index.php/Admin/School/SchInformation/index">
+              <i class="fa fa-circle-o"></i>
+              <span>学校信息</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/School/SchArea/index">
+              <i class="fa fa-circle-o"></i>
+              <span>校区管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/School/Dept/index">
+              <i class="fa fa-circle-o"></i>
+              <span>部门管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/School/Grade/index">
+              <i class="fa fa-circle-o"></i>
+              <span>年级管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/School/Course/index">
+              <i class="fa fa-circle-o"></i>
+              <span>课程管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/School/Class/index">
+              <i class="fa fa-circle-o"></i>
+              <span>班级管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/School/Student/index">
+              <i class="fa fa-circle-o"></i>
+              <span>学生管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/School/Teacher/index">
+              <i class="fa fa-circle-o"></i>
+              <span>教师管理</span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="sidebar-menu">
+          <li class="header">家校互动</li>
+          <li>
+            <a href="/index.php/Admin/Parent/Online/index">
+              <i class="fa fa-circle-o"></i>
+              <span>在线咨询</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Parent/Homework/index">
+              <i class="fa fa-circle-o"></i>
+              <span>作业管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Parent/Reward/index">
+              <i class="fa fa-circle-o"></i>
+              <span>奖励管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Parent/Examination/index">
+              <i class="fa fa-circle-o"></i>
+              <span>考试管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Parent/Result/index">
+              <i class="fa fa-circle-o"></i>
+              <span>成绩管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Parent/Comment/index">
+              <i class="fa fa-circle-o"></i>
+              <span>评语管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Parent/Timetable/index">
+              <i class="fa fa-circle-o"></i>
+              <span>课程表管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Parent/MyMessage/index">
+              <i class="fa fa-circle-o"></i>
+              <span>我的消息</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Parent/Message/index">
+              <i class="fa fa-circle-o"></i>
+              <span>短信管理</span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="sidebar-menu">
+          <li class="header">电子学生证设置</li>
+          <li>
+            <a href="/index.php/Admin/StuCard/SthCardSet/index">
+              <i class="fa fa-circle-o"></i>
+              <span>学生证设置</span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="sidebar-menu">
+          <li class="header">考勤管理</li>
+          <li>
+            <a href="/index.php/Admin/Atnd/RealTime/index">
+              <i class="fa fa-circle-o"></i>
+              <span>实时签到</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Atnd/AtndRecord/index">
+              <i class="fa fa-circle-o"></i>
+              <span>考勤记录</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Atnd/AtndManage/index">
+              <i class="fa fa-circle-o"></i>
+              <span>考勤规则</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Atnd/LeaveManage/index">
+              <i class="fa fa-circle-o"></i>
+              <span>请假管理</span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="sidebar-menu">
+          <li class="header">安全管理</li>
+          <li>
+            <a href="/index.php/Admin/Scy/Monitor/index">
+              <i class="fa fa-circle-o"></i>
+              <span>实时监控</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Scy/TrackPlayback/index">
+              <i class="fa fa-circle-o"></i>
+              <span>足迹回放</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Scy/SafeArea/index">
+              <i class="fa fa-circle-o"></i>
+              <span>安全区域</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Scy/WarnInfo/index">
+              <i class="fa fa-circle-o"></i>
+              <span>报警信息</span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="sidebar-menu">
+          <li class="header">设备管理</li>
+          <li>
+            <a href="/index.php/Admin/Device/DeviceManage/index">
+              <i class="fa fa-circle-o"></i>
+              <span>设备管理</span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="sidebar-menu">
+          <li class="header">系统管理</li>
+          <li>
+            <a href="/index.php/Admin/Sys/Users/index">
+              <i class="fa fa-circle-o"></i>
+              <span>用户管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Sys/Group/index">
+              <i class="fa fa-circle-o"></i>
+              <span>角色管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Sys/Rule/index">
+              <i class="fa fa-circle-o"></i>
+              <span>角色权限</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Sys\AdminUser/index">
+              <i class="fa fa-circle-o"></i>
+              <span>新建系统用户</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.php/Admin/Sys/Log/index">
+              <i class="fa fa-circle-o"></i>
+              <span>日志管理</span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="sidebar-menu">
+          <li class="header">学校管理</li>
+          <li>
+            <a href="/index.php/Admin/School/SchManage/index">
+              <i class="fa fa-circle-o"></i>
+              <span>学校管理</span>
+            </a>
+          </li>
+        </ul> -->
+      </div>
+    </section>
+    <!-- /.sidebar -->
+  </aside>

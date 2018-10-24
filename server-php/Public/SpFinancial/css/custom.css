@@ -1,0 +1,18 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors LJS (1114510520@qq.com)
+ * @date    2017-02-07 17:06:46
+ * @version $Id$
+ */
+
+/* 我的邀请页面 */
+.invitePage .header { background: #0475c3; padding: 0.625rem 0; text-align: center; }
+.invitePage .header .txt { color: #ffffff; font-size: 0.9375rem; }
+.invitePage .content { font-size: 0.625rem; }
+.invitePage .content .section { background: #ffffff; margin-bottom: 0.5625rem; }
+.invitePage .content .section .tit { font-size: 0.75rem; color: #333333; padding: 0.5625rem 0; margin: 0 0.75rem; border-bottom: 1px solid #e3e3e3; }
+.invitePage .content .section .tit .line { display: inline-block; position: relative; top: 0.09375rem; width: 0.1875rem; height: 0.75rem; background: #0475c3; margin-right: 0.375rem; }
+.invitePage .content .section .userInfo { padding: 0.625rem; font-size: 0.6875rem; }
+.invitePage .content .section .userInfo .phone { margin: 0 0.625rem; }
+

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>我的邀请</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="no">
+<link rel="stylesheet" type="text/css" href="/Public/WeFinancial/css/phone.css" />
+<link rel="stylesheet" type="text/css" href="/Public/WeFinancial/css/custom.css" />
+<script type="text/javascript" src="/Public/WeFinancial/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/WeFinancial/js/rem.js"></script>
+</head>
+<body class="bg">
+<div class="main invitePage">
+  <!-- 内容 -->
+  <div class="content">
+    <div class="section1">
+      <img class="img js_img" src="" alt="" />
+      <div class="user_info">
+        <div class="phone js_phone"></div>
+        <div class="type js_type"></div>
+        <div class="addr js_addr" style="font-size: 0.693333rem; color: #FFF;"></div>
+      </div>
+    </div>
+    <div class="section">
+      <h2 class="tit"><img class="icon" src="/Public/WeFinancial/img/img_personnel.png" alt="" />邀请人员统计信息</h2>
+      <div class="tu">
+        <div id="personnel" class="personnel"></div>
+        <div class="mask_tus js_mask_tus"></div>
+      </div>
+      <div class="txtInfo js_txtInfo">
+        <!-- <span class="txt js_val0"></span>
+        <span class="txt js_val1"></span>
+        <span class="txt js_val2"></span> -->
+      </div>
+    </div>
+    <div class="section">
+      <h2 class="tit"><img class="icon" src="/Public/WeFinancial/img/icon_area.png" alt="" />邀请人员地域统计信息</h2>
+      <div id="region" class="region"></div>
+    </div>
+  </div>
+
+  <!-- 邀请人员统计信息 详情列表弹出层 -->
+  <div class="mask js_mask">
+    <div class="popup">
+      <div class="tit js_tit">
+        <em class="cancel js_cancel">X</em>
+      </div>
+      <div class="search">
+        <select class="select js_select">
+          <option value="0">最近一周</option>
+          <option value="1">最近半月</option>
+          <option value="2">最近一月</option>
+          <option value="3">最近三月</option>
+          <option value="4">最近半年</option>
+          <option value="5">最近一年</option>
+        </select>
+        <div class="people_count">总数：<em class="js_people_count"></em>人</div>
+      </div>
+      <div class="list_cont js_list_cont"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 统计图 -->
+<script type="text/javascript" src="/Public/WeFinancial/js/echarts.min.js"></script>
+
+<!-- 弹出层 -->
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript">
+var user_id = localStorage.getItem("user_id"); // 获取本地user_id
+
+// 数据请求
+$.ajax({
+  url: '/index.php/wap/WeFinancial/userAccount',
+  type: 'post',
+  dataType: 'json',
+  data: {user_id: user_id},
+  success: function(msg) {
+    $('.js_img').attr('src', msg.data.userInfo.head_portrait);
+    $('.js_phone').text(msg.data.userInfo.username);
+    $('.js_type').text(msg.data.userInfo.type);
+    $('.js_addr').text(msg.data.userInfo.province+msg.data.userInfo.city);
+
+    // $('.js_val0').text(msg.data.num[0].name);
+    // $('.js_val1').text(msg.data.num[1].name);
+    // $('.js_val2').text(msg.data.num[2].name);
+
+    // // 求3种被邀请人员总人数
+    // var num1 = parseInt(msg.data.num[0].value);
+    // var num2 = parseInt(msg.data.num[1].value);
+    // var num3 = parseInt(msg.data.num[2].value);
+    // var sum  = num1 + num2 + num3;
+    // // 3种被邀请人分别占总数的比例
+    // if (sum == 0) { // 0不能做除数
+    //   var num1_1 = 0;
+    //   var num2_2 = 0;
+    //   var num3_3 = 0;
+    // } else {
+    //   var num1_1 = parseInt(num1/sum*100);
+    //   var num2_2 = parseInt(num2/sum*100);
+    //   var num3_3 = parseInt(num3/sum*100);
+    // };
+    // // 圆形空缺数
+    // var num1_surplus = 100 - num1_1;
+    // var num2_surplus = 100 - num2_2;
+    // var num3_surplus = 100 - num3_3;
+
+    // 基于准备好的dom，初始化echarts
+    var myChart1 = echarts.init(document.getElementById('personnel'));
+    // 邀请人员统计信息（指定图表的配置项和数据）
+    defaultOption = [
+      {
+        "center": [ // 圆位置
+          "14.5%",
+          "50%"
+        ],
+        "radius": [ // 圆半径
+          "75%",
+          "76%"
+        ],
+        "clockWise": false,
+        "hoverAnimation": false,
+        "type": "pie",
+        "itemStyle": {
+          "normal": {
+            "label": {
+              "show": true,
+              "textStyle": { // 文本样式
+                  "fontSize": 15,
+                  "fontWeight": "bold"
+              },
+              "position": "center"
+            },
+            "labelLine": {
+              "show": false
+            },
+            "color": "#333333",
+            "borderColor": "#db3981",
+            "borderWidth": 4
+          },
+          "emphasis": {
+            "label": {
+              "textStyle": {
+                "fontSize": 15,
+                "fontWeight": "bold"
+              }
+            },
+            "color": "#333333",
+            "borderColor": "#db3981",
+            "borderWidth": 4
+          }
+        },
+        "data": [
+          {
+            "value": 0,
+            "name": 0
+          },
+          {
+            "name": " ",
+            "value": 0,
+            "itemStyle": {
+              "normal": {
+                "label": {
+                  "show": false
+                },
+                "labelLine": {
+                  "show": false
+                },
+                "color": "#f3b8d2",
+                "borderColor": "#f3b8d2",
+                "borderWidth": 2
+              },
+              "emphasis": {
+                "color": "#f3b8d2",
+                "borderColor": "#f3b8d2",
+                "borderWidth": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "center": [
+          "50%",
+          "50%"
+        ],
+        "radius": [
+          "75%",
+          "76%"
+        ],
+        "clockWise": false,
+        "hoverAnimation": false,
+        "type": "pie",
+        "itemStyle": {
+          "normal": {
+            "label": {
+              "show": true,
+              "textStyle": {
+                  "fontSize": 15,
+                  "fontWeight": "bold"
+              },
+              "position": "center"
+            },
+            "labelLine": {
+              "show": false
+            },
+            "color": "#333333",
+            "borderColor": "#ffe532",
+            "borderWidth": 4
+          },
+          "emphasis": {
+            "label": {
+              "textStyle": {
+                "fontSize": 15,
+                "fontWeight": "bold"
+              }
+            },
+            "color": "#333333",
+            "borderColor": "#ffe532",
+            "borderWidth": 4
+          }
+        },
+        "data": [
+          {
+            "value": 0,
+            "name": 0
+          },
+          {
+            "name": " ",
+            "value": 0,
+            "itemStyle": {
+              "normal": {
+                "label": {
+                  "show": false
+                },
+                "labelLine": {
+                  "show": false
+                },
+                "color": "#fff6b9",
+                "borderColor": "#fff6b9",
+                "borderWidth": 2
+              },
+              "emphasis": {
+                "color": "#fff6b9",
+                "borderColor": "#fff6b9",
+                "borderWidth": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "center": [
+          "85.5%",
+          "50%"
+        ],
+        "radius": [
+          "75%",
+          "76%"
+        ],
+        "clockWise": false,
+        "hoverAnimation": false,
+        "type": "pie",
+        "itemStyle": {
+          "normal": {
+            "label": {
+              "show": true,
+              "textStyle": {
+                  "fontSize": 15,
+                  "fontWeight": "bold"
+              },
+              "position": "center"
+            },
+            "labelLine": {
+              "show": false
+            },
+            "color": "#333333",
+            "borderColor": "#2ed7e2",
+            "borderWidth": 4
+          },
+          "emphasis": {
+            "label": {
+              "textStyle": {
+                "fontSize": 15,
+                "fontWeight": "bold"
+              }
+            },
+            "color": "#333333",
+            "borderColor": "#2ed7e2",
+            "borderWidth": 4
+          }
+        },
+        "data": [
+          {
+            "value": 0,
+            "name": 0,
+          },
+          {
+            "name": " ",
+            "value": 0,
+            "itemStyle": {
+              "normal": {
+                "label": {
+                  "show": false
+                },
+                "labelLine": {
+                  "show": false
+                },
+                "color": "#b8f1f5",
+                "borderColor": "#b8f1f5",
+                "borderWidth": 2
+              },
+              "emphasis": {
+                "color": "#b8f1f5",
+                "borderColor": "#b8f1f5",
+                "borderWidth": 0
+              }
+            }
+          }
+        ]
+      }
+    ];
+    var numArr = msg.data.num;
+
+    // DOM
+    var html1 = '';
+    var html2 = '';
+    for (var i = 0; i < numArr.length; i++) {
+      html1 += '<span class="txt js_txt" type="' + numArr[i].type + '">' + numArr[i].name + '</span>';
+      html2 += '<div class="mask_tu js_mask_tu"></div>';
+    };
+    $('.js_txtInfo').html(html1);
+    $('.js_mask_tus').html(html2);
+
+    // 求和
+    var sum = 0;
+    for (var i = 0; i < numArr.length; i++) {
+      sum += parseInt(numArr[i].value);
+    };
+
+    // 遍历取配置项
+    var optionArr = [];
+    for (var i = 0; i < numArr.length; i++) {
+      var arr    = defaultOption[i];
+      var curNum = sum > 0 ? parseInt(numArr[i].value) : "0";
+      var per    = sum > 0 ? parseInt(curNum/sum*100) : 0;
+      var sur    = 100 - per;
+      arr.data[0].value = per;
+      arr.data[0].name  = curNum;
+      arr.data[1].value = sur;
+      optionArr.push(arr);
+    };
+
+    var option = {
+      "series": optionArr
+    }
+    // console.log(option)
+    // 使用刚指定的配置项和数据显示图表
+    myChart1.setOption(option);
+
+    // 柱状图
+    var nums;
+    var province;
+    if (msg.data.barGraph.length == 0) {
+      province = ['北京','天津','黑龙江','河北','山西','辽宁'];
+      nums     = [0, 0, 0, 0, 0, 0];
+    } else {
+      province = msg.data.barGraph.province;
+      nums     = msg.data.barGraph.num;
+    };
+    var myChart2 = echarts.init(document.getElementById('region'));
+    option2 = {
+      title: {
+        // text: '邀请人员地域统计',
+        subtext: '统计'
+      },
+      tooltip: {
+        trigger: 'axis'
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category',
+          data: province,
+          splitLine: {
+            show: false
+          },
+          axisTick: {
+            alignWithLabel: true
+          }
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          splitLine: {
+            show: false
+          },
+          splitArea: {
+            show: true,
+          },
+        }
+      ],
+      series: [
+        {
+          name: '人数',
+          type: 'bar',
+          label: {
+            normal: {
+              show: true,
+              position: 'top'
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: function(d) {return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
+            }
+          },
+          data: nums,
+        }
+      ]
+    };
+    myChart2.setOption(option2);
+  },
+  error: function() {
+    dialog.error('请求服务器异常！')
+  }
+})
+
+function fnAjax(type, time) {
+  $.ajax({
+    url: '/index.php/wap/WeFinancial/showUserInvitationType',
+    type: 'get',
+    dataType: 'json',
+    data: {type: type, time: time},
+    success: function(msg) {
+      console.log(msg)
+      var arr    = msg.data;
+      var length = arr.length;
+      var html   = '';
+      for (var i = 0; i < length; i++) {
+        html += '<div class="list">' +
+                  '<img class="list_img" src="' + msg.data[i].head_portrait + '" alt="" />' +
+                  '<div class="info1">' +
+                    '<div class="name">' + msg.data[i].name + '</div>' +
+                    '<div class="phoneNumber">' + msg.data[i].phone + '</div>' +
+                  '</div>' +
+                  '<div class="info2">' +
+                    '<div class="type">' + msg.data[i].type + '</div>' +
+                    '<div class="date">' + msg.data[i].create_time + '</div>' +
+                  '</div>' +
+                '</div>'
+      };
+      $('.js_list_cont').html(html);
+      $('.js_people_count').text(length);
+
+      // 计算弹出层高度
+      var windowH  = $(window).outerHeight() / 3;
+      $('.js_list_cont').css({
+        'max-height': windowH,
+        'overflow-y': 'auto'
+      });
+    },
+    error: function() {
+      dialog.error('请求服务器异常！')
+    }
+  })
+}
+
+// 点击原型图 查看用户信息
+$('.js_mask_tus').delegate('.js_mask_tu', 'click', function() {
+  $('.js_mask').css('display', 'block');
+  var type = $('.js_txtInfo .js_txt').eq($(this).index()).attr('type');
+  var time = $('.js_select').val();
+  $('.js_select').attr('type', type);
+  fnAjax(type, time);
+});
+
+// 选择要查看的时间范围
+$('.js_select').change(function() {
+  var type = $(this).attr('type');
+  var time = $(this).val();
+  console.log(time)
+  fnAjax(type, time);
+});
+
+// 取消弹出框
+$('.js_cancel').click(function() {
+  $('.js_mask').css('display', 'none');
+  $('.js_select').val('0');
+})
+
+// 获取当前页面网址参数
+function getUrlParam(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+  var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+  if (r != null) {
+    return decodeURI(r[2]);
+  };
+  return null; // 返回参数值
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/Public/bootstrap/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/Public/dist/font/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/Public/dist/font/ionicons/2.0.1/css/ionicons.min.css" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/Public/dist/css/AdminLTE.min.css" />
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/_all-skins.min.css" />
+  <!-- AdminLTE皮肤默认选择的skin-blue。也可以选择其他的皮肤。确保你应用皮肤类body标签更改生效 -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/skin-blue.min.css" />
+  <!-- 自定义公共css -->
+  <link rel="stylesheet" href="/Public/dist/css/custom.css" />
+
+  <style type="text/css">
+    .modal-body { height: 300px; overflow-y: auto; }
+    .exam_type{
+      line-height: 35px; color: red; font-weight: bold; text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="shade" style="" id="modalWindow2">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="" action="" method="post"  id="Querys">
+        <input class="primaryKey" type="hidden" name="s_id" id="s_id" value="{$Think.get.s_id}" />
+        <input class="primaryKey" type="hidden" name="a_id" id="a_id" value="{$Think.get.a_id}" />
+        <input class="primaryKey" type="hidden" name="g_id" id="g_id" value="{$Think.get.g_id}" />
+        <input class="primaryKey" type="hidden" name="c_id" id="c_id" value="{$Think.get.c_id}" />
+        <input class="primaryKey" type="hidden" name="ex_id" id="ex_id" />
+        <nav class="navbar navbar-default">
+          <!-- container-fluid -->
+          <div class="container-fluid">
+            <div class="form-inline navbar-form navbar-left">
+              <div class="form-group">
+                <label for="ex_id02">单考名称：</label>
+                <select id="ex_id02" name="ex_id" class="form-control input-sm ex_id02"></select>
+              </div>
+              <div class="form-group">
+                <button type="button" class="btn btn-primary btn-sm query" onclick="subMits()">
+                  <i class="fa fa-search"></i> 查询
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+        </form>
+        <!-- table -->
+      <form class="" action="" method="post" onsubmit="return false" id="formWindow2">
+        <input type="hidden" name="c_id" value="{$c_id}" />
+        <input type="hidden" name="g_id" value="{$g_id}" />
+        <input type="hidden" name="ex_id" value="{$ex_id}" />
+        <input type="hidden" name="s_id" id="s_id" value="{$s_id}" />
+        <input type="hidden" name="a_id" id="a_id" value="{$a_id}" />
+        <div class="content-wrap">
+          <div class="custom-fixed-table-container">
+            <div class="row">
+              <div class="col-md-12">
+              <if condition="($type eq 1)">  
+              <div class="exam_type">考试成绩已录入!</div>
+              <else/>
+                <table class="custom_table_data js_table_data">
+                  <thead>
+                    <tr>
+                      <th class="text-center">学号</th>
+                      <th class="text-center">学生</th>
+                      <th class="text-center">成绩</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <foreach name="stu" item="vo">
+                    <tr>
+                      <td class="text-center">{$vo.stu_no}</td>
+                      <td class="text-center">{$vo.stu_name}<input type="hidden" name="stu_name[]" value="{$vo.stu_name}" /></td>
+                      <td class="text-center">
+                        <input type="text" name="scores[]" value="" />
+                        <input type="hidden" name="stu_id[]" value="{$vo.stu_id}" />
+                      </td>
+                    </tr>
+                    </foreach>
+                  </tbody>
+                </table>
+              </if>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer" style="text-align:center;">
+    <button type="button" class="btn btn-success btn-sm save">
+      <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+    <button type="button" class="btn btn-default btn-sm layui-layer-close" onclick="closes();">
+      <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+
+<!-- 单考弹出层 隐藏域 -->
+<form id="searchForm4" name="searchForm" action="">
+  <input type="hidden" id="c_id_hide" name="c_id" value="" />
+  <input type="hidden" id="ex_id_hide" name="ex_id" value="" />
+</form>
+
+<include file="Public:footer_js" />
+<!-- cookie -->
+<script type="text/javascript" src="/Public/dist/js/jquery.cookie.js"></script>
+
+<script type="text/javascript">
+$(function() {
+  var g_id = '{$Think.get.g_id}';
+  var c_id = '{$Think.get.c_id}';
+
+  // 刷新页面后给查询条件赋值
+  if($.cookie("exId")) {
+    // 初始化下拉框数据
+    initSelectClass('ex_id02',g_config.host+'/index.php/Admin/Parent/Result/get_exam?g_id=' + g_id + '&c_id=' + c_id,0,{type:'examname'},false,'undefined',function() {
+      $("#ex_id02").val($.cookie("exId"));
+    }); // 单考名称
+  } else {
+    initSelectClass('ex_id02',g_config.host+'/index.php/Admin/Parent/Result/get_exam?g_id=' + g_id + '&c_id=' + c_id,0,{type:'examname'},true); // 单考名称
+  }
+
+  // 弹出层内容高度
+  function modalWindow2H() {
+    $('#modalWindow2 .modal-body').css({
+      height: $('.layui-layer-content',window.parent.document).height()-$('#modalWindow2 .modal-footer').outerHeight(),
+      overflow: 'auto'
+    });
+  }
+  modalWindow2H();
+  $(window).resize(function() {
+    modalWindow2H();
+  });
+})
+
+// 隐藏域赋值
+function searchForm4() {
+  $("#searchForm4 #ex_id_hide").val($("#ex_id02").val());
+}
+
+// 查询
+function search() {
+  // form查询域赋值
+  searchForm4();
+  $.get('/index.php/Admin/Parent/Result/exam_add?' + $("#searchForm4").serialize(), function(data) {});
+}
+
+function subMits(){
+  if ($("#g_id").val()=='') {
+    dialog.error('年级不能为空!');
+    return false;
+  }
+  if ($("#c_id").val()=='') {
+    dialog.error('班级不能为空!');
+    return false;
+  }
+  if ($("#ex_id02").val()=='') {
+    dialog.error('考试名称不能为空!');
+    return false;
+  }
+
+  // 刷新页面之前先存储查询条件值
+  $.cookie("exId",$("#ex_id02").val(),{expires:1}); // expires 可以设定保存时间{expires:7,path:'/',domain:'itcast.cn',secure:true}
+
+  $("#Querys").submit();
+}
+
+// 删除查询条件记录
+function delcookie() {
+  $.cookie("exId",null,{expires:1});
+}
+
+// 取消
+function closes() {
+  delcookie(); // 取消前先删除查询条件记录
+  parent.layer.closeAll();
+}
+
+// 保存数据
+function save() {
+  delcookie(); // 保存前先删除查询条件记录
+
+  $('#ex_id').val($('#ex_id02').val());
+  var scores_zt = 0;
+  $("input[name^=scores]").each(function(i, o) {
+    var scores   = $("input[name='scores[]']")[i].value;
+    var stu_name = $("input[name='stu_name[]']")[i].value;
+    var score_fs = /^(\d{0,3})([.]\d{0,2})?$/; // 验证成绩正则
+    if (scores == '') {
+      i=i+1;
+      scores_zt = -1;
+      dialog.notify('第'+i+'行'+stu_name+'成绩不能为空');
+      return false;
+    } else {
+      if (!score_fs.test(scores)) {
+        i=i+1;
+        scores_zt = -1;
+        dialog.notify('第'+i+'行'+stu_name+'的成绩输入格式错误，请重新输入！');
+        return false;
+      };
+    };
+  });
+  if (scores_zt == 0) {
+    var url = g_config.host + '/index.php/Admin/Parent/Result/exam_add_handle';
+    fpost(url,'formWindow2',btnCallbackRefreshWindowTopTable2);
+  };
+}
+</script>
+</body>
+</html>

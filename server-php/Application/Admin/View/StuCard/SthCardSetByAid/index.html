@@ -1,0 +1,1930 @@
+  <!-- Main Header -->
+  <include file="Public:header" title="学生证批量设置"/>
+  <style>
+  .form-center-1{
+      margin: 0 auto;
+      width: 119px;
+  }
+  .form-center-2{
+      margin: 0 auto;
+      width: 100px;
+  }
+  .form-center-3{
+    margin: 0 auto;
+    width: 230px;
+  }
+  .form-center-4{
+    margin: 0 auto;
+    width: 300px;
+  }
+  .ztree li a > span:last-child {max-width: none; }
+  </style>
+  <link rel="stylesheet" href="/Public/plugins/switch/bootstrap-switch.min.css">
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">学生证批量设置</li>
+      </ol>
+    </section>
+    <section class="content">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">校区列表</h3>
+            </div>
+            <div class="box-body" >
+              <div class="tree-search">
+                <i class="tree-search-icon" id="searchNodeBtn"></i> 
+                <input type="text" placeholder="搜索关键字" id="searchNodeVal" value="" class="empty fs-12" />
+              </div>
+              <div class="tree-scroll">
+                <ul id="treeDemo" class="ztree js_ztree_height"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="box">
+            <div class="form-group pull-right" style="padding:20px 20px 0 0;">
+              <button type="button" class="btn btn-primary" data-color="#39B3D7" data-opacity="0.95" onclick="resetSetSaveConfig()">
+                <span class="glyphicon glyphicon-cog"></span> 恢复出厂设置
+              </button>
+              <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" onclick="restartSetConfig()">
+                <span class="glyphicon glyphicon-repeat"></span> 重启终端
+              </button>
+            </div>
+            <div class="box-body" style="padding:0 10px; clear:both;" >
+              <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs" style="">
+                  <li class="active"><a data-toggle="tab" href="#soundSize">喇叭音量</a></li>
+                  <li><a data-toggle="tab" href="#stealthTime">上课时段设置</a></li>
+                  <li><a data-toggle="tab" href="#optionsSetting">高级选项设置</a></li>
+                </ul>
+                <div class="tab-content">
+                  <div id="soundSize" class="tab-pane active">
+                    <form class="form-horizontal">
+                      <div class="box-body  form-center-1">
+                        <div class="form-group">
+                          <div class="row" >
+                            <label class="checkbox-inline" >
+                              <input type="radio" name="soundSize" id="soundSize-2" class="flat-green" value="2"> 大 
+                            </label>
+                            <label class="checkbox-inline">
+                              <input type="radio" name="soundSize" id="soundSize-1" class="flat-green" value="1"> 中 
+                            </label>
+                            <label class="checkbox-inline">
+                              <input type="radio" name="soundSize" id="soundSize-0" class="flat-green" value="0"> 小 
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="box-footer text-center">
+                        <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="soundSizeSetSave" onclick="soundSizeSetSaveConfig()">
+                          <span class="glyphicon glyphicon-save"></span> 保存
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                    <div id="stealthTime" class="tab-pane">
+                      <form class="form-horizontal">
+                        <div class="box-body">
+                          <div class="panel panel-default">
+                            <div class="panel-body">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-inline navbar-form">
+                                    <h5><strong>请选择时间段：</strong></h5>
+                                    <div class="form-group" style=" margin:0 30px 0 0;">
+                                      <p class="pull-left" style="padding:6px 3px 0 0;">时间段一：</p>
+                                      <input style="width:60px;" type="text" value="00:00" id="timeSlotStart1" class="form-control pull-left class-hour">
+                                      <p class="pull-left" style="padding:6px 3px 0;">到</p>
+                                      <input style="width:60px;" type="text" value="00:00" id="timeSlotEnd1" class="form-control pull-left class-hour">
+                                    </div>
+                                    <div class="form-group" style=" margin:0 30px 0 0;">
+                                      <p class="pull-left" style="padding:6px 3px 0 0;">时间段二：</p>
+                                      <input style="width:60px;" type="text" value="00:00" id="timeSlotStart2" class="form-control pull-left class-hour">
+                                      <p class="pull-left" style="padding:6px 3px 0;">到</p>
+                                      <input style="width:60px;" type="text" value="00:00" id="timeSlotEnd2" class="form-control pull-left class-hour">
+                                    </div>
+                                    <div class="form-group" style=" margin:0 30px 0 0;">
+                                      <p class="pull-left" style="padding:6px 3px 0 0;">时间段三：</p>
+                                      <input style="width:60px;" type="text" value="00:00" id="timeSlotStart3" class="form-control pull-left class-hour">
+                                      <p class="pull-left" style="padding:6px 3px 0;">到</p>
+                                      <input style="width:60px;" type="text" value="00:00" id="timeSlotEnd3" class="form-control pull-left class-hour">
+
+                                    </div>
+                                  </div>
+
+                                  <div class="form-inline navbar-form">
+                                    <h5><strong>请开关设置：</strong></h5>
+                                    <div class="form-group" style="margin: 0 10px 0 0;">
+                                      <label class=" control-label" style="margin: 0 0 0 40px;">周一</label>
+                                      <div >
+                                        <input type="checkbox" name="monTealthTimeStatus" id="monTealthTimeStatus" class="tealthTimeStatus1 tealthTimeStatus" value="OFF">
+                                      </div>
+                                    </div>
+                                    <div class="form-group" style="margin: 0 10px 0 0;">
+                                      <label class=" control-label" style="margin: 0 0 0 40px;">周二</label>
+                                      <div >
+                                        <input type="checkbox" name="tuesTealthTimeStatus" id="tuesTealthTimeStatus" class="tealthTimeStatus2 tealthTimeStatus" value="OFF">
+                                      </div>
+                                    </div>
+                                    <div class="form-group" style="margin: 0 10px 0 0;">
+                                      <label class=" control-label" style="margin: 0 0 0 40px;">周三</label>
+                                      <div >
+                                        <input type="checkbox" name="wednesTealthTimeStatus" id="wednesTealthTimeStatus" class="tealthTimeStatus3  tealthTimeStatus" value="OFF">
+                                      </div>
+                                    </div>
+                                    <div class="form-group" style="margin: 0 10px 0 0;">
+                                      <label class=" control-label" style="margin: 0 0 0 40px;">周四</label>
+                                      <div >
+                                        <input type="checkbox" name="thursTealthTimeStatus" id="thursTealthTimeStatus" class="tealthTimeStatus4 tealthTimeStatus" value="OFF">
+                                      </div>
+                                    </div>
+                                    <div class="form-group" style="margin: 0 10px 0 0;">
+                                      <label class=" control-label" style="margin: 0 0 0 40px;">周五</label>
+                                      <div >
+                                        <input type="checkbox" name="friTealthTimeStatus" id="friTealthTimeStatus" class="tealthTimeStatus5 tealthTimeStatus" value="OFF">
+                                      </div>
+                                    </div>
+                                    <div class="form-group" style="margin: 0 10px 0 0;">
+                                      <label class=" control-label" style="margin: 0 0 0 40px;">周六</label>
+                                      <div >
+                                        <input type="checkbox" name="saturTealthTimeStatus" id="saturTealthTimeStatus" class="tealthTimeStatus6 tealthTimeStatus" value="OFF">
+                                      </div>
+                                    </div>
+                                    <div class="form-group" style="margin: 0 10px 0 0;">
+                                      <label class=" control-label" style="margin: 0 0 0 40px;">周日</label>
+                                      <div >
+                                        <input type="checkbox" name="sunTealthTimeStatus" id="sunTealthTimeStatus" class="tealthTimeStatus7 tealthTimeStatus" value="OFF">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>     
+                            </div>
+                          </div>     
+                        </div>
+                        <div class="box-footer text-center">
+                          <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="tealthTimeSave" onclick="tealthTimeSaveConfig()">
+                            <span class="glyphicon glyphicon-save"></span> 保存
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                    <div id="optionsSetting" class="tab-pane">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="box box-info">
+                            <div class="box-body">
+                              <ul class="nav nav-stacked">
+                                <li class="active"><a data-toggle="tab" href="#workingModeSet">工作模式设置</a></li>
+                              
+                                <li><a data-toggle="tab" href="#domainPortSet">域名和端口设置</a></li>
+                                <li><a data-toggle="tab" href="#ipPortSet">IP和端口设置</a></li>
+                                
+                                <li><a data-toggle="tab" href="#rfidSet">天线组设置</a></li>
+                                <li><a data-toggle="tab" href="#rfidGpsSet">天线和GPS围栏设置</a></li>
+                                <li><a data-toggle="tab" href="#callfilterSet">来电过滤开关设置</a></li>
+                               
+                                <!-- <li><a data-toggle="tab" href="#calldisplaySet">来电显示开关设置</a></li> -->
+                                <li><a data-toggle="tab" href="#wirelessatteSet">无线考勤开关设置</a></li>
+                                <li><a data-toggle="tab" href="#stepcounterSet">计步开关设置</a></li>
+                                <li><a data-toggle="tab" href="#inschoolSet">自动屏蔽开关设置</a></li>
+                          
+                              </ul>
+                            </div> 
+                          </div>
+                        </div>
+                        <div class="col-md-9">
+                          <div class="tab-content">
+                            <div id="workingModeSet" class="tab-pane active">
+                              <form class="form-horizontal">
+                                <div class="form-group">
+                                  <label class="col-md-3 control-label" for="shortMassage"><span class="xing">*</span>定位模式：</label>
+                                  <div class="col-md-9">
+                                    <!-- <input type="text" placeholder="正常定位模式" id="shortMassage" class="form-control"> -->
+                                    <select id="shortMassage" name="shortMassage" class="form-control">
+                                      <option value="请选择">请选择</option>
+                                      <!-- <option value="m1">实时定位模式</option> -->
+                                      <option value="m1">追踪定位模式</option>
+                                      <option value="m2">正常定位模式</option>
+                                      <!-- <option value="m3">纯基站定位</option>
+                                      <option value="m4">无平台模式</option> --> 
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-md-3 control-label" for="reportingTime "><span class="xing">*</span>上报时间间隔(秒)：</label>
+                                  <div class="col-md-9">
+                                    <input type="text" placeholder="请输入时间" id="reportingTime" class="form-control">
+                                  </div>
+                                </div>
+                                <div class="box-footer text-center">
+                                  <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="workingModeSetSave" onclick="workingModeSetSaveConfig()">
+                                    <span class="glyphicon glyphicon-save"></span> 保存
+                                  </button>
+                                  
+                                </div>
+                              </form>
+                            </div>
+                            <div id="domainPortSet" class="tab-pane">
+                              <form class="form-horizontal">
+                                <div class="box-body">
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="domainValue">域名：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入域名" id="domainValue" class="form-control">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="port1">端口：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入端口" id="port1" class="form-control">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="box-footer text-center">
+                                  <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="domainPortSetSave" onclick="domainPortSetSaveConfig()">
+                                    <span class="glyphicon glyphicon-save"></span> 保存
+                                  </button>
+                                  
+                                </div>
+                              </form>
+                            </div>
+                            <div id="ipPortSet" class="tab-pane">
+                              <form class="form-horizontal">
+                                <div class="box-body">
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="ip">IP：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入IP" id="ip" class="form-control">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="port2">端口：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入端口" id="port2" class="form-control">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="box-footer text-center">
+                                  <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="ipPortSetSave" onclick="ipPortSetSaveConfig()">
+                                    <span class="glyphicon glyphicon-save"></span> 保存
+                                  </button>
+                                  
+                                </div>
+                              </form>
+                            </div>
+                            <div id="rfidSet" class="tab-pane">
+                              <form class="form-horizontal">
+                                <div class="box-body">
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="rfidInfo1">天线组序号：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入天线组序号" id="rfidInfo1" class="form-control rfidInfo">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="rfidInfo2">进天线ID：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入进天线ID" id="rfidInfo2" class="form-control rfidInfo">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="rfidInfo3">出天线ID：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入出天线ID" id="rfidInfo3" class="form-control rfidInfo">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="box-footer text-center">
+                                  <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="rfidSetSave" onclick="rfidSetSaveConfig()">
+                                    <span class="glyphicon glyphicon-save"></span> 保存
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
+                            <div id="rfidGpsSet" class="tab-pane">
+                              <form class="form-horizontal">
+                                <div class="box-body">
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="rfidGpsInfo1">天线组序号：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入天线组序号" id="rfidGpsInfo1" class="form-control rfidGpsInfo">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="rfidGpsInfo2">进天线ID：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入进天线ID" id="rfidGpsInfo2" class="form-control rfidGpsInfo">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="rfidGpsInfo3">出天线ID：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入出天线ID" id="rfidGpsInfo3" class="form-control rfidGpsInfo">
+                                    </div>
+                                  </div>
+                                   <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="rfidGpsInfo4">学校GPS纬度：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入学校GPS纬度" id="rfidGpsInfo4" class="form-control rfidGpsInfo">
+                                    </div>
+                                  </div>
+                                   <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="rfidGpsInfo5">学校GPS经度：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入学校GPS经度" id="rfidGpsInfo5" class="form-control rfidGpsInfo">
+                                    </div>
+                                  </div>
+                                   <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="rfidGpsInfo6">中心位置半径：</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" placeholder="请输入中心位置半径" id="rfidGpsInfo6" class="form-control rfidGpsInfo">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="box-footer text-center">
+                                  <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="rfidGpsSetSave" onclick="rfidGpsSetSaveConfig()">
+                                    <span class="glyphicon glyphicon-save"></span> 保存
+                                  </button>
+                                  
+                                </div>
+                              </form>
+                            </div>
+                            <div id="callfilterSet" class="tab-pane">
+                              <form class="form-horizontal">
+                                <div class="box-body">
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label">来电过滤开关：</label>
+                                    <div class="col-sm-10">
+                                      <input type="checkbox" name="callfilterStatus" id="callfilterStatus"   class="callfilterStatus" value="OFF">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="box-footer text-center">
+                                  <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="callfilterSetSave" onclick="callfilterSetSaveConfig()">
+                                    <span class="glyphicon glyphicon-save"></span> 保存
+                                  </button>
+                                  
+                                </div>
+                              </form>
+                            </div>
+                            <div id="calldisplaySet" class="tab-pane">
+                              <form class="form-horizontal">
+                                <div class="box-body">                           
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label">来电显示开关：</label>
+                                    <div class="col-sm-10">
+                                      <input type="checkbox" name="calldisplayStatus" id="calldisplayStatus" class="calldisplayStatus" value="OFF">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="box-footer text-center">
+                                  <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="calldisplaySetSave" onclick="calldisplaySetSaveConfig()">
+                                    <span class="glyphicon glyphicon-save"></span> 保存
+                                  </button>
+                                  
+                                </div>
+                              </form>
+                            </div>
+                            <div id="wirelessatteSet" class="tab-pane">
+                              <form class="form-horizontal">
+                                <div class="box-body">                           
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label">无线考勤开关：</label>
+                                    <div class="col-sm-10">
+                                      <input type="checkbox" name="wirelessatteStatus" id="wirelessatteStatus" class="wirelessatteStatus" value="OFF">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="box-footer text-center">
+                                  <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="wirelessatteSetSave" onclick="wirelessatteSetSaveConfig()">
+                                    <span class="glyphicon glyphicon-save"></span> 保存
+                                  </button>
+                                  
+                                </div>
+                              </form>
+                            </div>
+                            <div id="stepcounterSet" class="tab-pane">
+                              <form class="form-horizontal">
+                                <div class="box-body">                           
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label">计步开关：</label>
+                                    <div class="col-sm-10">
+                                      <input type="checkbox" name="stepcounterStatus" id="stepcounterStatus" class="stepcounterStatus" value="OFF">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="box-footer text-center">
+                                  <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="stepcounterSetSave" onclick="stepcounterSetSaveConfig()">
+                                    <span class="glyphicon glyphicon-save"></span> 保存
+                                  </button>
+                                  
+                                </div>
+                              </form>
+                            </div>
+                            <div id="inschoolSet" class="tab-pane">
+                              <form class="form-horizontal">
+                                <div class="box-body  form-center-4">
+                                  <div class="form-group">
+                                    <div class="row" >
+                                      <label class="checkbox-inline" >
+                                        <input type="radio" name="inschool" id="inschool-2" class="flat-green" value="2"> 进校屏蔽 
+                                      </label>
+                                      <label class="checkbox-inline">
+                                        <input type="radio" name="inschool" id="inschool-1" class="flat-green" value="1"> 上课时段屏蔽
+                                      </label>
+                                      <label class="checkbox-inline">
+                                        <input type="radio" name="inschool" id="inschool-0" class="flat-green" value="0"> 不屏蔽 
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="box-footer text-center">
+                                  <button type="button" class="btn btn-success" data-color="#39B3D7" data-opacity="0.95" id="inschoolSetSave" onclick="inschoolSetSaveConfig()">
+                                    <span class="glyphicon glyphicon-save"></span> 保存
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+<form id="stuCardfrom">
+  <input type="hidden" name="statue" id="config_falg" />
+  <input type="hidden" name="soundsize" id="soundsize" />
+  <input type="hidden" name="tealthtime" id="tealthtime" />
+  <input type="hidden" name="working" id="working" />
+  <input type="hidden" name="domain" id="domain" />
+  <input type="hidden" name="ipport" id="ipport" />
+  <input type="hidden" name="rfid" id="rfid" />
+  <input type="hidden" name="rfidgps" id="rfidgps" />
+  <input type="hidden" name="callfilter" id="callfilter" />
+  <input type="hidden" name="calldisplay" id="calldisplay" />
+  <input type="hidden" name="wirelessatte" id="wirelessatte" />
+  <input type="hidden" name="stepcounter" id="stepcounter" />
+  <input type="hidden" name="inschool" id="inschool" />
+  <input type="hidden" class="prov_id_hide id_hide" name="prov_id" value="" placeholder="省" />
+  <input type="hidden" class="city_id_hide id_hide" name="city_id" value="" placeholder="市" />
+  <input type="hidden" class="county_id_hide id_hide" name="county_id" value="" placeholder="区" />
+  <input type="hidden" class="s_id_hide id_hide" name="s_id"  placeholder="学校" />
+  <input type="hidden" class="a_id_hide id_hide" name="a_id" value="" placeholder="校区" />
+  <!-- 功能设置类型 -->
+  <input type="hidden" name="typeFalg" id="typeFalg" value=""/>
+</form>
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+<!-- REQUIRED JS SCRIPTS -->
+<include file="Public:footer_js"/>
+<!-- 文件树搜索 -->
+<script type="text/javascript" src="/Public/dist/js/jquery.ztree.exhide.min.js"></script>
+<!-- Switch 切换开关 -->
+<script type="text/javascript" src="/Public/plugins/switch/bootstrap-switch.min.js"></script>
+<script>
+
+
+// 隐身时间 Switch 切换开关事件定义
+$(".tealthTimeStatus1").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".tealthTimeStatus1").val("ON");
+  }else{
+    $(".tealthTimeStatus1").val("OFF");
+  }
+});
+
+$(".tealthTimeStatus2").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".tealthTimeStatus2").val("ON");
+  }else{
+    $(".tealthTimeStatus2").val("OFF");
+  }
+});
+
+$(".tealthTimeStatus3").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".tealthTimeStatus3").val("ON");
+  }else{
+    $(".tealthTimeStatus3").val("OFF");
+  }
+});
+
+$(".tealthTimeStatus4").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".tealthTimeStatus4").val("ON");
+  }else{
+    $(".tealthTimeStatus4").val("OFF");
+  }
+});
+
+$(".tealthTimeStatus5").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".tealthTimeStatus5").val("ON");
+  }else{
+    $(".tealthTimeStatus5").val("OFF");
+  }
+});
+
+$(".tealthTimeStatus6").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".tealthTimeStatus6").val("ON");
+  }else{
+    $(".tealthTimeStatus6").val("OFF");
+  }
+});
+
+$(".tealthTimeStatus7").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".tealthTimeStatus7").val("ON");
+  }else{
+    $(".tealthTimeStatus7").val("OFF");
+  }
+});
+
+// 来电过滤开关 Switch 切换开关事件定义
+$(".callfilterStatus").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".callfilterStatus").val("ON");
+  }else{
+    $(".callfilterStatus").val("OFF");
+  }
+});
+
+// 来电显示开关 Switch 切换开关事件定义
+$(".calldisplayStatus").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".calldisplayStatus").val("ON");
+  }else{
+    $(".calldisplayStatus").val("OFF");
+  }
+});
+
+// 无线考勤开关 switch 切换开关事件定义
+$(".wirelessatteStatus").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".wirelessatteStatus").val("ON");
+  }else{
+    $(".wirelessatteStatus").val("OFF");
+  }
+});
+
+// 计步开关 Switch 切换开关事件定义
+$(".stepcounterStatus").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state){
+    $(".stepcounterStatus").val("ON");
+  }else{
+    $(".stepcounterStatus").val("OFF");
+  }
+});
+
+// 学生证管理文件树
+var settingStuCard = {
+  check: {
+    enable: false,
+    chkStyle: "radio",
+    autoCheckTrigger: true,
+    radioType: "all" // 在整棵树范围内当做一个分组
+  },
+  view: {
+    dblClickExpand: true
+  },
+  data: {
+    simpleData: {
+      enable: true
+    }
+  },
+  callback: {
+    beforeExpand: beforeExpand,
+    onExpand: onExpand,
+    onCollapse: onCollapse,
+    onClick: zTreeOnClick
+  }
+};
+
+// 保持展开单一路径 start
+var curExpandNode = null;
+function beforeExpand(treeId, treeNode) {
+  var pNode     = curExpandNode ? curExpandNode.getParentNode():null;
+  var treeNodeP = treeNode.parentTId ? treeNode.getParentNode():null;
+  var zTree     = $.fn.zTree.getZTreeObj("treeDemo");
+  for(var i=0, l=!treeNodeP ? 0:treeNodeP.children.length; i<l; i++ ) {
+    if (treeNode !== treeNodeP.children[i]) {
+      zTree.expandNode(treeNodeP.children[i], false);
+    }
+  }
+  while (pNode) {
+    if (pNode === treeNode) {
+      break;
+    }
+    pNode = pNode.getParentNode();
+  }
+  if (!pNode) {
+    singlePath(treeNode);
+  }
+}
+function singlePath(newNode) {
+  if (newNode === curExpandNode) return;
+  var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+    rootNodes, tmpRoot, tmpTId, i, j, n;
+  if (!curExpandNode) {
+    tmpRoot = newNode;
+    while (tmpRoot) {
+      tmpTId = tmpRoot.tId;
+      tmpRoot = tmpRoot.getParentNode();
+    }
+    rootNodes = zTree.getNodes();
+    for (i=0, j=rootNodes.length; i<j; i++) {
+      n = rootNodes[i];
+      if (n.tId != tmpTId) {
+        zTree.expandNode(n, false);
+      }
+    }
+  } else if (curExpandNode && curExpandNode.open) {
+    if (newNode.parentTId === curExpandNode.parentTId) {
+      zTree.expandNode(curExpandNode, false);
+    } else {
+      var newParents = [];
+      while (newNode) {
+        newNode = newNode.getParentNode();
+        if (newNode === curExpandNode) {
+          newParents = null;
+          break;
+        } else if (newNode) {
+          newParents.push(newNode);
+        }
+      }
+      if (newParents!=null) {
+        var oldNode = curExpandNode;
+        var oldParents = [];
+        while (oldNode) {
+          oldNode = oldNode.getParentNode();
+          if (oldNode) {
+              oldParents.push(oldNode);
+          }
+        }
+        if (newParents.length>0) {
+          zTree.expandNode(oldParents[Math.abs(oldParents.length-newParents.length)-1], false);
+        } else {
+          zTree.expandNode(oldParents[oldParents.length-1], false);
+        }
+      }
+    }
+  }
+  curExpandNode = newNode;
+}
+function onExpand(event, treeId, treeNode) {
+  curExpandNode = treeNode;
+  leftTreeScroll();
+}
+function onCollapse(event, treeId, treeNode) {
+  curExpandNode = treeNode;
+  leftTreeScroll();
+}
+// 保持展开单一路径 end
+
+// 请求树
+$.ajax({
+  type: "get",
+  url: "/index.php/Admin/index/get_tree?type=area",
+  dataType : 'json',
+  success: function(msg) {
+    var groupNodes = msg.data;
+    $.fn.zTree.init($("#treeDemo"), settingStuCard, groupNodes);
+  },
+  error: function(msg) {
+    dialog.error("请求服务器异常！");
+  }
+});
+
+
+var user_type = "{$user_type}"; // 用户类型 1学校管理员 2系统用户 3老师 4家长 5省/直辖市教委 6 市教委 7 区/县教委  
+//点击
+function zTreeOnClick(event, treeId, treeNode) {
+  var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+  var nodes   = treeObj.getSelectedNodes();
+  for (var i=0, l=nodes.length; i < l; i++) {
+    treeObj.checkNode(nodes[i], true, true);
+  }
+  if (user_type == '1') {
+    // 点击选择
+     if(treeNode.typeFlag == 'school') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+      search();
+    };
+  };
+  if (user_type == '2') {
+    // 点击选择
+    if(treeNode.typeFlag == 'prov') {
+      $(".prov_id_hide").val(treeNode.id); // 省/直辖市
+      $(".city_id_hide").val(''); // 市
+      $(".county_id_hide").val(''); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'city') {
+      $(".prov_id_hide").val(treeNode.getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.id); // 市
+      $(".county_id_hide").val(''); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'county') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.id); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'school') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+      search();
+    };
+  }; 
+}
+function clearDownTime(){
+  clearTimeout(timerSoundSize);
+  clearTimeout(timerTealthTime);
+  clearTimeout(timerWorkingMode);  
+  clearTimeout(timerDomainPort);
+  clearTimeout(timerIpPort);
+  clearTimeout(timerRfid);
+  clearTimeout(timerRfidGps);
+  clearTimeout(timerCallfilter);
+  clearTimeout(timerCalldisplay);
+  clearTimeout(timerWirelessatte);
+  clearTimeout(timerStepcounter);
+  clearTimeout(timerInschool);
+  soundSizeSetSave.attr('disabled', false);
+  soundSizeSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+  tealthTimeSave.attr('disabled', false);
+  tealthTimeSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+  workingModeSetSave.attr('disabled', false);
+  workingModeSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+  domainPortSetSave.attr('disabled', false);
+  domainPortSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+  ipPortSetSave.attr('disabled', false);
+  ipPortSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+  rfidSetSave.attr('disabled', false);
+  rfidSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+  rfidGpsSetSave.attr('disabled', false);
+  rfidGpsSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+  callfilterSetSave.attr('disabled', false);
+  callfilterSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+  calldisplaySetSave.attr('disabled', false);
+  calldisplaySetSave.html('<span class="glyphicon glyphicon-save"></span>保存');    
+  wirelessatteSetSave.attr('disabled', false);
+  wirelessatteSetSave.html('<span class="glyphicon glyphicon-save"></span>保存');   
+  stepcounterSetSave.attr('disabled', false);
+  stepcounterSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+  inschoolSetSave.attr('disabled', false);
+  inschoolSetSave.html('<span class="glyphicon glyphicon-save"></span>保存');
+}
+
+
+// 获取学生卡基本信息
+function search(){
+  clearDownTime();
+  clearCardConfig();
+  // 需要的数据
+  var url = '/index.php/Admin/StuCard/SthCardSetByAid/get_stu_data';
+  fget(url,{a_id: $(".a_id_hide").val()},function(res){
+    if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+    g_loadingIndex = -1;
+    if(res.status==1){
+
+      var stuObj=res.data;
+      initializeCardConfig(stuObj.config);
+    }else{
+      dialog.error(res.info);
+    }
+  })
+}
+
+// 刷新 文件树
+$(".id_hide").val("");
+
+//*-----清空学生卡设置-----*//
+function clearCardConfig(){
+
+  // 喇叭音量清空
+  $.each($('input[name="soundSize"]:checked'),function(i,v){
+    $(v).iCheck('uncheck');
+  });
+
+
+  // Switch清空
+  function clearSwitchStatus(switchStatus){
+    if($("."+switchStatus).val().indexOf('OFF')>-1){
+      $("."+switchStatus).val("ON");
+      $("."+switchStatus).bootstrapSwitch('toggleState');
+    }
+    if($("."+switchStatus).val().indexOf('ON')>-1){
+      $("."+switchStatus).val("OFF");
+      $("."+switchStatus).bootstrapSwitch('toggleState');
+    }   
+  }
+  clearSwitchStatus("tealthTimeStatus1");
+  clearSwitchStatus("tealthTimeStatus2");
+  clearSwitchStatus("tealthTimeStatus3");
+  clearSwitchStatus("tealthTimeStatus4");
+  clearSwitchStatus("tealthTimeStatus5");
+  clearSwitchStatus("tealthTimeStatus6");
+  clearSwitchStatus("tealthTimeStatus7");
+  clearSwitchStatus("callfilterStatus");
+  clearSwitchStatus("calldisplayStatus");
+  clearSwitchStatus("wirelessatteStatus");
+  clearSwitchStatus("stepcounterStatus");
+
+  //单选清空
+  $.each($('.class-hour'),function(i,v){
+    $(v).val("00:00");
+  });
+
+  // 工作模式清空
+  $("#reportingTime").val("");
+
+  // 域名和端口清空
+  $("#domainValue").val("");
+  $("#port1").val("");
+
+  // IP和端口清空
+  $("#ip").val("");
+  $("#port2").val("");
+
+  // 天线组清空
+  $("#rfidInfo1").val("");
+  $("#rfidInfo2").val("");
+  $("#rfidInfo3").val(""); 
+
+  // 天线和Gps围栏清空
+  $("#rfidGpsInfo1").val("");
+  $("#rfidGpsInfo2").val("");
+  $("#rfidGpsInfo3").val("");
+  $("#rfidGpsInfo4").val(""); 
+  $("#rfidGpsInfo5").val(""); 
+  $("#rfidGpsInfo6").val("");  
+
+  // 自动屏蔽功能清空
+  $.each($('input[name="inschool"]:checked'),function(i,v){
+    $(v).iCheck('uncheck');
+  });
+}
+clearCardConfig();
+
+//*-----初始化学生卡设置-----*//
+function initializeCardConfig(config){
+  if(config!=null){
+
+    /*--------------- 初始化隐藏时间设置 ----------------*/
+    function toggleSwitchState(data,switchName){
+      if (data != null && data != "") {
+        if(data.indexOf('ON')>-1){
+          $("."+switchName).val("ON");
+          $("."+switchName).iCheck('check');
+          $("."+switchName).bootstrapSwitch('toggleState');
+        }
+        else {
+          $("."+switchName).iCheck('uncheck');
+          $("."+switchName).val("OFF");
+        }
+      }
+    }
+
+    if(config.tealthtime!=undefined){
+      var stealthTimeData = config.tealthtime;
+      if (stealthTimeData != null && stealthTimeData != "") {
+        // 时间段
+        var stealthTimeValues = stealthTimeData.split("|");
+        var timeValues = stealthTimeValues[0];
+        var timeValue = timeValues.split(",");
+        // 状态
+        var stateValues = stealthTimeValues[1];
+        var stateValue = stateValues.split(",");
+        toggleSwitchState(stateValue[0],"tealthTimeStatus1");
+        toggleSwitchState(stateValue[1],"tealthTimeStatus2");
+        toggleSwitchState(stateValue[2],"tealthTimeStatus3");
+        toggleSwitchState(stateValue[3],"tealthTimeStatus4");
+        toggleSwitchState(stateValue[4],"tealthTimeStatus5");
+        toggleSwitchState(stateValue[5],"tealthTimeStatus6");
+        toggleSwitchState(stateValue[6],"tealthTimeStatus7");
+        function stealthTimeAssignment(timeValue){
+          for (var i = 0; i < timeValue.length; i++) {
+            var timeSlot = timeValue[i];
+            if(timeSlot != ""){
+              var times = timeSlot.split("-");
+              $("#timeSlotStart"+(i+1)).val(times[0]);
+              $("#timeSlotEnd"+(i+1)).val(times[1]);
+            }
+            // }else{
+            //   $("#timeSlotStart"+(i+1)).val("00:00");
+            //   $("#timeSlotEnd"+(i+1)).val("00:00");
+            // }
+          }
+        }
+        stealthTimeAssignment(timeValue)  
+      }
+    }
+    /*--------------- 喇叭音量 ----------------*/
+    if(config.soundsize!=undefined){
+      var soundSizeData =config.soundsize;
+      $("#soundSize"+"-"+soundSizeData).iCheck("check");
+    }else{
+      $("#soundSize-2").iCheck("check");
+    } 
+
+    /*--------------- 工作模式设置 ----------------*/
+    if(config.working!=undefined){
+      var workingModeData = config.working;
+      var workingModeArray = workingModeData.split(","); 
+      $("#reportingTime").val(workingModeArray[1]);
+      $("#shortMassage").find("option[value='"+workingModeArray[0]+"']").attr("selected",true); 
+    }else{
+      $("#shortMassage").find("option[value='m1']").attr("selected",true); 
+      $("#reportingTime").val("35")
+    }
+    
+    
+    /*--------------- 域名和端口设置 ----------------*/
+    if(config.domain!=undefined){
+      var domainPortData = config.domain;
+      var domainPortArray = domainPortData.split(","); 
+      $("#domainValue").val(domainPortArray[0]);
+      $("#port1").val(domainPortArray[1]);
+    }
+
+    /*--------------- IP和端口设置 ----------------*/
+    if(config.ipport!=undefined){
+      var ipPortData = config.ipport;
+      var ipPortArray = ipPortData.split(","); 
+      $("#ip").val(ipPortArray[0]);
+      $("#port2").val(ipPortArray[1]);
+    }
+
+    /*--------------- rfid设置 ----------------*/
+    if(config.rfid!=undefined){
+      var rfidData = config.rfid;
+      var rfidArray = rfidData.split(","); 
+      $("#rfidInfo1").val(rfidArray[0]);
+      $("#rfidInfo2").val(rfidArray[1]);
+      $("#rfidInfo3").val(rfidArray[2]);
+    }
+
+
+    /*--------------- rfid和GPS围栏设置 ----------------*/
+    if(config.rfid!=undefined){
+      var rfidGpsData = config.rfid;
+      var rfidGpsArray = rfidGpsData.split(","); 
+      $("#rfidGpsInfo1").val(rfidGpsArray[0]);
+      $("#rfidGpsInfo2").val(rfidGpsArray[1]);
+      $("#rfidGpsInfo3").val(rfidGpsArray[2]);
+      $("#rfidGpsInfo4").val(rfidGpsArray[3]);
+      $("#rfidGpsInfo5").val(rfidGpsArray[4]);
+      $("#rfidGpsInfo6").val(rfidGpsArray[5]);
+    }
+
+
+    /*--------------- 来电过滤开关功能设置 ----------------*/
+    if(config.callfilter!=undefined){
+      var callfilterData = config.callfilter;
+      toggleSwitchState(callfilterData,"callfilterStatus");
+    }else{
+      toggleSwitchState("ON","callfilterStatus");
+    }
+
+    /*--------------- 来电显示开关功能设置 ----------------*/
+    if(config.calldisplay!=undefined){
+      var calldisplayData = config.calldisplay;
+      toggleSwitchState(calldisplayData,"calldisplayStatus");
+    }
+
+    /*--------------- 无线考勤开关功能设置 ----------------*/
+    if(config.wirelessatte!=undefined){
+      var wirelessatteData = config.wirelessatte;
+      toggleSwitchState(wirelessatteData,"wirelessatteStatus");
+    }
+
+    /*--------------- 计步开关功能设置 ----------------*/
+    if(config.stepcounter!=undefined){
+      var stepcounterData = config.stepcounter;
+      toggleSwitchState(stepcounterData,"stepcounterStatus");
+    }
+    /*--------------- 进校自动屏蔽功能设置 ----------------*/
+    if(config.inschool!=undefined){
+      var inSchoolData =config.inschool;
+      $("#inschool"+"-"+inSchoolData).iCheck("check");
+    } 
+  }else{
+    dialog.notify('请现在进行相关批量设置!');
+  }   
+}
+// 手机号验证
+$('.phoneNumber').blur(function() {
+  var re = /^1[34578]\d{9}$/;
+  var cellphone = $(this).val();
+  if (!re.test(cellphone)&&cellphone!="") {
+    $(this).parents(".reParent").next('.col-sm-2').remove();
+    $(this).parents(".reParent").after('<div style="color:#f00; padding:3px 0 0 0;" class="col-sm-2"><span class="xing">*</span>手机号格式不正确！</div>');
+  }else{
+     $(this).parents(".reParent").next('.col-sm-2').remove();
+  }
+});
+
+// 喇叭音量保存设置 start
+var timerSoundSize =null;
+var soundSizeSetSave = $("#soundSizeSetSave");
+soundSizeSetSave.attr('disabled', false);
+function soundSizeSetSaveConfig(){
+  if($(".a_id_hide").val()!=""){
+        var soundSizeValue = "";
+        $.each($('input[name="soundSize"]:checked'),function(i,v){
+          soundSizeValue = $(v).val();
+        }); 
+        $("#soundsize").val(soundSizeValue);
+        $("#typeFalg").val("soundsize");
+
+        var countdown = 50;
+        function countDownTime(){  
+          if (countdown==0) {  
+            clearTimeout(timerSoundSize);
+            soundSizeSetSave.attr('disabled', false);
+            soundSizeSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+            countdown = 50;  
+            return false;
+          } else { 
+            soundSizeSetSave.attr('disabled', true);   
+            soundSizeSetSave.html(countdown+"秒后再点击保存"); 
+            countdown--;  
+          }
+          timerSoundSize = setTimeout(function() { 
+            countDownTime() 
+          },1000)
+        }
+        var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+        var data=  $("#stuCardfrom").serialize();
+        dpost(url,data,function(data){
+          if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+          g_loadingIndex = -1;
+          if( data.status == 1 ) {
+            dialog.success(data.info,function(){ 
+              countDownTime(); 
+              layer.closeAll();
+            });
+          } else {
+            dialog.error(data.info);
+          }
+        })
+      }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// 喇叭音量保存设置 end
+
+// 隐身时间设置 start
+var timerTealthTime =null;
+var tealthTimeSave = $("#tealthTimeSave");
+tealthTimeSave.attr('disabled', false);
+function tealthTimeSaveConfig(){
+   if($(".a_id_hide").val()!=""){
+        var timeSlots = "";
+        var monDay = "";
+        var tuesDay = "";
+        var wednesDay = "";
+        var thursDay = "";
+        var friDay = "";
+        var saturDay = "";
+        var sunDay = "";
+        for (var i = 1; i <= 3; i++) {
+          var timeSlotStart = $("#timeSlotStart"+i).val();
+          var timeSlotEnd = $("#timeSlotEnd"+i).val();
+
+          var start_time = new Date(timeSlotStart.replace(/\:/, ""));
+          var end_time = new Date(timeSlotEnd.replace(/\:/, ""));
+
+          if(start_time >= end_time&&timeSlotStart!="00:00" && timeSlotEnd!="00:00"){
+            dialog.error("开始时间不能大于等于结束时间！");
+            return false;
+          }
+          if(timeSlotStart != "" && timeSlotEnd!= "" ){
+            if(i!=3){
+              timeSlots += timeSlotStart + '-' + timeSlotEnd+ ',';  
+            }else{
+              timeSlots += timeSlotStart + '-' + timeSlotEnd+ '|';
+            }
+          }
+          else if(timeSlotStart == "" && timeSlotEnd== "" ){
+           if(i!=3){
+              timeSlots +=",";
+            }else{
+              timeSlots +="|"; 
+            }
+          }
+        };
+        monDay = $(".tealthTimeStatus1").val();
+        tuesDay = $(".tealthTimeStatus2").val();
+        wednesDay = $(".tealthTimeStatus3").val();
+        thursDay = $(".tealthTimeStatus4").val();
+        friDay = $(".tealthTimeStatus5").val();
+        saturDay = $(".tealthTimeStatus6").val();
+        sunDay = $(".tealthTimeStatus7").val();
+        var tealthtimeValue =timeSlots + monDay +"," + tuesDay +"," + wednesDay +","+ thursDay +"," + friDay +"," + saturDay +"," + sunDay;
+        $("#tealthtime").val(tealthtimeValue);
+        $("#typeFalg").val("tealthtime");
+        var countdown = 50;
+        function countDownTime(){  
+          if (countdown==0) {  
+            clearTimeout(timerTealthTime);
+            tealthTimeSave.attr('disabled', false);
+            tealthTimeSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+            countdown = 50;  
+            return false;
+          } else { 
+            tealthTimeSave.attr('disabled', true);   
+            tealthTimeSave.html(countdown+"秒后再点击保存"); 
+            countdown--;  
+          }
+          timerTealthTime = setTimeout(function() { 
+            countDownTime() 
+          },1000)
+        }
+        var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+        var data=  $("#stuCardfrom").serialize();
+        dpost(url,data,function(data){
+          if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+          g_loadingIndex = -1;
+          if( data.status == 1 ) {
+            dialog.success(data.info,function(){ 
+              countDownTime(); 
+              layer.closeAll();
+            });
+          } else {
+            dialog.error(data.info);
+          }
+        })
+       }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// 隐身时间设置 end
+
+// 工作模式保存设置 start
+var timerWorkingMode =null;
+var workingModeSetSave = $("#workingModeSetSave");
+workingModeSetSave.attr('disabled', false);
+function workingModeSetSaveConfig(){
+   if($(".a_id_hide").val()!=""){
+        var working = ""; 
+        if($("#shortMassage").val()=="请选择"){
+           dialog.error('请选择工作模式');
+           return false;
+        }else{
+          working = $("#shortMassage").val()+","+$("#reportingTime").val();
+        }
+        $("#working").val(working);
+        $("#typeFalg").val("working");
+        var shortMassage = $("#shortMassage").val();
+
+        var reportingTime = $("#reportingTime").val();
+        // alert(reportingTime);
+        var re_reportingTime = /^[0-9]*$/ 
+        if (!re_reportingTime.test(reportingTime)) {
+          dialog.error('输入的上报时间间隔不正确！');
+          return false;
+        }
+        if (reportingTime<35&&shortMassage=="m1") {
+          dialog.error('输入的时间间隔必须大于等于35秒！');
+          return false;
+        }
+        if (reportingTime<120&&shortMassage=="m2") {
+          dialog.error('输入的时间间隔必须大于等于120秒！');
+          return false;
+        }
+        if(reportingTime==""){
+          dialog.error('请输入上报时间间隔！');
+          return false;
+        }
+        var countdown = 50;
+        function countDownTime(){  
+          if (countdown==0) {  
+            clearTimeout(timerWorkingMode);
+            workingModeSetSave.attr('disabled', false);
+            workingModeSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+            countdown = 50;  
+            return false;
+          } else { 
+            workingModeSetSave.attr('disabled', true);   
+            workingModeSetSave.html(countdown+"秒后再点击保存"); 
+            countdown--;  
+          }
+          timerWorkingMode = setTimeout(function() { 
+            countDownTime() 
+          },1000)
+        }
+        var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+        var data=  $("#stuCardfrom").serialize();
+        dpost(url,data,function(data){
+          if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+          g_loadingIndex = -1;
+          if( data.status == 1 ) {
+            dialog.success(data.info,function(){ 
+              countDownTime(); 
+              layer.closeAll();
+            });
+          } else {
+            dialog.error(data.info);
+          }
+        })
+     }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// 工作模式保存设置 end 
+
+
+// 域名和端口保存设置 start
+var timerDomainPort =null;
+var domainPortSetSave = $("#domainPortSetSave");
+domainPortSetSave.attr('disabled', false);
+function domainPortSetSaveConfig(){
+  if($(".a_id_hide").val()!=""){
+        var domain = "";
+        domain = $("#domainValue").val() +","+$("#port1").val();
+        $("#domain").val(domain);
+        $("#typeFalg").val("domain");
+        // 验证域名
+        var re_domain=/^(http(s)?:\/\/)?([A-Za-z0-9]+\.)?[\w-]+\.\w{2,4}(\/)?$/ 
+        var domainValue = $("#domainValue").val();
+        if (!re_domain.test(domainValue)) {
+          dialog.error('输入的域名不正确！');
+          return false;
+        }
+        if(domainValue==""){
+          dialog.error('请输入域名！');
+          return false;
+        }
+        // 验证端口
+        var re_port1=/^\d{0,5}$/ 
+        var port1 = $("#port1").val();
+        if (!re_port1.test(port1)) {
+          dialog.error('输入的端口不正确！');
+          return false;
+        }
+        if(port1==""){
+          dialog.error('请输入端口！');
+          return false;
+        }
+        var countdown = 50;
+        function countDownTime(){  
+          if (countdown==0) {  
+            clearTimeout(timerDomainPort);
+            domainPortSetSave.attr('disabled', false);
+            domainPortSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+            countdown = 50;  
+            return false;
+          } else { 
+            domainPortSetSave.attr('disabled', true);   
+            domainPortSetSave.html(countdown+"秒后再点击保存"); 
+            countdown--;  
+          }
+          timerDomainPort = setTimeout(function() { 
+            countDownTime() 
+          },1000)
+        }
+        var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+        var data=  $("#stuCardfrom").serialize();
+        dpost(url,data,function(data){
+          if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+          g_loadingIndex = -1;
+          if( data.status == 1 ) {
+            dialog.success(data.info,function(){ 
+              countDownTime(); 
+              layer.closeAll();
+            });
+          } else {
+            dialog.error(data.info);
+          }
+        })
+      }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// 域名和端口保存设置 end
+
+// IP和端口保存设置 start
+var timerIpPort =null;
+var ipPortSetSave = $("#ipPortSetSave");
+ipPortSetSave.attr('disabled', false);
+function ipPortSetSaveConfig(){
+   if($(".a_id_hide").val()!=""){
+
+        var ipport = "";
+        ipport = $("#ip").val() +","+$("#port2").val();
+        $("#ipport").val(ipport);
+        $("#typeFalg").val("ipport");
+        // 验证IP
+        var re_ip=/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])/ 
+        var ip = $("#ipport").val();
+        if (!re_ip.test(ip)) {
+          dialog.error('输入的IP不正确！');
+          return false;
+        }
+        if(ip==""){
+          dialog.error('请输入IP！');
+          return false;
+        }
+        // 验证端口
+        var re_port2=/^\d{0,5}$/ 
+        var port2 = $("#port2").val();
+        if (!re_port2.test(port2)) {
+          dialog.error('输入的端口不正确！');
+          return false;
+        }
+        if(port2==""){
+          dialog.error('请输入端口！');
+          return false;
+        }
+
+        var countdown = 50;
+        function countDownTime(){  
+          if (countdown==0) {  
+            clearTimeout(timerIpPort);
+            ipPortSetSave.attr('disabled', false);
+            ipPortSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+            countdown = 50;  
+            return false;
+          } else { 
+            ipPortSetSave.attr('disabled', true);   
+            ipPortSetSave.html(countdown+"秒后再点击保存"); 
+            countdown--;  
+          }
+          timerIpPort = setTimeout(function() { 
+            countDownTime() 
+          },1000)
+        }
+        var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+        var data=  $("#stuCardfrom").serialize();
+        dpost(url,data,function(data){
+          if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+          g_loadingIndex = -1;
+          if( data.status == 1 ) {
+            dialog.success(data.info,function(){ 
+              countDownTime(); 
+              layer.closeAll();
+            });
+          } else {
+            dialog.error(data.info);
+          }
+        })
+      }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// IP和端口保存设置 end
+
+// 天线组保存设置 start
+var timerRfid =null;
+var rfidSetSave = $("#rfidSetSave");
+rfidSetSave.attr('disabled', false);
+function rfidSetSaveConfig(){
+
+  if($(".a_id_hide").val()!=""){
+    var rfid = "";
+    rfid = $("#rfidInfo1").val() +","+$("#rfidInfo2").val() +","+$("#rfidInfo3").val();
+    $("#rfid").val(rfid);
+    $("#typeFalg").val("rfid");
+
+    var re_rfidInfo1=/^\w+$/; // 天线进出ID验证正则
+    var re_rfidInfo4 =/^[1-5]$/; // 天线序号ID验证正则
+    var rfidInfo = $(".rfidInfo");
+    var labelArr=[];
+    for (var i = 0; i < rfidInfo.length; i++) {
+      var labeltext=rfidInfo.eq(i).parents(".col-sm-10").prev("label").html().replace(/：/,"");
+      labelArr.push(labeltext)
+    }
+    for (var i = 0; i < rfidInfo.length; i++) {
+      // 天线序号ID设置验证
+      if(!re_rfidInfo4.test(rfidInfo.eq(0).val())&&rfidInfo.eq(0).val()!="") {
+        dialog.error('输入的1至5之间的任意数字！');
+        return false;
+      }
+      // 天线进出ID设置验证
+      if(!re_rfidInfo1.test(rfidInfo.eq(1).val())&&rfidInfo.eq(1).val()!="") {
+        dialog.error('输入的'+labelArr[1]+'不正确！');
+        return false;
+      }
+      if(!re_rfidInfo1.test(rfidInfo.eq(2).val())&&rfidInfo.eq(2).val()!="") {
+        dialog.error('输入的'+labelArr[2]+'不正确！');
+        return false;
+      }
+      // 表单为空设置验证
+      if(rfidInfo.eq(i).val()==""){
+        dialog.error('请输入'+labelArr[i]+'！');
+        return false;
+      }
+    };
+
+    var countdown = 50;
+    function countDownTime(){  
+      if (countdown==0) {  
+        clearTimeout(timerRfid);
+        rfidSetSave.attr('disabled', false);
+        rfidSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+        countdown = 50;  
+        return false;
+      } else { 
+        rfidSetSave.attr('disabled', true);   
+        rfidSetSave.html(countdown+"秒后再点击保存"); 
+        countdown--;  
+      }
+      timerRfid = setTimeout(function() { 
+        countDownTime() 
+      },1000)
+    }
+    var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+    var data=  $("#stuCardfrom").serialize();
+    dpost(url,data,function(data){
+      if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+      g_loadingIndex = -1;
+      if( data.status == 1 ) {
+        dialog.success(data.info,function(){ 
+          countDownTime(); 
+          layer.closeAll();
+        });
+      } else {
+        dialog.error(data.info);
+      }
+    })
+  }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// 天线组保存设置 end
+
+
+// 天线和GPS围栏保存设置 start
+var timerRfidGps =null;
+var rfidGpsSetSave = $("#rfidGpsSetSave");
+rfidGpsSetSave.attr('disabled', false);
+function rfidGpsSetSaveConfig(){
+  if($(".a_id_hide").val()!=""){
+    var rfidgps = "";
+     rfidgps = $("#rfidGpsInfo1").val() +","+$("#rfidGpsInfo2").val() +","+$("#rfidGpsInfo3").val()+","+$("#rfidGpsInfo4").val()+","+$("#rfidGpsInfo5").val()+","+$("#rfidGpsInfo6").val();
+    $("#rfidgps").val(rfidgps);
+    $("#typeFalg").val("rfidgps");
+
+    var re_rfidGpsInfo1=/^\w+$/; // 天线进出ID验证正则
+    var re_rfidGpsInfo2 =/^\d+(\.\d+)?$/; // 经纬度验证正则
+    var re_rfidGpsInfo3=/([5-9][0-9])|([1-9]\d{2,})/;// 中心位置半径验证正则
+    var re_rfidGpsInfo4 =/^[1-5]$/; // 天线序号ID验证正则
+    var rfidGpsInfo = $(".rfidGpsInfo");
+    var labelArr=[];
+    for (var i = 0; i < rfidGpsInfo.length; i++) {
+      var labeltext=rfidGpsInfo.eq(i).parents(".col-sm-10").prev("label").html().replace(/：/,"");
+      labelArr.push(labeltext)
+    }
+    for (var i = 0; i < rfidGpsInfo.length; i++) {
+      
+      // 天线序号ID设置验证
+      if(!re_rfidGpsInfo4.test(rfidGpsInfo.eq(0).val())&&rfidGpsInfo.eq(0).val()!="") {
+        dialog.error('请输入1至5之间的任意数字！');
+        return false;
+      }
+      // 天线进出ID设置验证
+      if(!re_rfidGpsInfo1.test(rfidGpsInfo.eq(1).val())&&rfidGpsInfo.eq(1).val()!="") {
+        dialog.error('输入的'+labelArr[1]+'不正确！');
+        return false;
+      }
+      if(!re_rfidGpsInfo1.test(rfidGpsInfo.eq(2).val())&&rfidGpsInfo.eq(2).val()!="") {
+        dialog.error('输入的'+labelArr[2]+'不正确！');
+        return false;
+      }
+      // 经纬度设置验证
+      if(!re_rfidGpsInfo2.test(rfidGpsInfo.eq(3).val())&&rfidGpsInfo.eq(3).val()!="") {
+        dialog.error('输入的'+labelArr[3]+'不正确！');
+        return false;
+      }
+      if(!re_rfidGpsInfo2.test(rfidGpsInfo.eq(4).val())&&rfidGpsInfo.eq(4).val()!="") {
+        dialog.error('输入的'+labelArr[4]+'不正确！');
+        return false;
+      }
+      // 中心位置半径设置验证
+      if(!re_rfidGpsInfo3.test(rfidGpsInfo.eq(5).val())&& rfidGpsInfo.eq(5).val()!="") {
+        dialog.error('请输入大于等于50的半径值！');
+        return false;
+      }
+      // 表单为空设置验证
+      if(rfidGpsInfo.eq(i).val()==""){
+        dialog.error('请输入'+labelArr[i]+'！');
+        return false;
+      }
+    };
+   
+    var countdown = 50;
+    function countDownTime(){  
+      if (countdown==0) {  
+        clearTimeout(timerRfid);
+        rfidGpsSetSave.attr('disabled', false);
+        rfidGpsSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+        countdown = 50;  
+        return false;
+      } else { 
+        rfidGpsSetSave.attr('disabled', true);   
+        rfidGpsSetSave.html(countdown+"秒后再点击保存"); 
+        countdown--;  
+      }
+      timerRfidGps = setTimeout(function() { 
+        countDownTime() 
+      },1000)
+    }
+    var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+    var data=  $("#stuCardfrom").serialize();
+    dpost(url,data,function(data){
+      if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+      g_loadingIndex = -1;
+      if( data.status == 1 ) {
+        dialog.success(data.info,function(){ 
+          countDownTime(); 
+          layer.closeAll();
+        });
+      } else {
+        dialog.error(data.info);
+      }
+    })
+  }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// 天线和GPS围栏保存设置 end
+
+
+// 来电过滤开关功能设置 start
+var timerCallfilter =null;
+var callfilterSetSave = $("#callfilterSetSave");
+callfilterSetSave.attr('disabled', false);
+function callfilterSetSaveConfig(){
+  if($(".a_id_hide").val()!=""){
+    var callfilter = "";
+    callfilter = $(".callfilterStatus").val()
+    $("#callfilter").val(callfilter);
+    $("#typeFalg").val("callfilter");
+    var countdown = 50;
+    function countDownTime(){  
+      if (countdown==0) {  
+        clearTimeout(timerCallfilter);
+        callfilterSetSave.attr('disabled', false);
+        callfilterSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+        countdown = 50;  
+        return false;
+      } else { 
+        callfilterSetSave.attr('disabled', true);   
+        callfilterSetSave.html(countdown+"秒后再点击保存"); 
+        countdown--;  
+      }
+      timerCallfilter = setTimeout(function() { 
+        countDownTime() 
+      },1000)
+    }
+    var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+    var data=  $("#stuCardfrom").serialize();
+    dpost(url,data,function(data){
+      if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+      g_loadingIndex = -1;
+      if( data.status == 1 ) {
+        dialog.success(data.info,function(){ 
+          countDownTime(); 
+          layer.closeAll();
+        });
+      } else {
+        dialog.error(data.info);
+      }
+    })
+  }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// 来电过滤开关功能设置 end
+
+// 来电显示开关功能设置 start
+var timerCalldisplay =null;
+var calldisplaySetSave = $("#calldisplaySetSave");
+calldisplaySetSave.attr('disabled', false);
+function calldisplaySetSaveConfig(){
+  if($(".a_id_hide").val()!=""){
+    var calldisplay = "";
+    calldisplay = $(".calldisplayStatus").val()
+    $("#calldisplay").val(calldisplay);
+    $("#typeFalg").val("calldisplay");
+    var countdown = 50;
+    function countDownTime(){  
+      if (countdown==0) {  
+        clearTimeout(timerCalldisplay);
+        calldisplaySetSave.attr('disabled', false);
+        calldisplaySetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+        countdown = 50;  
+        return false;
+      } else { 
+        calldisplaySetSave.attr('disabled', true);   
+        calldisplaySetSave.html(countdown+"秒后再点击保存"); 
+        countdown--;  
+      }
+      timerCalldisplay = setTimeout(function() { 
+        countDownTime() 
+      },1000)
+    }
+    var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+    var data=  $("#stuCardfrom").serialize();
+    dpost(url,data,function(data){
+      if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+      g_loadingIndex = -1;
+      if( data.status == 1 ) {
+        dialog.success(data.info,function(){ 
+          countDownTime(); 
+          layer.closeAll();
+        });
+      } else {
+        dialog.error(data.info);
+      }
+    })
+  }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// 来电显示开关功能设置 end
+
+// 无线考勤开关功能设置 start
+var timerWirelessatte =null;
+var wirelessatteSetSave = $("#wirelessatteSetSave");
+wirelessatteSetSave.attr('disabled', false);
+function wirelessatteSetSaveConfig(){
+  if($(".a_id_hide").val()!=""){
+
+    var wirelessatte = "";
+    wirelessatte = $(".wirelessatteStatus").val()
+    $("#wirelessatte").val(wirelessatte);
+    $("#typeFalg").val("wirelessatte");
+    var countdown = 50;
+    function countDownTime(){  
+      if (countdown==0) {  
+        clearTimeout(timerWirelessatte);
+        wirelessatteSetSave.attr('disabled', false);
+        wirelessatteSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+        countdown = 50;  
+        return false;
+      } else { 
+        wirelessatteSetSave.attr('disabled', true);   
+        wirelessatteSetSave.html(countdown+"秒后再点击保存"); 
+        countdown--;  
+      }
+      timerWirelessatte = setTimeout(function() { 
+        countDownTime() 
+      },1000)
+    }
+    var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+    var data=  $("#stuCardfrom").serialize();
+    dpost(url,data,function(data){
+      if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+      g_loadingIndex = -1;
+      if( data.status == 1 ) {
+        dialog.success(data.info,function(){ 
+          countDownTime(); 
+          layer.closeAll();
+        });
+      } else {
+        dialog.error(data.info);
+      }
+    })
+  }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// 无线考勤开关功能设置 end
+
+// 计步开关功能设置 start
+var timerStepcounter =null;
+var stepcounterSetSave = $("#stepcounterSetSave");
+stepcounterSetSave.attr('disabled', false);
+function stepcounterSetSaveConfig(){
+  if($(".a_id_hide").val()!=""){
+    var stepcounter = "";
+    stepcounter = $(".stepcounterStatus").val()
+    $("#stepcounter").val(stepcounter);
+    $("#typeFalg").val("stepcounter");
+    
+    var countdown = 50;
+    function countDownTime(){  
+      if (countdown==0) {  
+        clearTimeout(timerStepcounter);
+        stepcounterSetSave.attr('disabled', false);
+        stepcounterSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+        countdown = 50;  
+        return false;
+      } else { 
+        stepcounterSetSave.attr('disabled', true);   
+        stepcounterSetSave.html(countdown+"秒后再点击保存"); 
+        countdown--;  
+      }
+      timerStepcounter = setTimeout(function() { 
+        countDownTime() 
+      },1000)
+    }
+    var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+    var data=  $("#stuCardfrom").serialize();
+    dpost(url,data,function(data){
+      if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+      g_loadingIndex = -1;
+      if( data.status == 1 ) {
+        dialog.success(data.info,function(){ 
+          countDownTime(); 
+          layer.closeAll();
+        });
+      } else {
+        dialog.error(data.info);
+      }
+    })
+  }else{
+  dialog.error('请您选择要操作的校区！');
+  }
+}
+// 计步开关功能设置 end
+
+// 自动屏蔽功能设置 start
+var timerInschool =null;
+var inschoolSetSave = $("#inschoolSetSave");
+inschoolSetSave.attr('disabled', false);
+function inschoolSetSaveConfig(){
+  if($(".a_id_hide").val()!=""){
+    var inSchoolValue = "";
+    $.each($('input[name="inschool"]:checked'),function(i,v){
+      inSchoolValue = $(v).val();
+    }); 
+    $("#inschool").val(inSchoolValue);
+    $("#typeFalg").val("inschool");
+    var countdown = 50;
+    function countDownTime(){  
+      if (countdown==0) {  
+        clearTimeout(timerInschool);
+        inschoolSetSave.attr('disabled', false);
+        inschoolSetSave.html('<span class="glyphicon glyphicon-save"></span>保存'); 
+        countdown = 50;  
+        return false;
+      } else { 
+        inschoolSetSave.attr('disabled', true);   
+        inschoolSetSave.html(countdown+"秒后再点击保存"); 
+        countdown--;  
+      }
+      timerInschool = setTimeout(function() { 
+        countDownTime() 
+      },1000)
+    }
+    var url = '/index.php/Admin/StuCard/SthCardSetByAid/edit';
+    var data=  $("#stuCardfrom").serialize();
+    dpost(url,data,function(data){
+      if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+      g_loadingIndex = -1;
+      if( data.status == 1 ) {
+        dialog.success(data.info,function(){ 
+          countDownTime(); 
+          layer.closeAll();
+        });
+      } else {
+        dialog.error(data.info);
+      }
+    })
+  }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+// 自动屏蔽功能设置 end
+
+// 重启终端设置
+function restartSetConfig(){
+  if($(".a_id_hide").val()!=""){
+    var url = g_config.host + "/index.php/Admin/StuCard/SthCardSetByAid/get_restart_config";
+    var a_id_v= $(".a_id_hide").val();
+    var data   = {};
+    data.a_id = a_id_v;
+    dialog.confirm('您确定要重启终端设置吗？',function(){fget(url,data,restartSetCallback);});
+   }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+
+// 重启终端设置回调函数
+function restartSetCallback(data) {
+  if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+  g_loadingIndex = -1;
+  if (data.status == 1){
+    dialog.success1(data.info);
+  }else if(data.status == 0){
+    dialog.error(data.info);
+  }
+}
+
+// 恢复出厂设置
+function resetSetSaveConfig(){
+  if($(".a_id_hide").val()!=""){
+    var url = g_config.host + "/index.php/Admin/StuCard/SthCardSetByAid/get_reset_config";
+    var a_id_v= $(".a_id_hide").val();
+    var data   = {};
+    data.a_id = a_id_v;
+    dialog.confirm('您确定要恢复出厂设置吗？',function(){fget(url,data,resetSetSaveCallback);});
+  }else{
+    dialog.error('请您选择要操作的校区！');
+  }
+}
+
+// 恢复出厂设置回调函数
+function resetSetSaveCallback(data) {
+  if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+  g_loadingIndex = -1;
+  if (data.status == 1){
+    dialog.success1(data.info);
+  }else if(data.status == 0){
+    dialog.error(data.info);
+  }
+}
+
+//单选
+$('input[type="checkbox"].flat-green, input[type="radio"].flat-green').iCheck({
+  checkboxClass: 'icheckbox_flat-green',
+  radioClass: 'iradio_flat-green'
+});  
+
+//时间段
+$('.class-hour').datetimepicker({
+  datepicker:false,
+  format:'H:i'
+});
+
+// 左侧文件树搜索
+$('#searchNodeBtn').click(function() {
+  searchNodeAll('treeDemo',$('#searchNodeVal'));
+  leftTreeScroll();
+});
+$('#searchNodeVal').on('input', function() {
+  searchNodeAll('treeDemo',$('#searchNodeVal'));
+  leftTreeScroll();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>账号日志</title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/Public/bootstrap/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/Public/dist/font/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/Public/dist/font/ionicons/2.0.1/css/ionicons.min.css" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/Public/dist/css/AdminLTE.min.css" />
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/_all-skins.min.css" />
+  <!-- AdminLTE皮肤默认选择的skin-blue。也可以选择其他的皮肤。确保你应用皮肤类body标签更改生效 -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/skin-blue.min.css" />
+  <!-- 自定义公共css -->
+  <link rel="stylesheet" href="/Public/dist/css/custom.css" />
+  <!-- 表格 css -->
+  <link rel="stylesheet" href="/Public/plugins/bootstrap-table/bootstrap-table.css" />
+  <style type="text/css">
+    .modal-body { padding-top: 0!important; }
+  </style>
+</head>
+<body>
+<!-- 绑定设备 -->
+<div class="shade" style="" id="modalWindow2">
+  <div class="modal-body">
+    <!-- table -->
+    <div class="content-wrap">
+      <div class="row">
+        <div class="col-md-12">
+          <table id="table_data" class="js-custom-table-data">
+            <thead>
+              <tr>
+                <th data-align="center" data-sortable="false" data-field="log_info" name="">日志内容</th>
+                <th data-align="center" data-sortable="false" data-field="log_time" name="">日志时间</th>
+                <th data-align="center" data-sortable="false" data-field="money" name="">资金变更</th>
+                <th data-align="center" data-sortable="false" data-field="type" name="">日志类型</th>
+                <th data-align="center" data-sortable="false" data-field="order_id" name="">订单ID</th>
+                <th data-align="center" data-sortable="false" data-field="payment_id" name="">支付类型</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<include file="Public:footer_js"/>
+
+<script type="text/javascript">
+// 弹出层内容高度
+function modalWindow2H() {
+  $('#modalWindow2 .modal-body').css({
+    height: $('.layui-layer-content',window.parent.document).height()-$('#modalWindow2 .modal-footer').outerHeight(),
+    overflow: 'auto'
+  });
+}
+modalWindow2H();
+$(window).resize(function() {
+  modalWindow2H();
+});
+
+// 表格数据
+var $g_params = {};
+var $table    = $('#table_data');
+// table 功能设置
+$table.bootstrapTable({
+  toolbar:"#toolbar",                   // 工具栏
+  toggle:"table",                       // 表格
+  showToggle:true,                      // 是否显示(表格样式)切换
+  showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+  showExport:true,                      // 是否显示导出
+  pagination:true,                      // 分页
+  pageList:[10, 25, 50, 100],           // 每页行数
+  ajax:"ajaxRequest",                   // 数据地址
+  sidePagination:"server"               // 服务器
+});
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  // 需要的数据
+  var url = "/index.php/Admin/DealOrder/DealOrder/getBillList?user_id=" + '{$Think.get.user_id}';
+  queryList(url,params);
+}
+</script>
+</body>
+</html>

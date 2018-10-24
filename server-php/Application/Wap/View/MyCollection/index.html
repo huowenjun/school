@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>我的收藏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="no">
+<link rel="stylesheet" href="/Public/Store/wap_store/css/search_panel.css" />
+<link rel="stylesheet" href="/Public/Store/wap_store/css/idangerous.swiper.css" />
+<!-- iCheck for checkboxes and radio inputs -->
+<link rel="stylesheet" href="/Public/plugins/iCheck/all.css" />
+</head>
+<body>
+<div class="top_content">
+  <!-- #header -->
+  <div class="head my_collect_head js_head">
+    <div class="store_head">
+      <form class="head_right clear" action="" method="post">
+        <input class="storeInput" id="keyword" type="text" name="" placeholder="搜索在线商城商品" value="" title="搜索在线商城商品" />
+        <a class="sousuo js_sousuo"></a>
+      </form>
+    </div>
+  </div>
+  <!-- /header -->
+</div>
+
+<!-- #content -->
+<div class="wx_wrap myCollect">
+  <div id="searchResBlock">
+    <div class="mod_fixed_wrapper js_mod_fixed_wrapper" style="display: none;">
+      <!-- mod_fixed_wrapper -->
+      <div class="mod_filter">
+        <div class="mod_filter_inner">
+          <div class="leftBtn">
+            <div class="tab bulk_manage_btn js_bulk_manage"><span class="btn"><i class="icon_bulk_manage"></i>批量管理</span></div>
+            <div class="tab check_all_btn js_check_all">
+              <label class="checkbox-inline">
+                <input id="tipsay1" type="checkbox" name="tipsay" class="flat-red btn" /> 全选
+              </label>
+            </div>
+            <div class="tab del_btn js_del_btn"><span class="btn"><i class="icon_del"></i>删除</span></div>
+            <div class="tab cancel_btn js_cancel_btn"><span class="btn"><i class="icon_del"></i>取消</span></div>
+          </div>
+          <div class="tab switch"><i class="icon_switch"></i></div>
+        </div>
+      </div>
+    </div>
+    <!-- # 一栏/两栏 切换 mod_itemlist_small/mod_itemgrid -->
+    <div class="mod_itemlist_small js-mod-item">
+      <div class="hint_msg js_hint_msg">
+        <img src="/Public/Store/wap_store/img/empty_box.png" />
+        <span class="txt">您还没有收藏商品，快去<a class="back_index js_back_index" href="javascript:void(0)"> 商城首页 </a>收藏吧！</span>
+      </div>
+      <div id="js_templateInfo"></div>
+    </div>
+    <!-- // 一栏/两栏 切换 mod_itemlist_small/mod_itemgrid -->
+  </div>
+  <div class="my_collect_btn js_back_index">
+    <a class="btn" href="javascript:void(0)">返回<br>首页</a>
+  </div>
+</div>
+<!-- /content -->
+
+<form id="hide_form" action="" method="get">
+  <input type="hidden" id="keyword_hide" name="keyword" value="" placeholder="搜索关键字" />
+</form>
+
+<!-- jQuery 2.2.3 -->
+<script type="text/javascript" src="/Public/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="/Public/Store/wap_store/js/rem.js"></script>
+
+<!-- 轮播 -->
+<script type="text/javascript" src="/Public/Store/wap_store/js/idangerous.swiper.js"></script>
+<!-- iCheck 1.0.1 -->
+<script type="text/javascript" src="/Public/plugins/iCheck/icheck.min.js"></script>
+<!-- 自定义公共js -->
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<!-- layer弹出层 -->
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript">
+$(function() {
+  // ajax 商品数据请求
+  var url = '/index.php/Wap/MyCollection/query?user_id=' + getUrlParam('user_id');
+  function fnAjax(url) {
+    $.ajax({
+      type: 'get',
+      url: url,
+      dataType: 'json',
+      success: function(msg) {
+        var obj   = msg.data.list;
+        var count = msg.data.count;
+        if (count > 0) {
+          $('.js_mod_fixed_wrapper').show();
+          html = '';
+          for (var i = 0; i < obj.length; i++) {
+            html+='<div class="hproduct"> <!-- 如果此产品已经售完 就给此div再加个类名：soldout 样式已写好 -->' +
+                    '<input type="hidden" class="js_hide_keyid" keyId="' + obj[i].collect_id + '" />' +
+                    '<div class="cover">';
+                    if (obj[i].coupon_url == '') {
+            html+=    '<a href="' + obj[i].url_pc_short + '">';
+                    } else {
+            html+=    '<a href="' + obj[i].coupon_url + '">';
+                    }
+            html+=      '<img src="' + obj[i].image + '" alt="">' +
+                      '</a>' +
+                    '</div>' +
+                    '<div class="info_txt">' +
+                      '<div class="fn">';
+                      if (obj[i].coupon_url == '') {
+            html+=      '<a href="' + obj[i].url_pc_short + '">';
+                      } else {
+            html+=      '<a href="' + obj[i].coupon_url + '">';
+                      }
+                        if (obj[i].coupon_url != '') {
+            html+=        '<span class="hot">赠券</span>';
+                        };
+            html+=        obj[i].describe +
+                        '</a>' +
+                      '</div>' +
+                      '<div class="prices">' +
+                        '<strong>' +
+                          '<em>¥' + obj[i].price + '</em>' +
+                        '</strong>' +
+                        '<span class="comment_num">' +
+                          '<span>' + obj[i].address + '</span>' +
+                        '</span>' +
+                      '</div>' +
+                      '<div class="shop_name">' +
+                        '<span class="fl">' +
+                          '<img class="icon" src="/Public/Store/wap_store/img/icon_shop.png" />' + obj[i].shop_name +
+                        '</span>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="mask_layer js_mask_layer">' +
+                      '<div class="mask_txt js_mask_txt"></div>' +
+                    '</div>' +
+                  '</div>'
+          };
+          $('#js_templateInfo').html(html);
+          if ($('.js_bulk_manage').css('display') == 'none') {
+            $('.js_mask_layer').show();
+          };
+        } else {
+          $('.js_hint_msg').show();
+          $('#js_templateInfo').html('');
+          $('.js_mod_fixed_wrapper').hide();
+        };
+      },
+      error: function(msg) {
+        dialog.error('请求服务器异常！');
+      }
+    });
+  }
+  fnAjax(url);
+
+  // 返回首页
+  $('body').delegate('.js_back_index', 'click', function() {
+    window.location.href = '/index.php/Wap/Store?user_id=' + getUrlParam('user_id');
+  });
+
+  // 点击切换 一栏/两栏 mod_itemlist_small/mod_itemgrid
+  $('.mod_filter_inner').delegate('.tab.switch', 'click', function() {
+    if ($(this).hasClass('state_switch')) {
+      $(this).removeClass('state_switch');
+      $('.mod_itemgrid').removeClass('mod_itemgrid').addClass('mod_itemlist_small');
+      $('.hproduct').removeClass('item_long_cover');
+    } else {
+      $(this).addClass('state_switch');
+      $('.mod_itemlist_small').removeClass('mod_itemlist_small').addClass('mod_itemgrid');
+      $('.hproduct').addClass('item_long_cover');
+    };
+  });
+
+  // 商品搜索
+  $('.js_head').delegate('.js_sousuo', 'click', function() {
+    hide_form();
+    fnAjax(url + '&' + $('#hide_form').serialize());
+  });
+
+  // 隐藏域赋值
+  function hide_form() {
+    $("#keyword_hide").val($("#keyword").val());
+  }
+
+  // 批量管理
+  $('.js_bulk_manage').delegate('.btn', 'click', function() {
+    $('.js_bulk_manage').hide();
+    $('.js_mask_layer, .js_check_all, .js_del_btn, .js_cancel_btn').show();
+  });
+
+  // 取消管理
+  $('.js_cancel_btn').delegate('.btn', 'click', function() {
+    $('.js_bulk_manage').show();
+    $('.js_mask_layer, .js_check_all, .js_del_btn, .js_cancel_btn').hide();
+    $('.js_del_btn .btn').removeClass('active');
+    $('#js_templateInfo .js_mask_txt').removeClass('checked').text('');
+    $('.js_check_all input[type="checkbox"]').iCheck('uncheck');
+  });
+
+  // 选择商品
+  $('#js_templateInfo').delegate('.js_mask_txt', 'click', function() {
+    if ($(this).hasClass('checked')) {
+      $(this).removeClass('checked').text('');
+    } else {
+      $(this).addClass('checked').text('√');
+    };
+    if ($('#js_templateInfo').find('.checked').length < $('#js_templateInfo').find('.js_mask_txt').length) {
+      $('.js_check_all input[type="checkbox"]').iCheck('uncheck');
+      if ($('#js_templateInfo').find('.checked').length == 0) {
+        $('.js_del_btn .btn').removeClass('active');
+      } else {
+        $('.js_del_btn .btn').addClass('active');
+      };
+    } else {
+      $('.js_check_all input[type="checkbox"]').iCheck('check');
+      $('.js_del_btn .btn').addClass('active');
+    };
+  });
+
+  // 删除
+  $('.js_del_btn').delegate('.btn', 'click', function() {
+    if ($(this).hasClass('active')) {
+      var arr = [];
+      $('.js-mod-item .js_mask_txt.checked').each(function(index, el) {
+        arr.push($(this).parents('.js_mask_layer').siblings('.js_hide_keyid').attr('keyid'));
+      });
+      var ids = arr.join();
+      $.ajax({
+        type: 'get',
+        url: '/index.php/Admin/Mall/MyCollection/del?collect_id=' + ids,
+        dataType: 'json',
+        success: function(msg) {
+          if( msg.status == 1 ) {
+            dialog.success(msg.info,function() {
+              hide_form();
+              fnAjax(url + '&' + $('#hide_form').serialize());
+              parent.layer.closeAll();
+              $('.js_del_btn .btn').removeClass('active');
+            });
+          } else {
+            dialog.error(msg.info);
+          }
+        },
+        error: function(msg) {
+          dialog.error('请求服务器异常！');
+        }
+      });
+    } else {
+      dialog.notify('请选择要取消收藏的商品！');
+    };
+  });
+
+  // 单选、复选
+  $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+    checkboxClass: 'icheckbox_flat-red',
+    radioClass: 'iradio_flat-red'
+  });
+
+  // 全选
+  $('.js_check_all').on('ifClicked', function() {
+    if ($(this).find('.checked').length > 0) {
+      $('.js_mask_txt').removeClass('checked').text('');
+      $('.js_del_btn .btn').removeClass('active');
+    } else {
+      $('.js_mask_txt').addClass('checked').text('√');
+      $('.js_del_btn .btn').addClass('active');
+    };
+  })
+
+  // 获取当前页面网址参数
+  function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+    var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+    if (r != null) {
+      return decodeURI(r[2]);
+    };
+    return null; // 返回参数值
+  }
+});
+</script>
+</body>
+</html>

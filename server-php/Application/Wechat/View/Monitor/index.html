@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>学生实时位置</title>
+<link rel="stylesheet" href="/Public/Wechat/css/weui.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui2.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/Wechat/css/phone.css" />
+<!-- 进度条 -->
+<link rel="stylesheet" href="/Public/plugins/myProgress/myProgress.css" />
+<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=pObgXUnySvcX39VAqroiOt6xqUrNoOzK"></script>
+</head>
+<style>
+  .infoWindow{
+    width: 176px;
+    padding: 15px 12px 0;
+  }
+  ul,li{ list-style: none;}
+  .infoWindow ul{
+    overflow: hidden;
+  }
+  .infoWindow ul li{
+    font-size: 12px;
+    clear: both;
+    overflow: hidden;
+    white-space :normal;
+    margin-bottom: 10px;
+  }
+  .infoWindow ul li .fl{ float: left;}
+</style>
+<body>
+<div class="header">
+  <div class="custom_cell">
+    <div class="weui-cell__bd" style="text-align: center;">
+      <p>学生实时位置</p>
+    </div>
+  </div>
+</div>
+<div class="container" id="container">
+  <div class="weui_cells weui_cells_form">
+    <div class="weui_cell" >
+      <div class="weui_cell_hd"><label for="" class="weui_label">学生：</label></div>
+      <div class="weui_cell_bd weui_cell_primary">
+        <input class="weui_input" type="select" value="" id='selectStudent' />
+      </div>
+    </div>
+  </div>
+    <!-- #地图 -->
+    <div id="allmap" style="overflow: hidden;"></div>
+
+</div>
+
+<input type="hidden" name="imei" id="imei" value="" />
+
+<!-- jQuery 2.2.3 -->
+<script type="text/javascript" src="/Public/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<!-- 自定义js文件 -->
+<script type="text/javascript" src="/Public/Wechat/js/phone.js"></script>
+<!-- 选择日期时间 -->
+<script type="text/javascript" src="/Public/Wechat/js/picker.js"></script>
+<!-- 下拉单选 下拉多选 -->
+<script type="text/javascript" src="/Public/Wechat/js/select.js"></script>
+<!-- 进度条 -->
+<script type="text/javascript" src="/Public/plugins/myProgress/jquery.myProgress.js"></script>
+
+<script type="text/javascript">
+// 获取地图高度
+function allmaprFn() {
+  var windowH     = $(window).height();
+  var headerH     = $('.header').outerHeight(true);
+  var selH     = $('.weui_cells').outerHeight(true);
+  var mapH = windowH - headerH - selH;
+  $('#allmap').css({
+    'height': mapH
+  });
+}
+allmaprFn();
+
+var map = new BMap.Map("allmap");  
+// 根据IP定位
+var localCity = new BMap.LocalCity();
+ localCity.get(function (r) {
+     map.centerAndZoom(r.center, r.level);
+ });
+map.enableScrollWheelZoom(true); // 开启鼠标滚轮缩放
+var bottom_right_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_BOTTOM_RIGHT,type:BMAP_NAVIGATION_CONTROL_ZOOM}); //添加缩放平移控件
+map.addControl(bottom_right_navigation);
+
+// 是否绑定
+function isBondDevice(stuValue){
+  map.clearOverlays();  //清除地图上所有覆盖物
+  clearTimeout(timer);
+  $("#imei").val("");
+  $.ajax({
+    type: "get",
+    data:{stu_id: stuValue},
+    url: "/index.php/Wechat/Monitor/get1",
+    dataType : 'json',
+    success: function(res) {
+      $.each(res.data.list, function(key,value) {
+        var imei=value.imei; 
+        $("#imei").val(imei);
+      }) 
+    },
+    error: function(res) {
+      $.toast("请求服务器异常！", "forbidden");
+    }
+  });
+}
+//通过学生id获取设备信息
+var timer = null;
+function  getInfoByStuid(stuid){
+  clearInterval(getInfoByTimer);
+  if( $("#imei").val()!=""){
+    $.ajax({
+      type: "get",
+      data:{stu_id:stuid,type:0},
+      url: "/index.php/Wechat/Monitor/query" ,
+      beforeSend: function(){
+        $.showLoading();
+      },
+      complete: function(){
+        $.hideLoading();
+      },
+      dataType : 'json',
+      success: function(res) {
+        if(res.data.length!=0){
+          var stuObj=res.data;
+          var lat=stuObj.latitude;
+          var lng=stuObj.longitude;
+          var pointValue = new BMap.Point(lng,lat);
+          infoData = stuObj;
+          translatePoint(pointValue);
+          timer=window.setTimeout("getInfoByStuid("+stuid+")",10000)
+        }else{
+          $.toast("该学生没有实时监控数据", "forbidden");
+        };
+
+      },
+      error: function(res) {
+        $.toast("请求服务器异常", "forbidden");
+      }
+    });
+  }else{
+    $.toast("学生暂未绑定设备", "forbidden");
+  };
+}
+// 信息窗口
+var geoc = new BMap.Geocoder();
+function openInfoWindow(pointConvertor) {
+  var powerValue=infoData.power;
+  var signalValue=infoData.signal;
+  var sexInfo=infoData.sex;
+  var timeInfo = infoData.create_time;
+  var posTypeInfo = infoData.type;
+  var imeiInfo = infoData.imei;
+  if(sexInfo==1){
+    var boyIcon = new BMap.Icon("/Public/dist/img/map/boy-icon.png",new BMap.Size(44,68));
+    var boyMarker = new BMap.Marker(pointConvertor,{icon:boyIcon});
+    map.addOverlay(boyMarker);
+  }else if(sexInfo==0){
+    var girlIcon = new BMap.Icon("/Public/dist/img/map/girl-icon.png",new BMap.Size(44,68));
+    var girlMarker = new BMap.Marker(pointConvertor,{icon:girlIcon});
+    map.addOverlay(girlMarker);
+  }
+  geoc.getLocation(pointConvertor, function(rs) {
+    var addComp = rs.addressComponents;
+    var content='<div class="infoWindow"><ul><li>IMEI：'+ imeiInfo +'</li><li>定位方式：'+ posTypeInfo +'</li><li><div class="fl">设备电量：</div><div class="power-progress-out fl" id="power"><div class="percent-show"><span></span>%</div><div class="progress-in power-progress-in"></div></div></li><li><div class="fl">设备信号：</div><div class="signal-progress-out fl" id="signal"><div class="percent-show"><span></span>%</div><div class="progress-in signal-progress-in"></div></div></li><li>地址：'+ addComp.province  + addComp.city + addComp.district + addComp.street  + addComp.streetNumber + '</li><li>定位时间：'+timeInfo+'</li></ul></div>';
+      var label = new BMap.Label();
+      label.setOffset(new BMap.Size(-80,-210));
+      label.setContent(content);
+      if(sexInfo==1){
+        boyMarker.setLabel(label);
+      }else if(sexInfo==0){
+        girlMarker.setLabel(label);
+      }
+      label.setStyle({
+        border:"none",
+        width: "200px",
+        height:"210px",
+        background:"url('/Public/dist/img/map/info-window-bg-wx-big.png') no-repeat" 
+      });
+      $("#power").myProgress({speed: 500, percent: powerValue, width: "100px", height: "15px"});
+      $("#signal").myProgress({speed: 500, percent: signalValue, width: "100px", height: "15px"}); 
+  })  
+  map.centerAndZoom(pointConvertor, map.getZoom());
+}
+
+// 坐标转换
+var convertor = new BMap.Convertor();
+function translatePoint(pointValue){
+  // 坐标转换完之后的回调函数
+  translateCallback=function(data){
+    if(data.status === 0) {
+      map.clearOverlays(); 
+      var pointConvertor = new BMap.Point(data.points[0].lng,data.points[0].lat);
+      openInfoWindow(pointConvertor);
+    }
+  }
+  var pointArr = [];
+  pointArr.push(pointValue);
+  convertor.translate(pointArr, 1, 5,translateCallback);
+}
+
+// 加载学生
+var getInfoByTimer=null;
+function loadStudent(){
+  $.ajax({
+    type: "get",
+    url: "/index.php/Wechat/Monitor/get_list",
+    beforeSend: function(){
+      $.showLoading();
+    },
+    complete: function(){
+      $.hideLoading();
+    },
+    dataType : 'json',
+    success: function(res) {
+      var re = res.data;
+      $("#selectStudent").select({
+        title: "学生",
+        items: re,
+        onChange: function(d) {
+         isBondDevice(d.values);
+         getInfoByTimer=setInterval("getInfoByStuid("+d.values+")",2000); 
+        }
+      });
+    },
+    error: function(msg) {
+      // dialog.error("请求服务器异常！");
+      $.toast("请求服务器异常", "forbidden");
+    }
+  });
+}
+loadStudent();
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>找回密码</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/Public/bootstrap/css/bootstrap.min.css" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/Public/dist/css/AdminLTE.min.css" />
+  <!-- 自定义公共css -->
+  <link rel="stylesheet" href="/Public/dist/css/custom.css" />
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="/Public/plugins/iCheck/all.css" />
+</head>
+<body>
+<div class="wrapperPW">
+    <div class="box box-danger">
+        <div class="box-header with-border">
+          <h1>通过短信验证码找回</h1>
+          <div class="process-show">
+            <div class="process-img process-img1"></div>
+            <div class="process-text">
+                <span style=" padding:0 100px 0 0;">验证手机号</span>
+                <span style=" padding:0 115px 0 0;">设置密码</span>
+                <span>完成</span>
+            </div>
+          </div>
+        </div>
+        <div class="box-body">
+            <div class="modal-body" style=" width:280px; margin:0 auto;">
+              <p>请选择一个手机号以进行下一步操作</p>
+              <div class="form-horizontal"  id="selectCell" style=" padding:0 0 0 80px;">     
+              </div>
+            </div>
+            <div class="modal-footer" style="text-align:center;">
+                <button type="button" class="btn btn-danger" style="width:200px;" id="nextStep" >下一步</button>
+            </div>
+        </div>
+    </div>
+    <div class="footePw">
+      <p>信平台安防校园后台管理系统<br style="margin-bottom:10px;'">备案/许可证编号为：京ICP备15018821号</p>
+    </div>
+</div>
+
+<!--  END OF PAPER WRAP -->
+
+<!-- MAIN EFFECT -->
+<!-- jQuery 2.2.3 -->
+<script type="text/javascript" src="/Public/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script type="text/javascript" src="/Public/bootstrap/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script type="text/javascript" data-src="/Public/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script type="text/javascript" data-src="/Public/dist/js/demo.js"></script>
+
+<!-- 自定义公共js -->
+<script type="text/javascript" src="/Public/dist/js/custom.js"></script>
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+
+<!-- layer弹出层 -->
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<!-- iCheck 1.0.1 -->
+<script type="text/javascript" src="/Public/plugins/iCheck/icheck.min.js"></script>
+<script type="text/javascript">
+// 加载手机号
+// var username = getLocationString('username');
+function phoneList(){
+  var selectCellHtml = ""; 
+  var selectcell = $("#selectCell");
+  var url = '/index.php/Admin/ForgetPw/SelectCell/PhoneNumber';
+  // dpost(url,{username:username},function(res){
+  dpost(url,' ',function(res){
+    if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+    g_loadingIndex = -1;
+    if(res.status==1){
+      var phonestr = res.data.phone;
+      var phonevalue = phonestr.split(",");
+      for (var i = 0; i <phonevalue.length; i++) {
+        selectCellHtml+='<div class="form-group">';
+        selectCellHtml+='<label class="checkbox-inline phoneradio"><input type="radio" name="phone" value='+i+'  class="flat-green"> <text>'+phonevalue[i]+'</text></label>';
+        selectCellHtml+='</div>';
+      }
+      selectcell.html(selectCellHtml); 
+      // 单选
+      $('input[type="checkbox"].flat-green, input[type="radio"].flat-green').iCheck({
+        checkboxClass: 'icheckbox_flat-green',
+        radioClass: 'iradio_flat-green'
+      });
+      $(".phoneradio:eq(0) .iradio_flat-green ").addClass('checked');
+    }
+  })
+}
+phoneList();
+
+//换取 本页面超时session值
+var timeout;
+function session(){
+$.ajax({
+     type: "get",
+     async: false,
+     url: "/index.php/Admin/ForgetPw/SelectCell/Timeout",
+     dataType : 'json', 
+     success: function(res){
+      if(res.status==1){
+        timeout = res.data.timeout;
+      }
+     }
+  })
+  return timeout;
+}
+
+// 点击下一步 跳转到验证手机号页面
+var nextstep = $("#nextStep");
+nextstep.on('click', function(event) {
+  var ses = session();
+  if(ses==1){
+     dialog.notify('页面超时跳到找回密码首页',"/index.php/Admin/ForgetPw/AccountValidate/index");
+    return;
+  }else{
+    var url = "/index.php/Admin/ForgetPw/IdentityValidate/index"
+    var mobile = $(".phoneradio .checked").siblings('text').text();
+    var radioval = $(".phoneradio .checked .flat-green").val();
+    // location.href = url+'?phone=' + mobile+'&username=' + username+'&radioval=' + radioval;
+    location.href = url+'?phone=' + mobile+'&radioval=' + radioval;
+  }
+});
+
+
+// function getLocationString(name) {  
+//   // 如果链接没有参数，或者链接中不存在我们要获取的参数，直接返回空  
+//   if(location.href.indexOf("?")==-1 || location.href.indexOf(name+'=')==-1)  
+//   {  
+//       return '';  
+//   }  
+//   // 获取链接中参数部分  
+//   var queryString = location.href.substring(location.href.indexOf("?")+1);  
+ 
+//   // 分离参数对 ?key=value&key2=value2  
+//   var parameters = queryString.split("&");  
+ 
+//   var pos, paraName, paraValue;  
+//   for(var i=0; i<parameters.length; i++)  
+//   {  
+//       // 获取等号位置  
+//       pos = parameters[i].indexOf('=');  
+//       if(pos == -1) { continue; }  
+ 
+//       // 获取name 和 value  
+//       paraName = parameters[i].substring(0, pos);  
+//       paraValue = parameters[i].substring(pos + 1);  
+ 
+//       // 如果查询的name等于当前name，就返回当前值，同时，将链接中的+号还原成空格  
+//       if(paraName == name)  
+//       {  
+//           return unescape(paraValue.replace(/\+/g, " "));  
+//       }  
+//   }  
+//   return '';  
+// };  
+</script>
+</body>
+</html>

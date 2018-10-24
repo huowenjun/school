@@ -1,0 +1,235 @@
+<?php
+require_once "jssdk.php";
+$jssdk = new JSSDK("wx229e8482e32502ed", "53ce0566be98d9ec6539b98655ac580d");
+$signPackage = $jssdk->GetSignPackage();
+?>
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>邀请二维码</title>
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui.css" />
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui2.css" />
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/WeFinancial/css/custom1.css" />
+<script type="text/javascript" src="/Public/WeFinancial/js/rem.js"></script>
+</head>
+
+<body style="background-color: #fff;">
+<div class="share-info tcenter">
+  <img  class="share-info-bg" src="/Public/WeFinancial/img/share-bg.jpg" >
+  <img  class="share-info-bottom-bg" src="/Public/WeFinancial/img/share-bg1.png">
+  <div class="head-portrait-box"></div>
+  <p class="per-name"></p> 
+  <div class="twe-code"></div>
+  <p class="twe-code-txt">长按识别二维码</p>
+  <p id="uploadImage" class="share-txt">高收益理财 <span></span>易高效沟通<br>多样化商城 <span></span>建数海科技</p>
+</div>
+<div class="share-list" >
+  <a href="javascript:;" onClick="toshare()"><img  src="/Public/WeFinancial/img/share-list1-1.png" alt=""></a>
+</div>
+
+<!-- jQuery 1.10.2 -->
+<script type="text/javascript" src="/Public/WeFinancial/js/jquery-1.10.2.min.js"></script>
+<!-- 弹出层 -->
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+
+<script type="text/javascript">
+
+$('.share-list a').bind("touchstart",function(event){
+  $(this).children('img').attr('src', '/Public/WeFinancial/img/share-list2-1.png');
+});
+
+$('.share-list a').bind("touchend",function(event){
+  $(this).children('img').attr('src', '/Public/WeFinancial/img/share-list2-1.png');
+});
+
+function toshare(){
+  $("body").append('<div class="sharebg"><img src="/Public/WeFinancial/img/jiantou.png"></div>');
+  $(".sharebg").addClass("sharebg-active");
+
+  $(".sharebg-active").click(function(){
+    $(".am-share").removeClass("am-modal-active");  
+    setTimeout(function(){
+      $(".sharebg-active").removeClass("sharebg-active"); 
+      $(".sharebg").remove(); 
+      $(".share-list a").children('img').attr('src', '/Public/WeFinancial/img/share-list1-1.png');
+    },500);
+  })
+} 
+
+//截取链接属性和值
+function getLocationString(name) {  
+  // 如果链接没有参数，或者链接中不存在我们要获取的参数，直接返回空  
+  if(location.href.indexOf("?")==-1 || location.href.indexOf(name+'=')==-1)  
+  {  
+      return '';  
+  }  
+  // 获取链接中参数部分  
+  var queryString = location.href.substring(location.href.indexOf("?")+1);  
+ 
+  // 分离参数对 ?key=value&key2=value2  
+  var parameters = queryString.split("&");  
+ 
+  var pos, paraName, paraValue;  
+  for(var i=0; i<parameters.length; i++)  
+  {  
+      // 获取等号位置  
+      pos = parameters[i].indexOf('=');  
+      if(pos == -1) { continue; }  
+ 
+      // 获取name 和 value  
+      paraName = parameters[i].substring(0, pos);  
+      paraValue = parameters[i].substring(pos + 1);  
+ 
+      // 如果查询的name等于当前name，就返回当前值，同时，将链接中的+号还原成空格  
+      if(paraName == name)  
+      {  
+          return unescape(paraValue.replace(/\+/g, " "));  
+      }  
+  }  
+  return '';  
+};  
+
+var user_id_url = getLocationString("user_id");// 本地获取链接参数user_id的值
+var perName=$(".per-name");
+var tweCode=$(".twe-code");
+var headPortraitBox=$(".head-portrait-box");
+$.ajax({ 
+  type : "get",
+  url: "/index.php/Wap/WeFinancial/getRefferCode", 
+  dataType : 'json',
+  data: {user_id:user_id_url},
+  success: function(res){
+    if(res.status ==1 ){ 
+      var appIdV=res.data.wx.appId;;
+      var timestampV=res.data.wx.timestamp;
+      var nonceStrV=res.data.wx.nonceStr;
+      var signatureV= res.data.wx.signature;
+      var urlV = res.data.url;
+      var imgV = res.data.img;
+      var head_portrait=res.data.head_portrait;
+      var name=res.data.name;
+      tweCode.html('<img src="http://school.xinpingtai.com/'+imgV+'">'); 
+      headPortraitBox.html('<img src="'+head_portrait+'" class=" head-portrait">');
+      perName.text(name);
+
+      wx.config({
+        debug: false,
+        appId: '<?php echo $signPackage["appId"];?>',
+        timestamp:'<?php echo $signPackage["timestamp"];?>',
+        nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+        signature: '<?php echo $signPackage["signature"];?>',
+        jsApiList: [
+          // 所有要调用的 API 都要加到这个列表中
+          'onMenuShareTimeline',
+          'checkJsApi',
+          'onMenuShareAppMessage',
+          'onMenuShareQQ',
+          'onMenuShareQZone',
+          'chooseImage',
+          'uploadImage',
+          'downloadImage',
+          'getLocalImgData'
+        ]
+      });
+
+      wx.ready(function () {
+
+          // 在这里调用 API
+        wx.onMenuShareAppMessage({
+          title: '信平台', // 分享标题
+          desc: '诚邀您注册并下载数海信平台客户端进行体验', // 分享描述
+          // link: urlV, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: 'http://school.xinpingtai.com/Public/logo.png', // 分享图标
+          type: 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+          success: function () {
+            // 用户确认分享后执行的回调函数
+            $.toast("分享成功");
+          },
+          cancel: function () {
+            // 用户取消分享后执行的回调函数
+            $.toast("分享失败","forbidden");
+          }
+        });
+
+        wx.onMenuShareAppMessage({
+          title: '信平台', // 分享标题
+          desc: '诚邀您注册并下载数海信平台客户端进行体验', // 分享描述
+          // link: urlV, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl:'http://school.xinpingtai.com/Public/logo.png ', // 分享图标
+          type: 'link', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+          success: function () {
+            // 用户确认分享后执行的回调函数
+            $.toast("分享成功");
+          },
+          cancel: function () {
+            // 用户取消分享后执行的回调函数
+            $.toast("分享失败","forbidden");
+          }
+        });
+
+        wx.onMenuShareTimeline({
+          title: '信平台', // 分享标题
+          // link: urlV, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: 'http://school.xinpingtai.com/Public/logo.png', // 分享图标
+         success: function () {
+          // 用户确认分享后执行的回调函数
+          $.toast("分享成功");
+          },
+          cancel: function () {
+            // 用户取消分享后执行的回调函数
+            $.toast("分享失败","forbidden");
+          }
+        });
+
+        wx.onMenuShareQQ({
+          title: '信平台', // 分享标题
+          desc: '诚邀您注册并下载数海信平台客户端进行体验', // 分享描述
+          // link: urlV, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: 'http://school.xinpingtai.com/Public/logo.png', // 分享图标
+          success: function () {
+          // 用户确认分享后执行的回调函数
+          $.toast("分享成功");
+          },
+          cancel: function () {
+            // 用户取消分享后执行的回调函数
+            $.toast("分享失败","forbidden");
+          }
+        });
+
+        wx.onMenuShareQZone({
+          title: '信平台', // 分享标题
+          desc: '诚邀您注册并下载数海信平台客户端进行体验', // 分享描述
+          // link: urlV, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: 'http://school.xinpingtai.com/Public/logo.png', // 分享图标
+          success: function () {
+          // 用户确认分享后执行的回调函数
+          $.toast("分享成功");
+          },
+          cancel: function () {
+            // 用户取消分享后执行的回调函数
+            $.toast("分享失败","forbidden");
+          }
+        });
+      });
+    }else{
+       dialog.error(res.info);
+       setTimeout("location.href='/index.php/Wap/Index/goto_bindPhone';", 2000);  
+
+    }
+  },error: function(res) {
+    dialog.error("请求服务器异常！");
+  }
+});
+</script>
+</body>
+</html>

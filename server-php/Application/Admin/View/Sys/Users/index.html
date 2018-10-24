@@ -1,0 +1,189 @@
+  <!-- Main Header -->
+  <include file="Public:header" title="用户管理"/>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">用户管理</li>
+      </ol>
+    </section>
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <form class="form-inline navbar-form navbar-left">
+                <div class="form-group">
+                  <label for="username1">账户：</label>
+                  <input id="username1" type="text" class="form-control" placeholder="请输入账户" />
+                </div>
+                <div class="form-group">
+                  <label for="name1">姓名：</label>
+                  <input id="name1" type="text" class="form-control" placeholder="请输入姓名" />
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary query" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                  </button>
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-success activation" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-ok-circle"></span> 启用
+                  </button>
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-danger disactivation" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-ban-circle"></span> 禁用
+                  </button>
+                </div>            
+                
+              </form>
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <table id="usermanage_table" class="js-custom-table-data">
+                    <thead>  
+                      <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-align="center" data-formatter="logFormatter" data-events="exoperateEvents">操作</th>
+                        <th data-field="username" data-sortable="true" data-align="center">账号</th>
+                        <th data-field="name" data-sortable="true" data-align="center">姓名</th>
+                        <th data-field="user_type" data-sortable="true" data-align="center">初始类型</th>
+                        <th data-field="status" data-sortable="true" data-align="center">状态</th>
+                        <th data-field="ref_name" data-sortable="true" data-align="center">邀请人姓名</th>
+                        <th data-field="company_name" data-sortable="true" data-align="center">邀请人公司名称</th>
+                        <th data-field="create_time" data-sortable="true" data-align="center">创建时间</th>   
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <form id="searchForm" name="searchForm" action="">
+    <input type="hidden" name="username" id="username" value="" />
+    <input type="hidden" name="name" id="name" value="" />
+  </form>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED JS SCRIPTS -->
+<include file="Public:footer_js"/>
+
+<script>
+$(function() {
+  // 表格数据
+  var $table = $('#usermanage_table');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",                   // 工具栏
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+});
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  $("#username").val($("#username1").val());
+  $("#name").val($("#name1").val());
+  // 需要的数据
+  var url = "/index.php/Admin/Sys/Users/query?" + $("#searchForm").serialize();
+  queryList(url,params);
+}
+
+// 搜索
+function search(){
+  //form查询域赋值
+  $("#username").val($("#username1").val());
+  $("#name").val($("#name1").val());
+  // 需要的数据
+  var url = "/index.php/Admin/Sys/Users/query?" + $("#searchForm").serialize();
+  $g_params.data.page = parseInt($('.pagination li.active a').text());
+  queryList(url,$g_params);
+}
+
+//状态处理
+function activation(type_i){
+  var type_title = "启用";
+  if (type_i==1) {
+    type_title = "禁用";
+  };
+  var url = g_config.host + "/index.php/Admin/Sys/Users/enable";
+  var ids = getIdSelections($('.js-custom-table-data'),'user_id');
+  var strIds = ids.join(',');
+  var data   = {};
+  data.user_id = strIds;
+  data.type=type_i;
+  if (ids.length == 0) {
+    dialog.notify('请先选择要处理的记录');
+    return;
+  } 
+  else {
+    dialog.confirm('您确定要'+type_title+'吗？',function(){dpost(url,data,btnCallbackRefreshTable1);});
+  }
+}
+
+// 启动
+$('.activation').click(function() {
+  activation(0);
+});
+
+// 禁用
+$('.disactivation').click(function() {
+  activation(1);
+});
+
+//单选
+$('input[type="checkbox"].flat-green, input[type="radio"].flat-green').iCheck({
+  checkboxClass: 'icheckbox_flat-green',
+  radioClass: 'iradio_flat-green'
+});
+
+// 自定义编辑表格中的操作按钮
+function logFormatter(value, row, index) {
+  return [
+    '<button type="button" class="btn btn-sm btn-primary logs" data-color="#39B3D7" data-opacity="0.95">',
+    '<span class="glyphicon glyphicon-eye-open"></span> 账户日志',
+    '</button>'
+  ].join('');
+}
+window.exoperateEvents = {
+  // 点击账户日志 弹出层
+  'click .logs': function (e, value, row, index) {
+    var key = Object.keys(row)[0]; // 主键第一个值
+    console.log(key+':'+row[key]);
+    layer.open({
+      type: 2,
+      title: '账户日志',
+      shadeClose: true,
+      shade: 0.2,
+      area: ['60%', '60%'],
+      content: "{:U('/Admin/Sys/Users/logs');}?user_id=" + row.user_id
+    });
+  }
+};
+</script>
+</body>
+</html>

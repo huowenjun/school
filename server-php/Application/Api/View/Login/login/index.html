@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>信平台平安校园后台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Le styles -->
+    <script type="text/javascript" src="/Public/assets/js/jquery.js"></script>
+    <link rel="stylesheet" href="/Public/assets/css/loader-style.css">
+    <link rel="stylesheet" href="/Public/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/Public/assets/css/signin.css">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="/Public/assets/js/html5.js"></script>
+    <![endif]-->
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="/Public/assets/ico/minus.png">
+</head>
+<body>
+<!-- Preloader -->
+<div id="preloader">
+    <div id="status">&nbsp;</div>
+</div>
+<div class="container">
+    <div class="" id="login-wrapper">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div id="logo-login">
+                    <h1>信平台平安校园后台
+                        <span>v1.0</span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="account-box">
+                    <form id="formLogin" action="" method="post" onsubmit="return false;">
+                        <div class="form-group">
+                            <!--a href="#" class="pull-right label-forgot">Forgot email?</a-->
+                            <label for="username">用户名</label>
+                            <input type="text" id="username" class="form-control" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <!--a href="#" class="pull-right label-forgot">Forgot password?</a-->
+                            <label for="password">密码</label>
+                            <input type="password" id="password" class="form-control" name="password" required >
+                        </div>
+
+                        <div class="form-group">
+                            <!--a href="#" class="pull-right label-forgot">Forgot password?</a-->
+                            <label for="password">角色</label>
+                            <select name="type">
+                            <option value="3">老师</option>
+                            <option value="4">家长</option>
+                            </select>
+                        </div>
+
+
+                        <div class="checkbox pull-left">
+                            <label>
+                                <input type="checkbox">记住用户名
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-primary pull-right" id="btn_login" onclick="javascript:login();">登 录</button>
+
+                    </form>
+                    <a class="forgotLnk" href="index.html"></a>
+                    <div class="row-block">
+                        <div class="row">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>&nbsp;</p>
+    <div style="text-align:center;margin:0 auto;">
+        <h6 style="color:#fff;">信平台平安校园后台管理系统<br>备案/许可证编号为：京ICP备15018821号</h6>
+    </div>
+</div>
+<!--  END OF PAPER WRAP -->
+
+<!-- MAIN EFFECT -->
+<script type="text/javascript" src="/Public/assets/js/preloader.js"></script>
+<script type="text/javascript" src="/Public/assets/js/bootstrap.js"></script>
+<script type="text/javascript" src="/Public/assets/js/layer/layer.js"></script>
+<script type="text/javascript" src="/Public/assets/js/dialog.js"></script>
+<script type="text/javascript" src="/Public/assets/js/app.js"></script>
+<script type="text/javascript" src="/Public/assets/js/load.js"></script>
+<script type="text/javascript" src="/Public/assets/js/main.js"></script>
+<!-- /MAIN EFFECT -->
+
+<!-- <script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script> -->
+
+<script type="text/javascript" src="/Public/assets/js/custom.js"></script>
+
+<script type="text/javascript">
+
+
+
+    function search (){
+        var bFind = false;
+        $("input[type=text],input[type=password],input[type=textarea]").each(function(){
+            if($(this).val() == '' && $(this).attr('required') !== undefined && $(this).attr('required') !== false) {
+                $(this).focus();
+                bFind = true;
+                return false;
+            }
+        });
+        if((bFind === false) && ($("#btn_login") !== undefined)){
+            $("#btn_login").click();
+        }
+    }
+
+
+    function postCallBack(data) {
+    if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+    g_loadingIndex = -1;
+    if( data.status == 1 ) {
+        dialog.notify1(data.info,data.url);
+    }else{
+        dialog.notify1(data.info);
+    }
+}
+
+
+    // 登录
+    function login() {
+        // var user = $("#username").val();
+        // var pass = $("#password").val();
+        // $.ajaxSetup({
+        //       async:false
+        //     });        
+        // $.get('/index.php/Admin/Login/get_user',{'user':user,'pass':pass} , function(data){
+        //    console.log(data);
+        //    alert(data.info);
+
+        // });
+        
+        // alert(user+pass);
+        // return false;
+        var url = g_config.host + "/index.php/Api/Login/index";
+        fpost(url,'formLogin',postCallBack);
+    }
+
+</script>
+
+</body>
+</html>

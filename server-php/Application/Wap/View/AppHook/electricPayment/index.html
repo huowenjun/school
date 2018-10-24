@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>电费</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="no">
+<link rel="stylesheet" type="text/css" href="/Public/AppHook/css/phone.css" />
+<script type="text/javascript" src="/Public/AppHook/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/AppHook/js/rem.js"></script>
+</head>
+<body class="bg">
+<div class="main payPage2">
+	<!-- 内容 -->
+	<div class="content">
+    <div class="tit">
+      <span class="txt js_txt">选择缴费机构</span>
+      <a class="icon js_icon" href="javascript:void(0);">&gt;</a>
+    </div>
+    <div class="forms">
+      <div class="numtit">用户编号</div>
+      <div class="numberNum">
+        <input type="text" class="num" id="memo" value="" placeholder="请输入用户编号" />
+      </div>
+    </div>
+    <a class="subBtn js_subBtn" href="javascript:void(0);">查询账单</a>
+  </div>
+</div>
+
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<!-- layer弹出层 -->
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript">
+// 获取当前页面网址
+var currentUrl = this.location.href;
+
+/**
+* 序列化
+*
+* @param {Object} query
+* @returns {String}
+*/
+function stringify(query = {}) {
+  return Object.keys(query)
+  .map(function(key){
+    return encodeURIComponent(key) + '=' + encodeURIComponent(query[key])
+  }).join('&')
+}
+/**
+* 反序列化
+*
+* @param {String} queryString
+* @returns {Object}
+*/
+function parse(queryString = '') {
+  return queryString.split('&').reduce(function(obj, kv) {
+    const [key, value] = kv.split('=')
+    obj[decodeURIComponent(key)] = decodeURIComponent(value)
+    return obj
+  }, {})
+}
+
+// 点击缴费单位机构
+$('.js_icon').click(function() {
+  if (getUrlParam('user_num')) {
+    var queryStr      = window.location.search.substring(1);
+    var paramObj      = parse(queryStr);
+    paramObj.user_num = $('#memo').val();
+    var str1          = currentUrl.substring(0,currentUrl.lastIndexOf("?"));
+    var url           = '/index.php/Wap/AppHook/operatorList?url=' + str1 + '?' + stringify(paramObj);
+  } else {
+    var url = '/index.php/Wap/AppHook/operatorList?url=' + currentUrl + '&user_num=' + $('#memo').val();
+  };
+  $(this).attr('href',url);
+});
+
+// 点击查询账单
+$('.js_subBtn').click(function() {
+  var memo    = $('#memo').val();
+  var payUnit = $('.js_txt').text();
+  var bool = true;
+  if (!getUrlParam('item_id')) {
+    dialog.error('请选择缴费机构！');
+    bool = false;
+  };
+  if (memo == '') {
+    dialog.error('请输入用户编号！');
+    bool = false;
+  };
+  if (bool) {
+    // window.location.href = '/index.php/Wap/AppHook/propertyPaymentSubmenu?user_id=' + getUrlParam('user_id') + '&type_name=' + getUrlParam('type_name') + '&payUnit=' + payUnit + '&item_id=' + getUrlParam('item_id') + '&memo=' + memo;
+    // 测试户号 山东烟台的一个正确电费户号
+    window.location.href = '/index.php/Wap/AppHook/propertyPaymentSubmenu?user_id=' + getUrlParam('user_id') + '&type_name=' + getUrlParam('type_name') + '&payUnit=' + payUnit + '&item_id=64386602&memo=0668106641';
+  };
+});
+
+if (getUrlParam('item_name')) {
+  $('.js_txt').text(getUrlParam('item_name'));
+};
+
+if (getUrlParam('item_name')) {
+  $('#memo').val(getUrlParam('user_num'));
+};
+
+// 获取当前页面网址参数
+function getUrlParam(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+  var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+  if (r != null) {
+    return decodeURI(r[2]);
+  };
+  return null; // 返回参数值
+}
+</script>
+</body>
+</html>

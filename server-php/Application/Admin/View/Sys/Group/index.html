@@ -1,0 +1,232 @@
+  <!-- Main Header -->
+  <include file="Public:header" title="角色管理"/>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">角色管理</li>
+      </ol>
+    </section>
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <form class="form-inline navbar-form navbar-left">           
+                <div class="form-group">
+                  <button type="button" class="btn btn-success add" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-plus"></span>  添加
+                  </button>
+                </div>
+              </form> 
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <div id="toolbar">
+                    <div id="remove" class="btn btn-danger" style=" margin:0 0 10px 0;">
+                      <i class="fa fa-fw fa-close"></i>删除
+                    </div>
+                  </div>
+                  <table id="rolemanage_table" class="js-custom-table-data">
+                    <thead>  
+                      <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-align="center" data-formatter="editFormatter" data-events="operateEvents" name="editFormatter">编辑</th>
+                        <th data-field="title" data-sortable="true" data-align="center">角色名称</th>
+                        <th data-field="desc" data-sortable="true" data-align="center">备注</th>
+                        <th data-field="status" data-sortable="true" data-align="center">状态</th>
+                        <th data-align="center" data-formatter="viewRoleFormatter" data-events="viewRoleEvents" name="viewRoleFormatter">查看</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+
+<!--add-start -->
+<div class="" style="display:none;" id="modalWindow">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal"  action="" method="post" onsubmit="return false" id="formWindow">
+        <input type="hidden" name="id" id="id" class="primaryKey">
+        <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="col-md-3 control-label" for="title">角色名称：</label>
+                <div class="col-md-9">
+                  <input type="text" placeholder="请输入角色名称" id="title" name="title" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label" for="desc">备注：</label>
+                <div class="col-md-9">
+                  <input type="text" placeholder="请输入备注" id="desc" name="desc" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label" for="">状态：</label>
+                <div class="col-md-9">
+                  <label class="checkbox-inline">
+                    <input type="radio" name="status" class="flat-green start-up" value="1" checked> 启用
+                  </label>
+                  <label class="checkbox-inline">
+                    <input type="radio" name="status" class="flat-green prohibit" value="0"> 禁用
+                  </label> 
+                </div>
+              </div>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer" style="text-align:center;">
+    <button type="button" class="btn btn-success save">
+        <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+     <button type="button" class="btn btn-default layui-layer-close">
+        <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+<!--add-end-->
+
+<!-- REQUIRED JS SCRIPTS -->
+<include file="Public:footer_js"/>
+
+<script>
+$(function() {
+  // 表格数据
+  var $table = $('#rolemanage_table');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",                   // 工具栏
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+});
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  // 需要的数据
+  var url = "/index.php/Admin/Sys/Group/query";
+  queryList(url,params);
+}
+
+function search(){
+  // 需要的数据
+  var url = "/index.php/Admin/Sys/Group/query?" + $("#searchForm").serialize();
+  $g_params.data.page = parseInt($('.pagination li.active a').text());
+  queryList(url,$g_params);
+}
+
+// 新增/编辑
+function edit(id){
+    var url = '/index.php/Admin/Sys/Group/get';
+    if(id<5&&id!=0){
+      dialog.notify('此角色不能编辑！');
+      return false;
+    }
+    custom_edit(id,url,{id:id},'formWindow','modalWindow');
+}
+
+//保存数据
+function save() {
+  var url = g_config.host + '/index.php/Admin/Sys/Group/edit';
+  fpost(url,'formWindow',btnCallbackRefreshTable1);
+}
+
+//删除
+function del(){
+  var url = g_config.host + "/index.php/Admin/Sys/Group/delete";
+  var ids    = getIdSelections($('.js-custom-table-data'),'id');
+  var strIds = ids.join(',');
+  var data   = {};
+  data.id  = strIds;
+  if (ids.length == 0) {
+    dialog.notify('请先选择要删除的记录');
+    return;
+  } else {  
+    var arrIds=strIds.split(',')
+    $.each(arrIds,function(key,value){
+      if(value < 5){
+        dialog.notify('此角色不能删除！');
+        window.location.reload(true);
+      }else{
+        dialog.confirm('您确定要删除当前选项吗？',function(){dpost(url,data,btnCallbackRefreshTable1);});
+      } 
+    });
+  }
+}
+
+//编辑状态(启用,禁止)特殊字段处理
+function setEditDataEx(data){
+  if(data.status == 1){
+    $('.start-up').iCheck('check');
+    $('.prohibit').iCheck('uncheck');
+    
+  }
+  else if(data.status == 0){
+    $('.start-up').iCheck('uncheck');
+    $('.prohibit').iCheck('check');
+  }
+};
+
+// 单选
+$('input[type="checkbox"].flat-green, input[type="radio"].flat-green').iCheck({
+  checkboxClass: 'icheckbox_flat-green',
+  radioClass: 'iradio_flat-green'
+});
+
+// 自定义查看表格中的操作内容
+function viewRoleFormatter(value, row, index) {
+  return [
+    '<button type="button" class="btn btn-primary table-btn viewRole" style="margin:0 10px 0 0;" data-color="#39B3D7" data-opacity="0.95">',
+    '<i class="fa fa-eye"></i> 查看拥有的权限',
+    '</button>'
+  ].join('');
+}
+
+//查看拥有的权限
+window.viewRoleEvents = {
+  'click .viewRole': function (e, value, row, index) {   
+    viewRoleDetails(row.id)
+  }
+};
+function viewRoleDetails(id) {
+  layer.open({
+    type: 2,
+    title: '查看拥有的权限',
+    shadeClose: true,
+    shade: 0.2,
+    area: ['60%', '60%'],
+    content: "/index.php/Admin/Sys/Group/view_rule?id="+id
+  });
+}
+
+</script>
+</body>
+</html>

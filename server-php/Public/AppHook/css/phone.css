@@ -1,0 +1,302 @@
+@charset "UTF-8";
+/**
+ *
+ * @authors LJS (1114510520@qq.com)
+ * @date    2017-02-17 14:41:56
+ * @version $Id$
+ */
+
+/* 公共部分 */
+* { /*outline: none;*/ box-sizing: border-box; -moz-box-sizing: border-box; /* Firefox */
+  -webkit-box-sizing: border-box; /* Safari */
+  -webkit-tap-highlight-color: rgba(0,0,0,0); }
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; }
+html, body { min-height: 100%; }
+body { width: 20rem; margin: 0 auto; line-height:1.4286; font-family: 'Microsoft YaHei', Arial, Helvetica, sans-serif; font-size: 12px; /*-webkit-user-select: none; user-select: none;*/ /*禁止选中文本*/ }
+ul,li { list-style: none; }
+em, b, strong { font-weight: normal; }
+i, em { font-style: normal; }
+u, s, ins, del, a { text-decoration: none; }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; }
+table { border-collapse: collapse; border-spacing: 0; }
+img, fieldset, iframe, input { border: none; }
+input, button, textarea, select { font-family: inherit; font-size: inherit; font-weight: inherit; *font-size:100%; }
+th, td { text-align: left; }
+a { text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0); /*此属性是苹果手持设备的浏览器属性，意思是：点击它，它就会出现一个半透明的灰色背景。webkit是苹果浏览器引擎，tap点击，highlight背景高亮，color颜色，颜色用数值调节*/ }
+/*a:focus, input:focus { outline: none; -moz-outline: none; }*/
+.body { background: #e8eae9; }
+/*.clearFix:after { clear: both; display: block; visibility: hidden; height: 0px; line-height: 0px; content:'\20'; }
+.clearFix { zoom: 1; }*/
+.clear { *zoom: 1; }
+.clear:after { content:""; display: table; clear: both; }
+
+/* 按钮文字间距 start */
+.btnLetter { width: 72px; letter-spacing: 24px; text-indent:24px; text-align: center; }
+/* 按钮文字间距 end */
+
+/* 文字两端对齐 start */
+.textLetter { width: 72px; text-align: justify; }
+.textLetter:after {content: ''; display: inline-block; width: 100%; height: 0; }
+/* 文字两端对齐 end */
+.bg { background: #fcfcfc; }
+.subBtn { display: block; margin: 2.0625rem 0.5625rem 2.0625rem 0.5625rem; background-color: #00bad2; width: 18.9rem; height: 2.1875rem; line-height: 2.1875rem; border-radius: 4px; color: #ffffff; text-align: center; font-size: 0.875rem; }
+.subBtn2 { display: block; margin: 2.0625rem 0.5625rem 2.0625rem 0.5625rem; background-color: #00bad2; width: 18.9rem; height: 2.1875rem; line-height: 2.1875rem; border-radius: 4px; color: #ffffff; text-align: center; font-size: 0.875rem; }
+.subBtn.disabled, .subBtn2.disabled { background-color: #cccccc; color: #999999; }
+
+/* 生活缴费 - 原版本1 */
+/*.livingPayment .header { background: #222331; height: 2.375rem; }
+.livingPayment .header .cont { padding: 0.625rem 0 0 8.125rem; overflow: hidden; }
+.livingPayment .header .icon { float: left; width: 1.0rem; height: 1.1875rem; margin-right: 6px; }
+.livingPayment .header .txt { float: left; color: #e2c26e; font-size: 0.875rem; }
+.livingPayment .content { font-size: 0.6875rem; }
+.livingPayment .content .list { background: #ffffff; padding: 1.875rem 0 0 1.25rem; }
+.livingPayment .content .list .classify { overflow: hidden; }
+.livingPayment .content .list .classify li { float: left; width: 4.75rem; margin: 0 1.4375rem 1.4375rem 0; }
+.livingPayment .content .list .classify li img { display: block; width: 100%; height: 4.75rem; }
+.livingPayment .content .list .classify li .txt { display: block; text-align: center; height: 2.25rem; line-height: 2.25rem; color: #cfb268; font-size: 0.875rem; }*/
+
+/* 生活缴费 */
+.livingPayment .header { background: #00bad2; padding: 0.625rem 0; text-align: center; }
+.livingPayment .header .txt { color: #ffffff; font-size: 0.9375rem; }
+.livingPayment .content { font-size: 0.625rem; }
+.livingPayment .content .payList { background: #ffffff; margin-bottom: 0.5625rem; }
+.livingPayment .content .payList .tit { font-size: 0.75rem; color: #333333; padding: 0.5625rem 0; margin: 0 0.75rem; border-bottom: 1px solid #e3e3e3; }
+.livingPayment .content .payList .tit .line { display: inline-block; position: relative; top: 0.09375rem; width: 0.1875rem; height: 0.75rem; background: #00bad2; margin-right: 0.375rem; }
+.livingPayment .content .classify { overflow: hidden; margin-top: 0.5rem; }
+.livingPayment .content .classify li { float: left; width: 5rem; }
+.livingPayment .content .classify li a { display: block; }
+.livingPayment .content .classify li img { display: block; width: 1.4375rem; height: 1.4375rem; margin-left: 1.78125rem; }
+.livingPayment .content .classify li .txt { display: block; text-align: center; height: 1.5625rem; line-height: 1.5625rem; color: #444444; font-size: 0.625rem; margin-top: 0.3125rem; }
+
+/* 话费充值 + 流量充值 */
+.telephonePayment .content { font-size: 0.6875rem; }
+.telephonePayment .content .top { font-size: 0.875rem; padding: 0.1875rem 0.875rem 0.5rem 0.875rem; background-color: #ffffff; }
+.telephonePayment .content .top .numberSort { overflow: hidden; color: #999999; }
+.telephonePayment .content .top .numberSort .left { float: left; height: 1.875rem; line-height: 1.875rem; }
+.telephonePayment .content .top .numberSort .right { height: 1.875rem; line-height: 1.875rem; }
+.telephonePayment .content .top .numberNum { height: 1.875rem; line-height: 1.875rem; }
+.telephonePayment .content .top .numberNum input { width: 100%; height: 100%; font-size: 0.75rem; }
+.telephonePayment .content .center { margin-top: 0.875rem; }
+.telephonePayment .content .center .tab { overflow: hidden; background: #ffffff; }
+.telephonePayment .content .center .tab li { float: left; width: 50%; text-align: center; color: #919191; height: 2.0625rem; line-height: 2.0625rem; font-size: 0.875rem; border-bottom: 2px solid #fcfcfc; }
+.telephonePayment .content .center .tab li.active { color: #00bad2; border-color: #00bad2; }
+.telephonePayment .content .center .sums { overflow: hidden; padding: 0.875rem 0 0.3125rem 0.875rem; background: #ffffff; }
+.telephonePayment .content .center .sums li { float: left; width: 5.5rem; border: 1px solid #ccc; border-radius: 4px; padding: 0.5rem 0; margin: 0 0.875rem 0.875rem 0; }
+.telephonePayment .content .center .sums li.active { background-color: #00bad2; color: #ffffff; }
+.telephonePayment .content .center .sums li span { display: block; height: 1.125rem; line-height: 1.125rem; text-align: center; }
+.telephonePayment .content .center .sums li span:nth-child(2) { font-size: 0.5625rem; }
+.telephonePayment .content .section { margin-top: 0.875rem; }
+.telephonePayment .content .section .ways { overflow: hidden; color: #00bad2; padding: 0.875rem 0 0.3125rem 0.875rem; background: #ffffff; }
+.telephonePayment .content .section .ways li { float: left; width: 8.68rem; border-radius: 4px; padding: 0.5rem 0; margin: 0 0.875rem 0.875rem 0; text-align: center; }
+.telephonePayment .content .section .ways .alipayPay { border: 1px solid #00aaee; color: #00aaee; }
+.telephonePayment .content .section .ways .weChatPay { border: 1px solid #09bb07; color: #09bb07; }
+.telephonePayment .content .section .ways .alipayPay.active { background-color: #00aaee; color: #ffffff; }
+.telephonePayment .content .section .ways .weChatPay.active { background-color: #09bb07; color: #ffffff; }
+
+/* 物业费 + 水费 + 电费 + 燃气费 ------> 二级页面 */
+.payPage2 { padding-top: 0.625rem; }
+.payPage2 .content { font-size: 0.8125rem; }
+.payPage2 .content .tit { background: #ffffff; height: 1.8125rem; line-height: 1.8125rem; padding: 0 0.625rem; overflow: hidden; }
+.payPage2 .content .tit .txt { float: left; width: 17.1875rem; }
+.payPage2 .content .tit .icon { float: right; width: 1.5rem; text-align: right; color: #000000; }
+.payPage2 .content .forms { background: #ffffff; margin-top: 0.5625rem; padding: 0 0.625rem 0.5rem 0.625rem; }
+.payPage2 .content .forms .numtit { height: 1.875rem; line-height: 1.875rem; }
+.payPage2 .content .forms .numberNum { margin-top: 0.4375rem; height: 2.1875rem; line-height: 2.1875rem; border-bottom: 1px solid #e8e7e7; }
+.payPage2 .content .forms .numberNum .num { width: 100%; }
+.payPage2 .content .subBtn { margin: 2.6875rem 0.5625rem 0 0.5625rem; }
+
+/* 物业费 + 水费 + 电费 + 燃气费 ------> 三级页面 */
+.payPage3 { padding-top: 0.625rem; }
+.payPage3 .content { font-size: 0.8125rem; }
+.payPage3 .content .tit { background: #ffffff; height: 1.8125rem; line-height: 1.8125rem; padding: 0 0.625rem; }
+.payPage3 .content .forms { background: #ffffff; margin-top: 0.5625rem; padding: 0 0.625rem 0.5rem 0.625rem; }
+.payPage3 .content .forms .numtit { height: 1.875rem; line-height: 1.875rem; }
+.payPage3 .content .forms .numberNum { margin-top: 0.4375rem; height: 2.1875rem; line-height: 2.1875rem; border-bottom: 1px solid #e8e7e7; }
+.payPage3 .content .forms .numberNum .num { width: 100%; }
+.payPage3 .content .subBtn { margin: 2.6875rem 0.5625rem 0 0.5625rem; }
+.payPage3 .content .forms .userInfo { color: #939393; font-size: 0.625rem; }
+.payPage3 .content .forms .userInfo li { position: relative; height: 1.5625rem; line-height: 1.5625rem; overflow: hidden; }
+.payPage3 .content .forms .userInfo .left { position: absolute; top: 0; left: 0; width: 2.8125rem; overflow: hidden; }
+.payPage3 .content .forms .userInfo .right { display: block; margin-left: 2.8125rem; text-align: right; }
+
+/* 物业费 + 水费 + 电费 + 燃气费 ------> 缴费运营商列表页 */
+.operatorList .content .tit { background: #00bad2; overflow: hidden; padding: 0.625rem; font-size: 0.75rem; }
+.operatorList .content .tit label { float: left; height: 1.5625rem; line-height: 1.5625rem; color: #ffffff; }
+.operatorList .content .tit .select-value { float: left; width: 15.0rem; height: 1.5625rem; padding: 0 0.3125rem; }
+.operatorList .content .list { background: #ffffff; padding: 0 0.625rem; margin-top: 0.5625rem; font-size: 0.75rem; }
+.operatorList .content .list li { line-height: 1.0rem; padding: 0.3125rem 0; border-bottom: 1px solid #f1eeee; }
+.operatorList .content .list li:last-of-type { border-bottom: none; }
+
+/* 注册页 */
+body.register_bg { width: 100%; background-color: #f9f9f9; color: #333; -webkit-backface-visibility: hidden; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-family: Helvetica,"STHeiti STXihei","Microsoft JhengHei","Microsoft YaHei",Tohoma,Arial; line-height: 1; }
+.register_bg .container { background-color: #f9f9f9; }
+.register_bg .account-form { overflow: hidden; }
+.register_bg .account-form .form-title { margin: 25px 0 10px; padding: 0 12px; line-height: 24px; color: #7c7b83; text-transform: uppercase; text-shadow: 0 1px rgba(255, 255, 255, 0.2); font-size: 20px; text-align: center; font-weight: normal; }
+.register_bg .block-form { width: 100%; padding-left: 10px; margin-bottom: 20px; list-style: none; font-size: 14px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; overflow: hidden; -webkit-border-image: url("../img/border-line.png") 2 stretch; -moz-border-image: url("../img/border-line.png") 2 stretch; border-image: url("../img/border-line.png") 2 stretch; border-top: 2px solid #e5e5e5; border-bottom: 2px solid #e5e5e5; background-color: #fff; display: block; position: relative; }
+.register_bg .block-item { position: relative; padding: 0; width: 100%; line-height: 22px; display: table; overflow: hidden; -webkit-border-image: url("../img/border-line.png") 2 stretch; -moz-border-image: url("../img/border-line.png") 2 stretch; border-image: url("../img/border-line.png") 2 stretch; border-top: 2px solid #e5e5e5; }
+.register_bg .block-item:first-child { border-top: 0px none; }
+.register_bg .btn { display: inline-block; padding: 4px; text-align: center; margin: 0; font-size: 12px; cursor: pointer; line-height: 18px; color: #e5c46f; background-color: #222331; border: 1px solid #e5e5e5; border-color: #03b401; border-radius: 2px; border-top-color: rgb(229, 229, 229); border-right-color: rgb(229, 229, 229); border-bottom-color: rgb(229, 229, 229); border-left-color: rgb(229, 229, 229); }
+.register_bg .block-item .password { font-family: inherit; font-size: 100%; margin: 0; -webkit-appearance: none; -moz-appearance: none; }
+.register_bg .block-item input, .register_bg .account-form label { display: inline-block; /*vertical-align: top; */
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.register_bg .account-form ::-webkit-input-placeholder { color: #a8a8af; }
+.register_bg .account-form ::-ms-input-placeholder { color: #a8a8af; }
+.register_bg .account-form ::-moz-placeholder { color: #a8a8af; opacity: 1; }
+.register_bg .block-form .block-item label { display: table-cell; width: 90px; color: #999; padding: 10px 0; }
+.register_bg .block-item input, .register_bg .account-form .btn { margin: 0; margin-right: 0px; margin-left: 0px; padding: 0; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 16px; border: 0; }
+.register_bg .block-form .block-item input { width: 99%; overflow: hidden; margin-right: 10px; margin-left: 0; padding: 10px 0; font-size: 14px; min-height: 22px; display: table-cell; resize: none; background-color: #fff; border: 0px none; }
+.register_bg .block-item .btn-auth-code { position: absolute; top: 6px; right: 10px; height: 30px; line-height: 30px; padding-left: 7px; padding-right: 7px; font-weight: bold; font-size: 12px !important; }
+.register_bg .block-item .btn-auth-code.disabled { display: none; font-weight: initial; color: red; background: #cccccc; }
+.register_bg .action-container { padding: 0 10px; text-align: center; margin-top: 10px; margin-bottom: 10px; }
+.register_bg .action-container > .btn { margin-bottom: 10px; }
+.register_bg .btn.btn-block { text-align: center; width: 100%; padding: 11px 16px; font-size: 16px; line-height: 16px; border-radius: 4px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+
+/* 淘票 */
+.buyTicketsBg { background: #f2f3f4; }
+.buyTickets .topInfo { background: #ffffff; padding-bottom: 1.5625rem; }
+.buyTickets .tab { overflow: hidden; padding: 0 0.625rem; border-bottom: 1px solid #f2f3f4; font-size: 0.75rem; }
+.buyTickets .tab li { float: left; width: 50%; text-align: center; height: 2.1875rem; line-height: 2.1875rem; color: #4D4D4D; }
+.buyTickets .tab li.active { border-bottom: 2px solid #00bad2; }
+.buyTickets .address { margin: 0 0.625rem; overflow: hidden; font-size: 0.8125rem; position: relative; }
+.buyTickets .address .from, .buyTickets .address .to { float: left; line-height: 2.5rem; border-bottom: 1px solid #e9e9e9; width: 8.4375rem; }
+.buyTickets .address img { width: 1.40625rem; height: 1.40625rem; position: absolute; left: 50%; top: 0.5625rem; margin-left: -0.6875rem; }
+.buyTickets .address .to { float: right; text-align: right; }
+.buyTickets .dates { margin: 0 0.625rem; overflow: hidden; font-size: 0.8125rem; border-bottom: 1px solid #e9e9e9; }
+.buyTickets .dates .date { float: left; line-height: 2.5rem; }
+.buyTickets .dates .more { float: right; line-height: 2.5rem; }
+.buyTickets .subBtn { margin: 1.5625rem 0.5625rem 0 0.5625rem; }
+/* 首页 + 添加联系人(下单)页面 */
+.infoList { margin-top: 0.625rem; }
+.infoList .null { margin: 0.3125rem 0 0 0.3125rem; font-size: 0.8125rem; color: #595959; }
+.infoList .list { margin-bottom: 10px; padding: 0 0.625rem; background: #ffffff; }
+.infoList .list .rows { overflow: hidden; padding: 0.5rem 0; }
+.infoList .list .rows .row { float: left; width: 25%; text-align: center; }
+.infoList .list .rows .row1 { text-align: left; }
+.infoList .list .rows .row4 { text-align: right; }
+.infoList .list .rows .row .top { display: block; line-height: 1.125rem; font-size: 0.8125rem; }
+.infoList .list .rows .row.row1 .top { font-weight: 800; }
+.infoList .list .rows .row.row2 .top { font-size: 0.5rem; background: url(../img/icon_arrow.png) no-repeat center bottom; background-size: 60% 50%; }
+.infoList .list .rows .row.row4 .top { color: #ff4100; }
+.infoList .list .rows .row.row4 .top .txt { color: #b0b0b0; font-size: 0.625rem; }
+.infoList .list .rows .row .bottom { display: block; line-height: 0.9375rem; font-size: 0.625rem; }
+.infoList .list .submenu { display: none; }
+.infoList .list .submenu.active { display: block; }
+.infoList .list .submenu .submenuList { overflow: hidden; border-bottom: 1px solid #e9e9e9; }
+.infoList .list .submenu .submenuList:last-of-type { border-bottom: none; }
+.infoList .list .submenu .submenuList .row { float: left; width: 30%; text-align: left; line-height: 2.5rem; height: 2.5rem; font-size: 0.75rem; }
+.infoList .list .submenu .submenuList .row.row3 { width: 40%; text-align: right; color: #ff4100; }
+.infoList .list .submenu .submenuList .row.row3 .price { font-size: 0.8125rem; }
+.infoList .list .submenu .submenuList .row.row3 .btn { border: 1px solid #ff4100; border-radius: 4px; padding: 0.125rem 0.3125rem; color: #ff4100; }
+.infoList .list .expand { height: 1.6875rem; line-height: 1.6875rem; border-top: 1px dashed #e9e9e9; text-align: right; color: #ff4100; }
+.infoList .list .expand .showHideBtn { width: 0.6875rem; height: auto; }
+.infoList .list .expand .showHideBtn.active { transform: rotate(180deg); }
+/* 飞机票信息列表-二级信息列表 */
+.infoList .list.airTicket .submenu .submenuList .row.row1 { width: 40%; }
+.infoList .list.airTicket .submenu .submenuList .row.row2 { width: 20%; }
+/* 搜索弹出层 */
+.buyTickets .mask { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; }
+.buyTickets .mask .tit { width: 20rem; background: #00bad2; overflow: hidden; padding: 0.625rem; font-size: 0.75rem; }
+.buyTickets .mask .tit .search { position: relative; float: left; width: 16.5625rem; }
+.buyTickets .mask .tit .icon_search { position: absolute; left: 0.3125rem; top: 0.375rem; width: 0.8125rem; height: 0.8125rem; }
+.buyTickets .mask .tit .searchInfo { width: 16.5625rem; height: 1.5625rem; padding: 0 1.3125rem 0 1.375rem; }
+.buyTickets .mask .tit .icon_del { display: none; position: absolute; right: 0.3125rem; top: 0.4375rem; width: 0.6875rem; height: 0.6875rem; }
+.buyTickets .mask .tit .txt { float: right; margin-right: 0.09375rem; height: 1.5625rem; line-height: 1.5625rem; color: #ffffff; }
+.buyTickets .mask .list { overflow-y: auto; }
+.buyTickets .mask .list .null { margin: 0.3125rem 0 0 0.3125rem; font-size: 0.8125rem; color: #595959; }
+.buyTickets .mask .list li { overflow: hidden; margin: 0 0.625rem; border-bottom: 1px solid #f1eeee; }
+.buyTickets .mask .list li .info { line-height: 2.375rem; }
+.buyTickets .mask .list li .info.info1 { font-size: 0.5rem; padding: 0.125rem 0.3125rem; background: #00bad2; color: #ffffff; border-radius: 4px; position: relative; top: -0.09375rem; }
+.buyTickets .mask .list li .info.info2 { font-size: 0.75rem; margin-left: 0.1875rem; }
+.buyTickets .mask .list li .info.info3 { font-size: 0.75rem; margin-left: 0.1875rem; font-size: 0.625rem; color: #959595; }
+
+/* 订单页 */
+.order .header { background: #00bad2; height: 2.375rem; }
+.order .header .cont { text-align: center; line-height: 2.375rem; }
+.order .header .txt { color: #ffffff; font-size: 0.875rem; }
+.order .infoList .list .rows .row { width: 33%; text-align: center; }
+.order .infoList .list .rows .row .top { font-size: 0.875rem; }
+.order .infoList .list .rows .row.row1 .top { font-weight: initial; }
+.order .infoList .list .rows .row .bottom { font-weight: 800; font-size: 0.8125rem; }
+.order .infoList .list .rows .row.row2 .top, .order .infoList .list .rows .row.row2 .bottom { font-size: 0.625rem; font-weight: initial; }
+.order .infoList .list .expand { font-size: 0.75rem; }
+.order .linkman { padding: 0 0.625rem; height: 2.8125rem; line-height: 2.8125rem; background-color: #ffffff; border-top: 1px solid #f1eeee; border-bottom: 1px solid #f1eeee; font-size: 0.75rem; }
+.order .linkPeopleInfo { border-top: 1px solid #f1eeee; font-size: 0.75rem; background-color: #ffffff; margin-top: 10px; }
+.order .linkPeopleInfo .infoListA { border-bottom: 1px solid #f1eeee; padding: 0 0.625rem; overflow: hidden; }
+.order .linkPeopleInfo .infoListA label, .order .linkPeopleInfo .infoListA .input { float: left; height: 2.8125rem; line-height: 2.8125rem; }
+.order .linkPeopleInfo .infoListA label { width: 3.075rem; }
+.order .linkPeopleInfo .infoListA .input { width: 15.675rem; }
+.order .linkPeopleInfo .infoListA .input input { width: 100%; }
+.order .section { margin-top: 0.875rem; }
+.order .section .ways { overflow: hidden; color: #fc7c3b; padding: 0.875rem 0 0.3125rem 0.875rem; background: #ffffff; font-size: 0.75rem; }
+.order .section .ways li { float: left; width: 8.68rem; border: 1px solid #fc7c3b; border-radius: 4px; padding: 0.5rem 0; margin: 0 0.875rem 0.875rem 0; text-align: center; }
+.order .section .ways li.active { background-color: #fc7c3b; color: #ffffff; }
+/* 新增/编辑 乘车人 弹出层 */
+.addContact { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f2f3f4; }
+.addContact .header { background: #00bad2; height: 2.375rem; }
+.addContact .header .cont { font-size: 0.875rem; color: #ffffff; text-align: center; line-height: 2.375rem; position: relative; }
+.addContact .header .cont .txt { }
+.addContact .header .cont .cancelAdd { position: absolute; top: 0; right: 0.625rem; line-height: 2.375rem; }
+.addContact .formInfo { background-color: #ffffff; margin-top: 10px; font-size: 0.75rem; }
+.addContact .formInfo li { padding: 0 0.625rem; overflow: hidden; }
+.addContact .formInfo li label, .addContact .formInfo li .input { float: left; height: 2.8125rem; line-height: 2.8125rem; }
+.addContact .formInfo li label { width: 4.375rem; }
+.addContact .formInfo li .input { width: 14.375rem; }
+.addContact .formInfo li .input input { width: 100%; }
+/* 选择联系人 弹出层 */
+.selectLinkman { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); }
+.selectLinkman .info { position: fixed; bottom: 0; left: 0; width: 100%; height: 56%; background: #f2f3f4; }
+.selectLinkman .info .btn { height: 2.1875rem; padding: 0 0.625rem; font-size: 0.75rem; color: #00bad2; }
+.selectLinkman .info .btn .cancel { line-height: 2.1875rem; float: left; }
+.selectLinkman .info .btn .confirm { line-height: 2.1875rem; float: right; }
+.selectLinkman .info .add { height: 2.1875rem; line-height: 2.1875rem; border-top: 1px solid #f1eeee; border-bottom: 1px solid #f1eeee; background-color: #ffffff; padding: 0 0.625rem; text-align: center; font-size: 0.6875rem; color: #00bad2; }
+.selectLinkman .info .passengerList { margin-top: 10px; border-top: 1px solid #f1eeee; }
+.selectLinkman .info .passengerList .null { margin: 0.3125rem 0 0 0.3125rem; font-size: 0.8125rem; color: #595959; }
+.selectLinkman .info .passengerList .list { background-color: #ffffff; padding: 0 0.625rem; border-bottom: 1px solid #f1eeee; overflow: hidden; }
+.selectLinkman .info .passengerList .list .row { float: left; }
+.selectLinkman .info .passengerList .list .row1 { width: 20%; line-height: 3.1875rem; }
+.selectLinkman .info .passengerList .list .row1 .del { margin-right: 0.9375rem; font-size: 0.875rem; }
+.selectLinkman .info .passengerList .list .row1 img { width: 0.96875rem; height: 1.03125rem; position: relative; top: 0.1875rem; }
+.selectLinkman .info .passengerList .list .row2 { width: 70%; padding-top: 0.3125rem; padding-bottom: 0.4375rem; }
+.selectLinkman .info .passengerList .list .row2 .name { font-size: 0.75rem; font-weight: 800; line-height: 1.3125rem; }
+.selectLinkman .info .passengerList .list .row2 .idCard { line-height: 1.1875rem; font-size: 0.6875rem; }
+.selectLinkman .info .passengerList .list .row3 { width: 10%; text-align: right; line-height: 3.1875rem; }
+.selectLinkman .info .passengerList .list .row3 .radio {  }
+
+/*@media screen and (min-width: 768px) {
+  html { font-size: 62.1px!important; }
+}*/
+
+/* css3 加载动画 */
+.spinner { margin: 100px auto; width: 20px; height: 20px; position: relative; z-index: 99999; }
+.spinner-container1 > div, .spinner-container2 > div, .spinner-container3 > div { width: 6px; height: 6px; background-color: #333; border-radius: 100%; position: absolute; -webkit-animation: bouncedelay 1.2s infinite ease-in-out; animation: bouncedelay 1.2s infinite ease-in-out; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
+.spinner .spinner-container { position: absolute; width: 100%; height: 100%; }
+.spinner-container2 { -webkit-transform: rotateZ(45deg); transform: rotateZ(45deg); }
+.spinner-container3 { -webkit-transform: rotateZ(90deg); transform: rotateZ(90deg); }
+.spinner .circle1 { top: 0; left: 0; }
+.spinner .circle2 { top: 0; right: 0; }
+.spinner .circle3 { right: 0; bottom: 0; }
+.spinner .circle4 { left: 0; bottom: 0; }
+.spinner-container2 .circle1 { -webkit-animation-delay: -1.1s; animation-delay: -1.1s; }
+.spinner-container3 .circle1 { -webkit-animation-delay: -1.0s; animation-delay: -1.0s; }
+.spinner-container1 .circle2 { -webkit-animation-delay: -0.9s; animation-delay: -0.9s; }
+.spinner-container2 .circle2 { -webkit-animation-delay: -0.8s; animation-delay: -0.8s; }
+.spinner-container3 .circle2 { -webkit-animation-delay: -0.7s; animation-delay: -0.7s; }
+.spinner-container1 .circle3 { -webkit-animation-delay: -0.6s; animation-delay: -0.6s; }
+.spinner-container2 .circle3 { -webkit-animation-delay: -0.5s; animation-delay: -0.5s; }
+.spinner-container3 .circle3 { -webkit-animation-delay: -0.4s; animation-delay: -0.4s; }
+.spinner-container1 .circle4 { -webkit-animation-delay: -0.3s; animation-delay: -0.3s; }
+.spinner-container2 .circle4 { -webkit-animation-delay: -0.2s; animation-delay: -0.2s; }
+.spinner-container3 .circle4 { -webkit-animation-delay: -0.1s; animation-delay: -0.1s; }
+@-webkit-keyframes bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0.0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+@keyframes bouncedelay {
+  0%, 80%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 40% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}

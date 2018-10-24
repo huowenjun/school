@@ -1,0 +1,695 @@
+<?php if (!defined('THINK_PATH')) exit();?>﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>在线商城</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <!-- banner -->
+  <link rel="stylesheet" href="/Public/Store/pc_store/css/swiper.min.css" />
+  <link rel="stylesheet" href="/Public/Store/pc_store/css/pc_store.css" />
+</head>
+<body>
+<!-- header -->
+<div class="headerbg">
+  <div class="header">
+    <div class="textLeft fl">欢迎光临数海在线商城！</div>
+    <a class="textRight fr" href="/index.php/Admin/Index">返回管理平台</a>
+    <div class="textLeft fr">&nbsp;|&nbsp;</div>
+    <a class="textRight fr" href="/index.php/Admin/Mall/MyCollection">我的商品收藏</a>
+  </div>
+</div>
+<div class="headBg">
+  <div class="logo-search wid clearFix">
+    <div class="logo">
+      <a href="/index.php/Admin/Mall/Store">
+        <img src="/Public/Store/pc_store/img/pic_logo.png" width="209" height="46" />
+      </a>
+    </div>
+    <div class="search">
+      <div id="sousuo_Cont">
+        <div class="search-cen one clearFix">
+          <input type="text" id="keyword" class="keyword" name="" placeholder="搜索商品" />
+          <p>
+            <a class="js_sousuo">搜索</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /header -->
+
+<!-- banner -->
+<div class="banner js_banner" style="display: none">
+  <section class="pc-banner">
+    <div class="swiper-container">
+      <div class="swiper-wrapper js_swiper_wrapper"></div>
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="button">
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </section>
+</div>
+<!-- /banner -->
+
+<!-- content -->
+<div class="dataContent">
+  <div class="screen">
+    <div class="crumbs-nav">
+      <div class="crumbs-nav-item">
+        <div class="menu-drop">
+          <div class="trigger">
+            <span class="curr">已选</span>
+          </div>
+        </div>
+        <i class="crumbs-arrow">&gt;</i>
+      </div>
+      <div class="crumbs-nav-item">
+        <div class="selector-set js-selector-set">
+          <div class="select" liu-select="category"></div>
+          <div class="select" liu-select="subcategories"></div>
+          <div class="select" liu-select="03"></div>
+          <div class="select" liu-select="brand"></div>
+        </div>
+      </div>
+      <a href="javascript:;" class="btn btn-default fr js-undoAll">全部撤消</a>
+    </div>
+    <div class="selector js-selector">
+      <!-- 商品筛选 -->
+      <div class="js-selectorLine js-category1 s-brand" liu-div="category">
+        <div class="sl-wrap">
+          <div class="sl-key" liu-tit="category">
+            <span class="js_oLei">商品分类：</span>
+          </div>
+          <div class="sl-value">
+            <ul class="sl-b-letter js-brandLetter">
+              <li class="curr">所有分类</li>
+            </ul>
+            <div class="sl-v-list">
+              <ul class="js-valueList v-fixed">
+                <?php if(is_array($categoryList)): foreach($categoryList as $key=>$vo): ?><li liu-value="category">
+                    <a href="javascript:void(0);">
+                      <i></i>
+                      <input class="js_hide_id" type="hidden" value="<?php echo ($vo["cate_id"]); ?>" />
+                      <span class="js_categoryList_text js_categoryList_<?php echo ($vo["cate_id"]); ?>" data-text="<?php echo ($vo["name"]); ?>"><?php echo ($vo["name"]); ?></span>
+                    </a>
+                  </li><?php endforeach; endif; ?>
+              </ul>
+            </div>
+          </div>
+          <div class="sl-ext">
+            <a class="sl-e-more js-extMore" href="javascript:;" style="visibility: visible;">更多
+              <i></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="js-selectorLine js-category2 s-brand" liu-div="subcategories">
+        <div class="sl-wrap">
+          <div class="sl-key" liu-tit="subcategories">
+            <span class="js_oLei">子分类：</span>
+          </div>
+          <div class="sl-value">
+            <ul class="sl-b-letter js-brandLetter">
+              <li class="curr">所有子分类</li>
+            </ul>
+            <div class="sl-v-list js-switch2">
+              <ul class="js-valueList v-fixed js-switchCont2" liu-ul="subcategories">
+                <?php if(is_array($categorySub)): foreach($categorySub as $key=>$v): ?><li liu-value="subcategories">
+                    <a href="javascript:void(0);">
+                      <i></i>
+                      <input class="js_hide_id" type="hidden" value="<?php echo ($v["cate_id"]); ?>" />
+                      <span class="js_categoryList_text js_categoryList_<?php echo ($v["cate_id"]); ?>" data-text="<?php echo ($v["name"]); ?>"><?php echo ($v["name"]); ?></span>
+                    </a>
+                  </li><?php endforeach; endif; ?>
+              </ul>
+            </div>
+            <div class="sl-b-selected js-brandSelected">
+              <span class="sl-b-key">已选条件：</span>
+              <ul class="sl-v-list brand-selected"></ul>
+            </div>
+            <div class="sl-btns">
+              <a class="btn btn-primary js-btnsConfirm disabled" href="javascript:;">确定</a>
+              <a class="btn btn-default js-btnsCancel" href="javascript:;">取消</a>
+            </div>
+          </div>
+          <div class="sl-ext">
+            <a class="sl-e-more js-extMore" href="javascript:;" style="visibility: visible;">更多
+              <i></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- 请勿删除 暂时不用 -->
+      <!-- <div class="js-selectorLine s-brand" liu-div="03">
+        <div class="sl-wrap">
+          <div class="sl-key">
+            <span class="js_oLei">价格：</span>
+          </div>
+          <div class="sl-value">
+            <div class="sl-v-list">
+              <ul class="js-valueList v-fixed">
+                <?php if(is_array($priceList)): foreach($priceList as $key=>$v): ?><li liu-value="0028">
+                    <a href="javascript:void(0);">
+                      <i></i>
+                      <span><?php echo ($v); ?></span>
+                    </a>
+                  </li><?php endforeach; endif; ?>
+              </ul>
+            </div>
+          </div>
+          <div class="numSection">
+            <div class="sl-price">
+              <input class="input-txt" title="最低价" maxlength="6" />
+              <em>-</em>
+              <input class="input-txt" title="最高价" maxlength="8" />
+              <a class="btn btn-default">确定</a>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="js-selectorLine js-brandCategory s-brand" liu-div="brand">
+        <div class="sl-wrap">
+          <div class="sl-key" data-brand="brand" liu-tit="brand">
+            <span class="js_oLei">品牌分类：</span>
+          </div>
+          <div class="sl-value">
+            <ul class="sl-b-letter js-brandLetter">
+              <li class="curr">所有其他分类</li>
+            </ul>
+            <div class="sl-v-list">
+              <ul class="js-valueList v-fixed">
+                <?php if(is_array($brandList)): foreach($brandList as $key=>$v): ?><li liu-value="brand">
+                    <a href="javascript:void(0);">
+                      <i></i>
+                      <input class="js_hide_id" type="hidden" value="<?php echo ($v["id"]); ?>" />
+                      <span class="js_categoryList_text js_categoryList_<?php echo ($v["id"]); ?>" data-text="<?php echo ($v["brand"]); ?>"><?php echo ($v["brand"]); ?></span>
+                    </a>
+                  </li><?php endforeach; endif; ?>
+              </ul>
+            </div>
+            <div class="sl-b-selected js-brandSelected">
+              <span class="sl-b-key">已选条件：</span>
+              <ul class="sl-v-list brand-selected"></ul>
+            </div>
+            <div class="sl-btns">
+              <a class="btn btn-primary js-btnsConfirm disabled" href="javascript:;">确定</a>
+              <a class="btn btn-default js-btnsCancel" href="javascript:;">取消</a>
+            </div>
+          </div>
+          <div class="sl-ext">
+            <a class="sl-e-more js-extMore" href="javascript:;" style="visibility: visible;">更多
+              <i></i>
+            </a>
+            <a class="sl-e-multiple js-extMultiple" href="javascript:;">多选
+              <i></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="center_content">
+    <div class="left fl">
+      <div class="sell">
+        <h2>在线商品</h2>
+        <div class="sort">
+          <div class="sortCont js-sortCont">
+            <a class="js_selected_sort" href="javascript:void(0);" orderType="">综合排序</a>
+            <ul class="xiala js-xiala">
+              <li orderType="" class="active">综合排序</li>
+              <li orderType="1">价格 ↑</li>
+              <li orderType="2">价格 ↓</li>
+              <li orderType="3">销量 ↑</li>
+              <li orderType="4">销量 ↓</li>
+            </ul>
+          </div>
+          <div class="price">
+            <input type="text" id="sprice" name="" value="" placeholder="￥" />
+            <span>-</span>
+            <input type="text" id="eprice" name="" value="" placeholder="￥" />
+            <input class="btn js_price_sort" type="button" name="" value="确定">
+          </div>
+          <div class="clear"></div>
+        </div>
+        <div class="content">
+          <div class="dlFu" id="js_dlFu"></div>
+        </div>
+      </div>
+
+      <!-- #page -->
+      <div class="page">
+        <div id="pagination3"></div>
+      </div>
+      <!-- /page -->
+    </div>
+
+    <div class="right fr">
+      <div class="content">
+        <h2>热卖排行</h2>
+        <div class="js_dlFu"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /content -->
+
+<!-- footer -->
+<div class="footer">
+  <div class="foot">
+    <div class="footNav">
+      <a href="javascript:void(0);">关于数海</a>
+      <span>|</span>
+      <a href="javascript:void(0);">客服中心</a>
+      <span>|</span>
+      <a href="javascript:void(0);">信平台</a>
+      <span>|</span>
+      <a href="javascript:void(0);">大数据</a>
+      <span>|</span>
+      <a href="javascript:void(0);">新媒体广告</a>
+      <span>|</span>
+      <a href="javascript:void(0);">微营销</a>
+    </div>
+    <p class="text">数海信息技术有限公司 备案/许可证编号为：京ICP备15018821号</p>
+  </div>
+</div>
+<!-- /footer -->
+
+<form id="hide_form" action="" method="get">
+  <input type="hidden" id="category_id_hide" name="cate_id" value="" placeholder="产品分类id：一级分类id" />
+  <input type="hidden" name="category" value="" placeholder="产品分类：一级分类id" />
+  <input type="hidden" name="subcategories" value="" placeholder="子分类：二级分类id" />
+  <input type="hidden" name="brand" value="" placeholder="品牌分类" />
+  <input type="hidden" id="keyword_hide" name="keyword" value="" placeholder="搜索关键字" />
+  <input type="hidden" id="orderType_hide" name="orderType" value="" placeholder="排序" />
+  <input type="hidden" id="sprice_hide" name="sprice" value="" placeholder="最小价格" />
+  <input type="hidden" id="eprice_hide" name="eprice" value="" placeholder="最大价格" />
+  <input type="hidden" id="pagesize_hide" name="pagesize" value="20" placeholder="设置每页显示数据数量" />
+  <input type="hidden" id="page_hide" name="page" value="1" placeholder="页码默认是第1页" />
+</form>
+
+<!-- jquery-1.10.2.min.js -->
+<script type="text/javascript" src="/Public/Store/pc_store/js/jquery-1.10.2.min.js"></script>
+<!-- 分页 -->
+<script type="text/javascript" src="/Public/Store/pc_store/js/jquery.pagination.min.js"></script>
+<!-- banner -->
+<script type="text/javascript" src="/Public/Store/pc_store/js/swiper.min.js"></script>
+<!-- 自定义公共js -->
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<!-- layer弹出层 -->
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript">
+$(function() {
+  // banner ajax
+  $.get('/index.php/Api/Hook/showAdShop', function(data) {
+    var obj = data.data;
+    if (obj.length > 0) {
+      html = '';
+      $('.js_banner').show();
+      for (var i = 0; i < obj.length; i++) {
+        html += '<div class="swiper-slide">';
+        html +=   '<a href="' + obj[i].url + '">';
+        html +=     '<img src="' + obj[i].img + '" />';
+        html +=   '</a>'
+        html += '</div>'
+      };
+      $('.js_swiper_wrapper').html(html);
+
+      // 初始化 Swiper
+      var swiper = new Swiper('.swiper-container',{
+        autoplay: 3000,
+        speed: 1000,
+        autoplayDisableOnInteraction: false,
+        loop: true,
+        centeredSlides: true,
+        slidesPerView: 2,
+        pagination: '.swiper-pagination',
+        paginationClickable: true,
+        prevButton: '.swiper-button-prev',
+        nextButton: '.swiper-button-next',
+        onInit:function(swiper) {
+          swiper.slides[2].className="swiper-slide swiper-slide-active"; // 第一次打开不要动画
+        },
+        breakpoints: { 
+          668: {
+            slidesPerView: 1,
+          }
+        }
+      });
+    };
+  });
+
+  // 商品结构
+  function fndata(obj) {
+    for (var i = 0; i < obj.length; i++) {
+      html += '<dl class="js_commodity_chunk">' +
+                '<input type="hidden" class="js_hide_keyid" keyId="' + obj[i].id + '" />' +
+                '<dt>';
+      if (obj[i].coupon_url != '') {
+        html += '<a href="' + obj[i].coupon_url + '">';
+      } else {
+        html += '<a href="' + obj[i].url_pc_short + '">';
+      };
+      html += '<img src="' + obj[i].image + '" alt="">' + '</a>' + '</dt>' + '<dd>' + '<strong class="price">￥' + obj[i].price + '</strong>' + '<span class="commodity_sales">月销：' + obj[i].sales + '</span>' + '</dd>' + '<dd class="text">';
+      if (obj[i].coupon_url != '') {
+        html += '<span class="coupon">券</span>';
+      };
+      html += obj[i].describe + '</dd>' + '<dd>' + '<em class="shop_name">' + obj[i].shop_name + '</em>' + '</dd>' + '<dd>' + '<em class="shop_addr">' + obj[i].address + '</em>';
+      if (obj[i].status == 1) {
+        html += '<a class="collect js_collect active">已收藏</a>';
+      } else {
+        html += '<a class="collect js_collect">收藏</a>';
+      };
+      html += '</dd>' + '</dl>'
+    };
+  }
+
+  // ajax 商品热销数据请求
+  $.ajax({
+    type: 'get',
+    url: '/index.php/Admin/Mall/Store/hotProducts',
+    dataType: 'json',
+    success: function(msg) {
+      var obj = msg.data;
+      html = '';
+      fndata(obj);
+      $('.js_dlFu').html(html);
+    },
+    error: function(msg) {
+      dialog.error('请求服务器异常！');
+    }
+  });
+
+  // 分页
+  var pageSize = $('#pagesize_hide').val();       // 获取显示个数
+  var page     = parseInt($('#page_hide').val()); // 获取当前页数
+  $("#pagination3").pagination({
+    currentPage: page,      // 当前页数
+    totalPage: 0,           // 总页数
+    isShow: true,           // 是否显示首尾页
+    count: 7,               // 显示分页按钮个数
+    homePageText: "首页",   // 首页文本
+    endPageText: "尾页",    // 尾页文本
+    prevPageText: "上一页", // 上一页文本
+    nextPageText: "下一页", // 下一页文本
+    callback: function(current) { // 回调,current(当前页数)
+      $("#page_hide").val(current);
+      hide_form();
+      fnAjax(url + $('#hide_form').serialize());
+    }
+  });
+
+  // ajax 商品数据请求
+  var url = '/index.php/Admin/Mall/Store/query?';
+  function fnAjax(url) {
+    $.ajax({
+      type: 'get',
+      url: url,
+      dataType: 'json',
+      success: function(msg) {
+        var obj     = msg.data.list;
+        var sumPage = msg.data.count;
+        html = '';
+        fndata(obj);
+        $('#js_dlFu').html(html);
+
+        // 从新设置分页
+        var page = parseInt($('#page_hide').val());
+        $("#pagination3").pagination("setPage", page, Math.ceil(sumPage/pageSize));
+      },
+      error: function(msg) {
+        dialog.error('请求服务器异常！');
+      }
+    });
+  }
+
+  $('.js-category2').hide(); // 二级分类默认隐藏
+
+  // 隐藏域赋值
+  function hide_form() {
+    $("#keyword_hide").val($("#keyword").val());
+    $("#orderType_hide").val($(".js_selected_sort").attr('ordertype'));
+    $("#sprice_hide").val($("#sprice").val());
+    $("#eprice_hide").val($("#eprice").val());
+  }
+
+  // 点击收藏
+  $('#js_dlFu, .js_dlFu').delegate('.js_collect', 'click', function() {
+    var obj   = $(this);
+    var keyId = $(this).parents('.js_commodity_chunk').find('.js_hide_keyid').attr('keyId');
+    if (obj.text() == '收藏') {
+      $.ajax({
+        type: 'get',
+        url: '/index.php/Admin/Mall/Store/collect?id=' + keyId,
+        dataType: 'json',
+        success: function(msg) {
+          // 此商品已收藏
+          obj.addClass('active').text('已收藏');
+          dialog.success(msg.info,function() {
+            hide_form();
+            fnAjax(url + $('#hide_form').serialize());
+            parent.layer.closeAll();
+          });
+        },
+        error: function(msg) {
+          dialog.error('请求服务器异常！');
+        }
+      });
+    };
+    if (obj.text() == '已收藏') {
+      $.ajax({
+        type: 'get',
+        url: '/index.php/Admin/Mall/Store/unfavorite?id=' + keyId,
+        dataType: 'json',
+        success: function(msg) {
+          // 此商品已取消收藏
+          obj.removeClass('active').text('收藏');
+          dialog.success(msg.info,function() {
+            hide_form();
+            fnAjax(url + $('#hide_form').serialize());
+            parent.layer.closeAll();
+          });
+        },
+        error: function(msg) {
+          dialog.error('请求服务器异常！');
+        }
+      });
+    };
+  });
+
+  // 点击搜索 / 价格区间确定按钮
+  $(document).delegate('.js_sousuo, .js_price_sort', 'click', function() {
+    hide_form();
+    fnAjax(url + $('#hide_form').serialize());
+  });
+
+  // 点击排序
+  $('.js-xiala').delegate('li', 'click', function() {
+    $(this).addClass('active').siblings('li').removeClass('active');
+    $('.js_selected_sort').attr('orderType', $(this).attr('orderType'));
+    $('.js_selected_sort').text($(this).text());
+    hide_form();
+    fnAjax(url + $('#hide_form').serialize());
+  });
+  // 排序 鼠标滑过效果
+  $('.js-sortCont').hover(function() {
+    $(this).addClass('active').children('.js-xiala').show();
+  }, function() {
+    $(this).removeClass('active').children('.js-xiala').hide();
+  });
+
+  $('.js-switch2 .js-switchCont2').hide().eq(0).show();
+
+  // 点击多选
+  $('.sl-ext').delegate('.js-extMultiple', 'click', function() {
+    $(this).parents('.sl-wrap').addClass('multiple').removeClass('extend');
+    $(this).siblings('.js-extMore').addClass('opened').text('收起').append('<i></i>');
+  });
+
+  // 点击更多
+  $('.sl-ext').delegate('.js-extMore', 'click', function() {
+    if ($(this).hasClass('opened')) {
+      if ($(this).parents('.sl-wrap').hasClass('multiple')) {
+        return false;
+      } else {
+        $(this).parents('.sl-wrap').removeClass('extend');
+        $(this).removeClass('opened').text('更多').append('<i></i>');
+      };
+    } else {
+      $(this).parents('.sl-wrap').addClass('extend');
+      $(this).addClass('opened').text('收起').append('<i></i>');
+    };
+  });
+
+  // 多选时 判断选中的个数
+  function fnSumSelected(obj) {
+    if (obj.parents('.sl-value').find('.selected').length <= 1) {
+      obj.parents('.sl-value').find('.js-btnsConfirm').addClass('disabled');
+      obj.parents('.sl-value').find('.js-brandSelected').hide();
+    };
+  }
+
+  // 多选时 删除已选的
+  $('.js-brandSelected').delegate('.selected', 'click', function() {
+    var valueId = $(this).attr('liu-value');
+    $(this).parents('.js-brandSelected').siblings('.sl-v-list').find('.selected[liu-value=' + valueId + ']').removeClass('selected');
+    fnSumSelected($(this));
+    $(this).remove();
+  });
+
+  // 点击取消
+  $('.js-btnsCancel').click(function() {
+    $(this).parent('.sl-btns').siblings('.sl-v-list').find('li').removeClass('selected');
+    $(this).parent('.sl-btns').siblings('.js-brandSelected').hide().find('.brand-selected').children().remove();
+    $(this).parents('.sl-wrap').removeClass('multiple').removeClass('extend').find('.js-extMore').removeClass('opened').text('更多').append('<i></i>');
+    $(this).siblings('.js-btnsConfirm').addClass('disabled');
+  });
+
+  // 点击确定
+  $('.js-btnsConfirm').click(function() {
+    var oUl   = $(this).parents('.sl-value').find('.js-valueList.active');
+    var oLi   = oUl.find('.selected');
+    var oLei  = $(this).parents('.sl-value').siblings('.sl-key').find('.js_oLei').text();
+    var idDIV = $(this).parents('.js-selectorLine').attr('liu-div');
+    var sTxt  = '';
+    var sVal  = '';
+    if ($(this).hasClass('disabled')) {
+      return false;
+    };
+    $.each(oLi, function(index, el) {
+      if (index < 1) {
+        sTxt += $(el).find('.js_categoryList_text').text();
+        sVal += $(el).attr('liu-value');
+      } else {
+        sTxt += ',' + $(el).find('.js_categoryList_text').text();
+        sVal += ',' + $(el).attr('liu-value');
+      };
+    });
+    $('.js-selector-set .select[liu-select=' + idDIV + ']').append('<a href="javascript:;" class="ss-item" liu-ul="' + idDIV + '" liu-val="' + sVal + '"><b>' + oLei + '</b><em>' + sTxt + '</em><i class="js_one_del"></i></a>');
+    // if ($(this).parents('.sl-value').siblings('.sl-key').data('brand') == 'brand') {
+    //   $('#brand_hide').val(sTxt);
+    // };
+    $(this).parents('.sl-btns').siblings('.js-brandSelected').hide().find('.selected').remove();
+    $(this).parents('.sl-value').find('.selected').removeClass('selected');
+    $(this).addClass('disabled').parents('.sl-wrap').removeClass('multiple').removeClass('extend').parent('.js-selectorLine').hide();
+    $(this).parents('.sl-value').siblings('.sl-ext').find('.opened').removeClass('opened').text('更多').append('<i></i>');
+    hide_form();
+    $('#hide_form').submit();
+  });
+
+  // crumbs-nav中 已选中的删除
+  $('.js-selector-set').delegate('.ss-item .js_one_del', 'click', function() {
+    var select = $(this).parents('.select').attr('liu-select');
+    $('input[name='+select+']').val('');
+    if (select=='category') {
+      $('input[name=cate_id]').val('');
+      $('input[name=subcategories]').val('');
+    };
+    $('#hide_form').submit();
+  })
+
+  // 点击全部撤销
+  $('.crumbs-nav .js-undoAll').hide();
+  $('.crumbs-nav').delegate('.js-undoAll', 'click', function() {
+    $(this).hide().siblings().find('.js-selector-set .ss-item').remove();
+    $('.js-selectorLine').find('.sl-wrap').removeClass('multiple').removeClass('extend').find('.js-extMore').removeClass('.opened').text('更多').append('<i></i>');
+    $('.js-selectorLine').find('.js-brandSelected').hide().find('.selected').remove();
+    $('.js-selectorLine').find('.selected').removeClass('selected');
+    $('.js-selectorLine').find('.js-btnsConfirm').addClass('disabled');
+  });
+
+  // 单选/多选 已选
+  $('.js-valueList').delegate('li', 'click', function() {
+    var thisTxt = $.trim($(this).text());
+    if ($(this).find('.js_hide_id').length > 0) {
+      var thisVal = $(this).find('.js_hide_id').val();
+    } else {
+      var thisVal = $.trim($(this).text());
+    };
+    var oLei  = $(this).parents('.sl-value').siblings('.sl-key').find('.js_categoryList_text').text();
+    var oChil = $(this).parents().siblings('.js-brandSelected').children('.brand-selected');
+    var sVal  = $(this).attr('liu-value');
+    var idDIV = $(this).parents('.js-selectorLine').attr('liu-div');
+    // 判断是否是多选时
+    if ($(this).parents().hasClass('multiple')) {
+      if ($(this).hasClass('selected')) {
+        $(this).removeClass('selected');
+      } else {
+        $(this).parents('.js-valueList').addClass('active');
+        $(this).addClass('selected');
+        $(this).parents().siblings('.js-brandSelected').show();
+        $(this).parents().siblings().children('.js-btnsConfirm').removeClass('disabled');
+      };
+      var sHtml = '';
+      $(this).parent('.js-valueList').find('.selected').each(function(i,o) {
+        var sVals = $(o).attr('liu-value');
+        var sTxt  = $(o).find('.js_categoryList_text').text();
+        sHtml += '<li class="selected" liu-value="' + sVals + '"><a href="javascript:;"><i></i>' + sTxt + '</a></li>';
+      });
+      oChil.html(sHtml);
+    } else { // 否则是单选时
+      $('input[name='+idDIV+']').val(thisVal);
+      if (idDIV == 'category') {
+        $('#category_id_hide').val(thisVal);
+      };
+      hide_form();
+      $('#hide_form').submit();
+    };
+    fnSumSelected($(this));
+  });
+
+  // 获取当前页面网址参数
+  function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+    var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+    if (r != null) {
+      return decodeURI(r[2]);
+    };
+    return null; // 返回参数值
+  }
+
+  // 获取参数并转为对象
+  var searchObj = {};
+  if (window.location.search!='') {
+  	var searchArr = decodeURIComponent(window.location.search.substr(1)).split('&');
+    for (var i = 0; i < searchArr.length; i++) {
+    	var arr = searchArr[i].split('=');
+    	searchObj[arr[0]]=arr[1];
+    	// 设置隐藏域
+    	$('input[name='+arr[0]+']').val(arr[1]);
+    	// 设置已选中
+    	if (arr[1]!='') {
+    		var title = $('.js-selectorLine .sl-key[liu-tit='+arr[0]+'] .js_oLei').text();
+        var text  = $('.js_categoryList_' + arr[1]).text();
+        text = !!text?text:arr[1];
+	    	var html  = '<a href="javascript:;" class="ss-item" liu-ul="' + arr[0] + '" liu-val="' + arr[1] + '"><b>' + title + '</b><em>' + text + '</em><i class="js_one_del"></i></a>'
+	    	$('.js-selector-set .select[liu-select='+arr[0]+']').html(html);
+	    	// 已有的隐藏
+	    	$('.js-selectorLine[liu-div='+arr[0]+']').hide();
+    	};
+    };
+  };
+  // 判断二级菜单是否显示
+  if (searchObj.cate_id!=''&&searchObj.subcategories=='') {
+  	$('.js-category2').show();
+  };
+  $('#keyword_hide, #keyword').val(getUrlParam('keyword'));
+  $('#sprice_hide, #sprice').val(getUrlParam('sprice'));
+  $('#eprice_hide, #eprice').val(getUrlParam('eprice'));
+  if (getUrlParam('orderType') != null) {
+    $('#orderType_hide').val(getUrlParam('orderType'));
+    $('.js-xiala li[ordertype=' + getUrlParam('orderType') + ']').addClass('active').siblings('li').removeClass('active');
+    $('.js_selected_sort').attr('orderType', getUrlParam('orderType'));
+    $('.js_selected_sort').text($('.js-xiala li[ordertype=' + getUrlParam('orderType') + ']').text());
+  };
+  hide_form();
+  fnAjax(url + $('#hide_form').serialize());
+});
+</script>
+</body>
+</html>

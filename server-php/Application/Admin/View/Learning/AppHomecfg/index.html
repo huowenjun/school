@@ -1,0 +1,447 @@
+
+  <!-- Main Header -->
+  <include file="Public:header" title="App首页配置" />
+
+  <link rel="stylesheet" href="/Public/dist/css/jquery.mCustomScrollbar.css" />
+  <!--Main Sidebar-->
+  <include file="Public:left_nav" />
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">APP首页配置</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <div class="appHomeModule_bg">
+    <section class="content appHomeModule js_appHomeModule">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid" style="padding-right: 10px; padding-left: 10px;">
+          <div class="form-inline navbar-form navbar-left" style="padding: 0">
+            <div class="form-group">
+              <button type="button" class="btn btn-success btn-sm js_addModule">
+                <i class="fa fa-plus"></i> 添加模块
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="js_html"></div>
+    </section>
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <include file="Public:footer" />
+</div>
+<!-- ./wrapper -->
+
+<!-- 标题添加/编辑 弹出层 -->
+<div class="shade js_popup" id="titWindow">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal" action="/index.php/Admin/Upload/upload_image.html" enctype="multipart/form-data" method="post" id="iconFileFrom" style="display:none;">
+        <input type="file" id="icon_files" name="icon_files" value="" style="display:block" />
+      </form>
+      <form class="form-horizontal js_form_infos" action="" method="post" onsubmit="return false" id="titWindowForm">
+        <input type="hidden" name="id" id="pid" />
+        <div class="row">
+          <div class="col-md-12">
+            <div class="clearfix">
+              <p class="note pull-right">注：<span class="xing">*</span>标记为必填项</p>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group uploadFile">
+                  <label class="col-md-3 control-label" for="icon_files"><span class="xing">*</span> 上传标题图片：</label>
+                  <div class="col-md-9">
+                    <label class="upload_btn" for="icon_files"><i class="fa fa-fw fa-upload"></i>点击上传</label>
+                    <input type="hidden" id="f_tb" name="img" />
+                    <span class="hint">建议图片比例为 宽高1:1 (仅支持png/jpg/gif/jpeg格式)</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label"></label>
+                  <div class="col-md-9">
+                    <div class="imgHide"><img id="icon_m_tb" src="" alt="" width="88" /></div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="title"><span class="xing">*</span> 标题文字：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="标题文字" id="title" name="title" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="cell"><span class="xing">*</span> 一行几列显示：</label>
+                  <div class="col-md-8">
+                    <select id="cell" name="cell" class="form-control">
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer" style="text-align:center;">
+    <button type="button" class="btn btn-success btn-sm saveTit">
+      <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+    <button type="button" class="btn btn-default btn-sm layui-layer-close">
+      <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+
+<!-- logo分类添加/编辑 弹出层 -->
+<div class="shade js_popup" id="logoWindow">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal" action="/index.php/Admin/Upload/upload_image.html" enctype="multipart/form-data" method="post" id="iconFileFrom2" style="display:none;">
+        <input type="file" id="icon_files2" name="icon_files" value="" style="display:block" />
+      </form>
+      <form class="form-horizontal js_form_infos" action="" method="post" onsubmit="return false" id="logoWindowForm">
+        <input type="hidden" name="pid" id="pid" />
+        <input type="hidden" name="id" id="id" />
+        <div class="row">
+          <div class="col-md-12">
+            <div class="clearfix">
+              <p class="note pull-right">注：<span class="xing">*</span>标记为必填项</p>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="title"><span class="xing">*</span> logo标题：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="logo标题" id="title" name="title" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group uploadFile">
+                  <label class="col-md-3 control-label" for="icon_files2"><span class="xing">*</span> 上传logo图片：</label>
+                  <div class="col-md-9">
+                    <label class="upload_btn" for="icon_files2"><i class="fa fa-fw fa-upload"></i>点击上传</label>
+                    <input type="hidden" id="f_tb2" name="img" />
+                    <span class="hint">建议图片比例为 宽高1:1 (仅支持png/jpg/gif/jpeg格式)</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label"></label>
+                  <div class="col-md-9">
+                    <div class="imgHide"><img id="icon_m_tb2" src="" alt="" width="88" /></div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="url"><span class="xing">*</span> 图标跳转链接：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="图片跳转链接" id="url" name="url" class="form-control" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer" style="text-align: center;">
+    <button type="button" class="btn btn-success btn-sm saveLogo">
+      <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+    <button type="button" class="btn btn-default btn-sm layui-layer-close">
+      <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+
+<include file="Public:footer_js" />
+
+<script type="text/javascript" src="/Public/dist/js/jquery.form.js"></script>
+<script type="text/javascript" src="/Public/dist/js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<script type="text/javascript">
+// 获取div模拟滚动条高度
+$(window).load(function() {
+  $('.js_appHomeModule').mCustomScrollbar();
+});
+
+// ajax请求数据接口
+function fnAjax() {
+  $.ajax({
+    url: '/index.php/Admin/Learning/AppHomecfg/query',
+    type: 'get',
+    dataType: 'json',
+    success: function(msg) {
+      var obj  = msg.data;
+      var html = '';
+      for (var i = 0; i < obj.length; i++) {
+        var objArray = obj[i].array;
+        html += '<div class="row">' +
+          '<div class="col-md-12">' +
+            '<div class="box js_box">' +
+              '<div class="box-header with-border">' +
+                '<input class="js_hide_pid" id="' + obj[i].id + '" type="hidden" name="' + obj[i].id + '" value="" />';
+              if (obj[i].title != '') {
+        html += '<div class="titleInfo js_titleInfo">' +
+                  '<img class="fa" src="' + obj[i].img + '" alt="" />' +
+                  '<h6 class="box-title js_titTxt">' + obj[i].title + '</h6>' +
+                  '<i class="fa fa-edit js_titEdit"></i>' +
+                '</div>';
+              } else {
+        html += '<button type="button" class="btn btn-success btn-sm js_addTit">' +
+                  '<i class="fa fa-plus"></i> 添加标题' +
+                '</button>&nbsp;';
+              };
+        html += '<div class="box-tools pull-right">' +
+                  '<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>' +
+                  '<button type="button" class="btn btn-box-tool js_dels" data-widget="remove"><i class="fa fa-times"></i></button>' +
+                '</div>' +
+              '</div>' +
+              '<div class="box-body">';
+              if (obj[i].cell == '0') {
+        html += '<div class="logos js_logos tab4" cell="4">';
+              } else {
+        html += '<div class="logos js_logos tab' + obj[i].cell + '" cell="' + obj[i].cell + '">';
+              };
+                if (objArray) {
+                  for (var j = 0; j < objArray.length; j++) {
+            html += '<div class="logo js_logo">' +
+                      '<input class="js_hide_id" id="' + objArray[j].id + '" type="hidden" name="' + objArray[j].id + '" value="" />' +
+                      '<a class="js_logoSrc" href="' + objArray[j].url + '">' +
+                        '<img src="' + objArray[j].img + '" alt="" />' +
+                        '<span class="logoTxt js_logoTxt">' + objArray[j].title + '</span>' +
+                      '</a>' +
+                      '<div class="logoEdit">' +
+                        '<i class="fa fa-edit js_logoEdit"></i>' +
+                      '</div>' +
+                      '<div class="logoDel">' +
+                        '<i class="fa fa-trash js_logoDel"></i>' +
+                      '</div>' +
+                    '</div>'
+                  }
+                };
+          html += '<div class="logo">' +
+                    '<img class="js_addLogo" src="/Public/dist/img/app_home_cfg/img_add_logo.png" alt="" />' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>'
+      }
+      $('.js_html').html(html);
+
+      // 鼠标滑过时
+      $('.js_logo').hover(function() {
+        $(this).addClass('hover');
+      }, function() {
+        $(this).removeClass('hover');
+      });
+    },
+    error: function(msg) {
+      dialog.error('请求服务器异常！');
+    }
+  });
+}
+fnAjax();
+
+// 点击添加标题
+$('body').delegate('.js_addTit, .js_addModule', 'click', function() {
+  $('#titWindow #pid').val('');
+  $('#titWindow #f_tb').val('');
+  $('#titWindow #icon_m_tb').attr('src','');
+  $('#titWindow #title').val('');
+  $('#titWindow #cell').val('4');
+  $("#titWindow #cell option[value=4]").attr('selected',true).siblings('option').removeAttr('selected');
+  layer.open({
+    type: 1,
+    title: '添加标题',
+    shadeClose: true,
+    shade: 0.2,
+    area: ['60%', '60%'],
+    content: $('#titWindow')
+  });
+});
+
+// 点击添加logo分类
+$('body').delegate('.js_addLogo', 'click', function() {
+  $('#logoWindow #id').val('');
+  $('#logoWindow #f_tb2').val('');
+  $('#logoWindow #icon_m_tb2').attr('src','');
+  $('#logoWindow #title').val('');
+  $('#logoWindow #url').val('');
+  var pid = $(this).parents('.js_box').find('.js_hide_pid').attr('id');
+  $('#logoWindow #pid').val(pid);
+  layer.open({
+    type: 1,
+    title: '添加logo分类',
+    shadeClose: true,
+    shade: 0.2,
+    area: ['60%', '60%'],
+    content: $('#logoWindow')
+  });
+});
+
+// 点击编辑标题
+$('body').delegate('.js_titEdit', 'click', function() {
+  var pid    = $(this).parents('.js_box').find('.js_hide_pid').attr('id');
+  var imgSrc = $(this).parents('.js_titleInfo').find('img').attr('src');
+  var titTxt = $(this).parents('.js_titleInfo').find('.js_titTxt').text();
+  var cell   = $(this).parents('.js_box').find('.js_logos').attr('cell');
+  $('#titWindow #pid').val(pid);
+  $('#titWindow #f_tb').val(imgSrc);
+  $('#titWindow #icon_m_tb').attr('src',imgSrc);
+  $('#titWindow #title').val(titTxt);
+  $('#titWindow #cell').val(cell);
+  $('#titWindow #cell option[value=' + cell + ']').attr('selected',true).siblings('option').removeAttr('selected');
+  layer.open({
+    type: 1,
+    title: '添加标题',
+    shadeClose: true,
+    shade: 0.2,
+    area: ['60%', '60%'],
+    content: $('#titWindow')
+  });
+});
+
+// 点击编辑logo分类
+$('body').delegate('.js_logoEdit', 'click', function() {
+  var pid     = $(this).parents('.js_box').find('.js_hide_pid').attr('id');
+  var id      = $(this).parents('.js_logo').find('.js_hide_id').attr('id');
+  var imgSrc  = $(this).parents('.js_logo').find('img').attr('src');
+  var logoTxt = $(this).parents('.js_logo').find('.js_logoTxt').text();
+  var logoSrc = $(this).parents('.js_logo').find('.js_logoSrc').attr('href');
+  $('#logoWindow #pid').val(pid);
+  $('#logoWindow #id').val(id);
+  $('#logoWindow #f_tb2').val(imgSrc);
+  $('#logoWindow #icon_m_tb2').attr('src',imgSrc);
+  $('#logoWindow #title').val(logoTxt);
+  $('#logoWindow #url').val(logoSrc);
+  layer.open({
+    type: 1,
+    title: '添加logo分类',
+    shadeClose: true,
+    shade: 0.2,
+    area: ['60%', '60%'],
+    content: $('#logoWindow')
+  });
+});
+
+// H5上传文件（标题图标）
+$('#icon_files').change(function() {
+  var file = this.files[0];             // 获取input type=file文件所有数据，因为input type=file 可以多选，所以files是个数组
+  var fr   = new FileReader();          // H5的新api，文件预览对象
+  fr.onloadend = function(e) {          // 当转换完成之后fr.onloadend，执行函数，转换完的数据就是e
+    var imgSrc = e.target.result;       // file数据中的图片信息就是e.target.result，这是图片预览地址
+    $('#icon_m_tb').attr('src',imgSrc); // 预览图片
+    // 提交图片表单
+    $('#iconFileFrom').ajaxSubmit(function(msg) {
+      // 成功返回的数据
+      if (msg.status==1) {
+        var imgSrc = msg.data.url;
+        $('#f_tb').val(imgSrc);
+        $('#icon_m_tb').attr('src',imgSrc);
+        dialog.notify('文件上传成功');
+      } else {
+        alert('上传失败，请重新上传');
+        $('#icon_files').val('');
+        $('#f_tb').val('');
+        $('#icon_m_tb').attr('src','');
+      };
+    });
+  }
+  fr.readAsDataURL(file);               // 把file数据转为DataURL数据
+});
+
+// H5上传文件（logo图标）
+$('#icon_files2').change(function() {
+  var file = this.files[0];              // 获取input type=file文件所有数据，因为input type=file 可以多选，所以files是个数组
+  var fr   = new FileReader();           // H5的新api，文件预览对象
+  fr.onloadend = function(e) {           // 当转换完成之后fr.onloadend，执行函数，转换完的数据就是e
+    var imgSrc = e.target.result;        // file数据中的图片信息就是e.target.result，这是图片预览地址
+    $('#icon_m_tb2').attr('src',imgSrc); // 预览图片
+    // 提交图片表单
+    $('#iconFileFrom2').ajaxSubmit(function(msg) {
+      // 成功返回的数据
+      if (msg.status==1) {
+        var imgSrc = msg.data.url;
+        $('#f_tb2').val(imgSrc);
+        $('#icon_m_tb2').attr('src',imgSrc);
+        dialog.notify('文件上传成功');
+      } else {
+        alert('上传失败，请重新上传');
+        $('#icon_files2').val('');
+        $('#f_tb2').val('');
+        $('#icon_m_tb2').attr('src','');
+      };
+    });
+  }
+  fr.readAsDataURL(file);                // 把file数据转为DataURL数据
+});
+
+// 保存数据
+$('body').delegate('.saveTit, .saveLogo', 'click', function() {
+  var param = $(this).parents('.js_popup').find('.js_form_infos').attr('id');
+  var url   = g_config.host + '/index.php/Admin/Learning/AppHomecfg/edit';
+  fpost(url, param, function(data) {
+    if(data.status == 1) {
+      dialog.success(data.info,function() {
+        parent.layer.closeAll();
+        fnAjax();
+      });
+    } else {
+      dialog.error(data.info);
+    }
+  });
+});
+
+// 删除
+function del(keyId) {
+  dialog.confirm('您确定要删除此模块吗？',function() {
+    $.ajax({
+      type: 'get',
+      url: '/index.php/Admin/Learning/AppHomecfg/del?id=' + keyId,
+      dataType: 'json',
+      success: function(msg) {
+        if( msg.status == 1 ) {
+          dialog.success(msg.info,function() {
+            parent.layer.closeAll();
+            fnAjax();
+          });
+        } else {
+          dialog.error(msg.info);
+        }
+      },
+      error: function(msg) {
+        dialog.error('请求服务器异常！');
+      }
+    });
+  });
+}
+
+// 删除大模块
+$('body').delegate('.js_dels', 'click', function() {
+  var id = $(this).parents('.js_box').find('.js_hide_pid').attr('id');
+  del(id);
+});
+
+// 删除子模块
+$('body').delegate('.js_logoDel', 'click', function() {
+  var id = $(this).parents('.js_logo').find('.js_hide_id').attr('id');
+  del(id);
+});
+</script>
+</body>
+</html>

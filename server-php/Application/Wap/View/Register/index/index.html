@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>app注册页</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="no">
+<link rel="stylesheet" type="text/css" href="/Public/AppHook/css/phone.css" />
+<script type="text/javascript" src="/Public/AppHook/js/jquery-1.10.2.min.js"></script>
+</head>
+<body class="register_bg">
+<!-- container -->
+<div class="container">
+  <div class="account-form login-form">
+    <form class="" method="" action="">
+      <h2 class="form-title">
+        <span>请先注册账号</span>
+      </h2>
+      <!-- 表单主体 -->
+      <ul class="block-form">
+        <li class="block-item">
+          <label>手机号码</label>
+          <input id="phone" name="phone" autocomplete="off" maxlength="11" type="tel" placeholder="请输入您的手机号" />
+        </li>
+        <li class="block-item">
+          <label>登录密码</label>
+          <input id="pwd" name="pwd" class="password" autocomplete="off" maxlength="20" type="password" placeholder="请设置至少6位的密码" />
+        </li>
+        <li class="relative block-item">
+          <label>验证码</label>
+          <input id="code" name="code" maxlength="6" type="tel" placeholder="请输入短信验证码" />
+          <a class="btn btn-auth-code js_code_btn" data-text="获取验证码">获取验证码</a>
+          <a class="btn btn-auth-code js_code_btn2 disabled" data-text="已发送"><span class="js-time"></span>秒后重新获取</a>
+        </li>
+      </ul>
+      <div class="action-container">
+        <a class="btn btn-block js_submit_btn" href="javascript:void(0);">立即注册</a>
+      </div>
+    </form>
+  </div>
+</div>
+<a class="js_submit_btn2" style="position: fixed; bottom: 20px; left: 0; display: block; width: 100%; text-align: center;" href="javascript:void(0);">APP下载</a>
+
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<!-- layer弹出层 -->
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript">
+// 获取验证码 倒计时
+var oTimer;
+var iTime   = 60; // 设置倒计时60秒
+var num     = iTime;
+var phoneRe = /^1[34578]\d{9}$/; // 手机号码验证
+
+function fnAutoTime() {
+  num--;
+  if (num < 1) {
+    $('.js_code_btn2').hide().siblings('.js_code_btn').show();
+    clearInterval(oTimer);
+  } else {
+    $('.js_code_btn2 .js-time').text(num);
+  };
+}
+
+// 点击获取验证码
+$('.js_code_btn').click(function() {
+  var phone = $('#phone').val();
+  if (!phoneRe.test(phone)) { // 验证手机号码是否正确
+    dialog.notify('手机号码格式不正确，请填写正确的手机号码！');
+  } else {
+    // ajax 获取验证码
+    $.ajax({
+      url: '/index.php/Wap/Register/getCode',
+      type: 'post',
+      dataType: 'json',
+      data: {phone: phone},
+      success: function(msg) {
+        if (msg.status == '0') {
+          dialog.error(msg.info);
+        } else {
+          // 倒计时
+          num = iTime;
+          $('.js_code_btn').hide().siblings('.js_code_btn2').show();
+          $('.js_code_btn2 .js-time').text(num);
+          oTimer = setInterval(fnAutoTime,1000);
+        };
+      },
+      error: function() {
+        dialog.error('请求服务器异常！')
+      }
+    })
+  };
+})
+
+// 点击注册
+$('.js_submit_btn').click(function() {
+  var phone   = $('#phone').val();
+  var pwd     = $('#pwd').val();
+  var code    = $('#code').val();
+  var ref     = getUrlParam('ref');
+  var bool    = true;
+
+  if (code == '') {
+    dialog.error('请输入验证码！');
+    bool = false;
+  };
+  if (pwd == '') {
+    dialog.error('请输入密码！');
+    bool = false;
+  };
+  if (!phoneRe.test(phone)) {
+    dialog.notify('手机号码格式不正确，请填写正确的手机号码！');
+    bool = false;
+  };
+  if (bool) {
+    // ajax 注册接口
+    $.ajax({
+      url: '/index.php/Wap/Register/register',
+      type: 'post',
+      dataType: 'json',
+      data: {phone: phone, code: code, pwd: pwd, ref: ref},
+      // data: {phone: phone, code: code, pwd: pwd, ref: '1q23we'}, // ref: '1q23we'测试值
+      success: function(msg) {
+        if (msg.status == '1') {
+          dialog.success(msg.info, function() {
+            window.location.href = '/html/app-downloadPage/index.html';
+          });
+        } else {
+          dialog.error(msg.info);
+        };
+      },
+      error: function() {
+        dialog.error('请求服务器异常！')
+      }
+    })
+  };
+});
+
+// 直接下载
+$('.js_submit_btn2').click(function() {
+  window.location.href = '/html/app-downloadPage/index.html';
+});
+
+// 获取当前页面网址参数
+function getUrlParam(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+  var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+  if (r != null) {
+    return decodeURI(r[2]);
+  };
+  return null; // 返回参数值
+}
+</script>
+</body>
+</html>

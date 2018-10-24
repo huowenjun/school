@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>绑定登录</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="no">
+<link rel="stylesheet" type="text/css" href="/Public/WeFinancial/css/phone.css" />
+<link rel="stylesheet" type="text/css" href="/Public/WeFinancial/css/custom.css" />
+<!-- 省市区三联动 -->
+<link rel="stylesheet" type="text/css" href="/Public/WeFinancial/css/mui.picker.css" />
+
+<script type="text/javascript" src="/Public/WeFinancial/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/WeFinancial/js/rem.js"></script>
+</head>
+<body class="bg">
+<div class="page_container">
+  <div class="flex_line_c">
+    <image class="logo" src='/Public/WeFinancial/img/logo.png'></image>
+  </div>
+
+  <!-- 新用户注册 -->
+  <div class="login_con">
+    <!--省市区三联动-->
+    <div class="login_input">
+      <img class="icon" src="/Public/WeFinancial/img/icon_region.png" alt="" />
+      <div class="inputInfo">
+        <input type="hidden" id="city_id" class="js_city" />
+        <a id="city_text">请选择地区</a>
+      </div>
+    </div>
+    <div class="login_input">
+      <img class="icon" src="/Public/WeFinancial/img/icon_user.png" alt="" />
+      <div class="inputInfo">
+        <input class="flex_m js_phone" type="text" name="phone" placeholder="手机号" />
+      </div>
+    </div>
+    <div class="login_input">
+      <img class="icon" src="/Public/WeFinancial/img/icon_code.png" alt="" />
+      <div class="inputInfo inputInfoCode">
+        <input class="flex_m js_code" type="text" name="code" placeholder="验证码" />
+      </div>
+      <a class="flex_nosize code js-clickCode1" href="javascript:void(0);">获取验证码</a>
+      <a class="flex_nosize code js-clickCode2" href="javascript:void(0);" style="background:#ccc; color:red; display:none"><span class="js-time"></span>秒后重新获取</a>
+    </div>
+    <a class="tobinding flex_c_m button js-clickLogin">绑&nbsp;&nbsp;&nbsp;&nbsp;定</a>
+  </div>
+</div>
+
+<!-- 省市区三联动 -->
+<script type="text/javascript" src="/Public/WeFinancial/js/mui.min.js"></script>
+<script type="text/javascript" src="/Public/WeFinancial/js/mui.picker.min.js"></script>
+<script type="text/javascript" src="/Public/WeFinancial/js/data.city.js"></script>
+
+<!-- 弹出层 -->
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript">
+var reg        = /^1(3|4|5|7|8)[0-9]\d{8}$/; // 手机号码验证
+var source     = getUrlParam('source');
+var ref        = getUrlParam('ref');
+var code       = getUrlParam('code');
+var openid     = getUrlParam('openid');
+var nickname   = getUrlParam('nickname');
+var sex        = getUrlParam('sex');
+var headimgurl = getUrlParam('headimgurl');
+var unionid    = getUrlParam('unionid');
+
+// 获取验证码
+var oTimer;
+var iTime = 60; // 设置倒计时60秒
+var num   = iTime;
+$('.js-clickCode1').click(function() {
+  var phone = $('.js_phone').val();
+  if (reg.test(phone)) {
+    num = iTime;
+    $(this).hide().siblings('.js-clickCode2').show();
+    $('.js-clickCode2 .js-time').text(num);
+    oTimer = setInterval(fnAutoTime,1000);
+
+    // 发送验证码请求
+    $.ajax({
+      url: '/index.php/Api/login/getSMSCode', // 后台接口地址
+      type: 'POST',
+      dataType: 'json',
+      data: {phone: phone},
+      success: function(res) {
+        dialog.success1(res.info);
+      },
+      error: function() {
+        dialog.error('请求服务器异常！')
+      }
+    })
+  } else {
+    dialog.error('手机号有误，请重新输入');
+  }
+});
+function fnAutoTime() {
+  num--;
+  if (num < 0) {
+    $('.js-clickCode2').hide().siblings('.js-clickCode1').show();
+    clearInterval(oTimer);
+  } else {
+    $('.js-clickCode2 .js-time').text(num);
+  };
+}
+
+// 选择省市区
+var city_picker = new mui.PopPicker({layer:3});
+city_picker.setData(init_city_picker);
+$("#city_text").on("tap", function() {
+  setTimeout(function() {
+    city_picker.show(function(items) {
+      $("#city_id").val((items[0] || {}).value + "," + (items[1] || {}).value + "," + (items[2] || {}).value); // 该ID为接收城市ID字段
+      $("#city_text").html((items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text);
+    });
+  },200);
+});
+
+// 注册
+$('.js-clickLogin').click(function() {
+  var phone      = $('.js_phone').val(); // 手机号
+  var verifyCode = $('.js_code').val(); // 手机验证码
+  // 转成数组获取
+  var str    = $('.js_city').val();
+  var arr    = str.split(',');
+  var prov   = arr[0]; // 省
+  var city   = arr[1]; // 市
+  var county = arr[2]; // 区/县
+
+  if (!reg.test(phone)) {
+    dialog.error('手机号有误，请重新输入');
+  } else if (code === '') {
+    dialog.error('验证码不能为空');
+  } else {
+    // dialog.success1('注册中...');
+
+    // 注册请求
+    $.ajax({
+      url: '/index.php/Wap/Index/bindPhone', // 后台接口地址
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        source: source,
+        ref: ref,
+        code: code,
+        openid: openid,
+        nickname: nickname,
+        sex: sex,
+        headimgurl: headimgurl,
+        unionid: unionid,
+        phone: phone,
+        verifyCode: verifyCode,
+        province: prov,
+        city: city,
+        county: county
+      },
+      success: function(res) {
+        if (res.status == 0) {
+          dialog.error(res.info);
+        } else {
+          dialog.success1(res.info);
+          window.location.href = '/index.php/wap/WeFinancial/homePage';
+        }
+      },
+      error: function() {
+        dialog.error('请求服务器异常！')
+      }
+    })
+  }
+})
+
+// 获取当前页面网址参数
+function getUrlParam(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+  var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+  if (r != null) {
+    return decodeURI(r[2]);
+  };
+  return null; // 返回参数值
+}
+</script>
+</body>
+</html>

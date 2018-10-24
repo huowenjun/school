@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>学生足迹回放</title>
+<link rel="stylesheet" href="/Public/Wechat/css/weui.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui2.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/Wechat/css/phone.css" />
+<!-- 进度条 -->
+<link rel="stylesheet" href="/Public/plugins/myProgress/myProgress.css" />
+<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=pObgXUnySvcX39VAqroiOt6xqUrNoOzK"></script>
+</head>
+<style>
+  .infoWindow{
+    width: 176px;
+    padding: 15px 12px 0;
+  }
+  ul,li{ list-style: none;}
+  .infoWindow ul{
+    overflow: hidden;
+  }
+  .infoWindow ul li{
+    font-size: 12px;
+    clear: both;
+    overflow: hidden;
+    white-space :normal;
+    margin-bottom: 8px;
+  }
+  .infoWindow ul li .fl{ float: left;}
+</style>
+<body>
+<div class="header">
+  <div class="custom_cell">
+    <div class="weui-cell__bd" style="text-align: center;">
+      <p>学生足迹回放</p>
+    </div>
+  </div>
+</div>
+<div class="container" id="container">
+  <div class="weui_cells weui_cells_form">
+    <div class="weui_cell" >
+      <div class="weui_cell_hd"><label for="" class="weui_label">开始时间：</label></div>
+      <div class="weui_cell_bd weui_cell_primary">
+        <input class="weui_input" type="text" value="" id='sdatetime1' />
+      </div>
+    </div>
+    <div class="weui_cell">
+  
+      <div class="weui_cell_hd"><label for="" class="weui_label">结束时间：</label></div>
+      <div class="weui_cell_bd weui_cell_primary">
+        <input class="weui_input" type="text" value="" id='edatetime1' />
+      </div>
+    </div>
+    <div class="weui_cell" >
+    
+      <div class="weui_cell_hd"><label for="" class="weui_label">学生：</label></div>
+      <div class="weui_cell_bd weui_cell_primary">
+        <input class="weui_input" type="select" value="" id='selectStudent' />
+      </div>
+    </div>
+  </div>
+    <!-- #地图 -->
+    <div id="allmap" style="overflow: hidden;"></div>
+</div>
+<input type="hidden" name="imei" id="imei" value="" />
+<!-- jQuery 2.2.3 -->
+<script type="text/javascript" src="/Public/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<!-- 自定义js文件 -->
+<script type="text/javascript" src="/Public/Wechat/js/phone.js"></script>
+<!-- 选择日期时间 -->
+<script type="text/javascript" src="/Public/Wechat/js/picker.js"></script>
+<!-- 下拉单选 下拉多选 -->
+<script type="text/javascript" src="/Public/Wechat/js/select.js"></script>
+<!-- 进度条 -->
+<script type="text/javascript" src="/Public/plugins/myProgress/jquery.myProgress.js"></script>
+
+<script type="text/javascript">
+
+// 获取地图高度
+function allmaprFn() {
+  var windowH     = $(window).height();
+  var headerH     = $('.header').outerHeight(true);
+  var selH     = $('.weui_cells').outerHeight(true);
+  var mapH = windowH - headerH - selH;
+  $('#allmap').css({
+    'height': mapH
+  });
+}
+allmaprFn();
+
+var map = new BMap.Map("allmap");  
+// 根据IP定位
+var localCity = new BMap.LocalCity();
+ localCity.get(function (r) {
+     map.centerAndZoom(r.center, r.level);
+ });
+map.enableScrollWheelZoom(true); // 开启鼠标滚轮缩放
+var bottom_right_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_BOTTOM_RIGHT,type:BMAP_NAVIGATION_CONTROL_ZOOM}); // 添加缩放平移控件
+map.addControl(bottom_right_navigation);
+
+// 是否绑定
+function isBondDevice(stuValue){
+  map.clearOverlays();  //清除地图上所有覆盖物
+  $("#imei").val("");
+  $.ajax({
+    type: "get",
+    data:{stu_id: stuValue},
+    url: "/index.php/Wechat/TrackPlayback/get1",
+    dataType : 'json',
+    success: function(res) {
+      $.each(res.data.list, function(key,value) {
+        var imei=value.imei; 
+        $("#imei").val(imei);
+      }) 
+    },
+    error: function(res) {
+      $.toast("请求服务器异常", "forbidden");
+    }
+  });
+}
+
+
+
+// 自动轨迹回放
+var pointValue = [];
+var timeValue = [];
+var imeiValue = [];
+var falg = true;
+var newPoints =[];
+function playBack(stuid){
+  clearInterval(playBackTimer);
+  newPoints =[];
+  map.clearOverlays(); 
+  var sdatetime = $("#sdatetime1").val();
+  var edatetime = $("#edatetime1").val();
+  var start_time = new Date(sdatetime.replace(/\-/g, "\/"));
+  var end_time = new Date(edatetime.replace(/\-/g, "\/"));
+  if( $("#imei").val()!=""){
+    if(sdatetime =="" && edatetime ==""){
+      $.toast("请设置时间间隔", "forbidden");
+      falg = false;
+    }
+    var start_time = new Date(sdatetime.replace(/\-/g, "\/"));
+    var end_time = new Date(edatetime.replace(/\-/g, "\/"));
+    if(start_time > end_time){
+      $.toast("开始时间不能大于结束时间", "forbidden");
+      falg = false;
+    }
+    if(sdatetime.substring(0, 7)!=edatetime.substring(0, 7)){
+      $.toast("开始时间与结束时间需设置在同一月", "forbidden");
+      falg = false;
+    }
+    if(falg){
+      $.ajax({
+        type: "get",
+        data:{stu_id: stuid,sdatetime:sdatetime,edatetime:edatetime,type:0},
+        url: "/index.php/Wechat/TrackPlayback/query",
+        beforeSend: function(){
+          $.showLoading();
+        },
+        // complete: function(){
+        //   $.hideLoading();
+        // },
+        dataType : 'json',
+        success: function(res) {
+          // $(".weui_loading_toast").hide();
+          pointValue = [];
+          timeValue = [];
+          imeiValue = [];
+          if(res.data.length!=0){
+            $.each(res.data, function(key, value) {
+              timeValue.push(value.create_time);
+              imeiValue.push(value.imei);
+              var lat=value.latitude;
+              var lng=value.longitude;
+              var pointss = new BMap.Point(lng,lat);
+              pointValue.push(pointss);
+            });
+            pointConvertor(pointValue);
+          }else{
+            $.toast("此时间间隔内该学生没有足迹回放数据","forbidden");
+          };
+        },
+        error: function(res) {
+          $.toast("请求服务器异常", "forbidden");
+        }
+      });
+    }
+  }else{
+    $.toast("学生暂未绑定设备", "forbidden");
+  };
+};
+
+        
+// 加载学生
+var playBackTimer=null;
+function loadStudent(){
+  $.ajax({
+    type: "get",
+    url: "/index.php/Wechat/TrackPlayback/get_list" ,
+    beforeSend: function(){
+      $.showLoading();
+    },
+    complete: function(){
+      $.hideLoading();
+    },
+    dataType : 'json',
+    success: function(res) {
+      var re = res.data;
+      $("#selectStudent").select({
+        title: "学生",
+        items: re,
+        onChange: function(d) {
+          isBondDevice(d.values);
+          playBackTimer=setInterval("playBack("+d.values+")",2000);
+        }
+      });
+    },
+    error: function(msg) {
+      $.toast("请求服务器异常", "forbidden");
+    }
+  });
+}
+loadStudent();
+
+var ssi=0;
+//坐标转换
+function pointConvertor(pointValue){
+  var pointsLength=pointValue.length;
+  var tenLength=parseInt(pointsLength/10);
+  var tenMod=pointsLength%10;
+  if (tenMod>0){
+    tenLength=tenLength+1;
+  }
+  if(pointsLength==0){
+    return;
+  }
+  var convertor = new BMap.Convertor();
+  var start=parseInt(10*ssi);
+  var end=parseInt(start+10);
+  if(end>=pointsLength){
+    end=parseInt(pointsLength+1);
+  }
+  var arrys=pointValue.slice(start, end);
+  //坐标转换的回调函数
+  translateCallback = function (data){
+    if(data.status === 0) {
+      for (var i = 0; i < data.points.length; i++) {
+        newPoints=newPoints.concat(data.points[i]);
+      }
+      ssi++;
+      if(ssi<tenLength){
+        $(".weui_loading_toast").show();
+        pointConvertor(pointValue);
+      }
+      if(newPoints.length===pointValue.length){
+        ssi=0;
+        $(".weui_loading_toast").hide();
+        openInfoWindow(newPoints);
+      }
+    }
+  }
+  convertor.translate(arrys, 1, 5, translateCallback);
+}
+var geoc = new BMap.Geocoder();
+var label;
+function openInfoWindow(newPoints) {
+  // 开始图标 结束图标
+  var startImgUrl = "/Public/dist/img/map/icon_walk_start.png";
+  var endImgUrl = "/Public/dist/img/map/icon_walk_end.png";
+  var width = 30;
+  var height = 45;
+  var ptLen=newPoints.length-1;
+  var startIcon = new BMap.Icon(startImgUrl,new BMap.Size(width, height),{offset: new BMap.Size(50,-20),imageOffset: new BMap.Size(0, 0)});
+  var startMk = new BMap.Marker(newPoints[0],{icon:startIcon});
+  var endIcon = new BMap.Icon(endImgUrl,new BMap.Size(width, height),{offset: new BMap.Size(50,-20),imageOffset: new BMap.Size(0, 0)});
+  var endMk = new BMap.Marker(newPoints[ptLen],{icon:endIcon});
+
+  // 整体划线
+  polyLine(newPoints,startMk,endMk,ptLen);
+
+  // 手动点击起点图标展示信息窗口
+  startMk.addEventListener("click", function(){
+    map.removeOverlay(label);
+    geoc.getLocation(newPoints[0], function(rs) {
+      var addComp = rs.addressComponents;
+      var content='<div class="infoWindow"><ul><li>编号：'+1+'</li><li>IMEI：'+imeiValue[0]+'</li><li>地址：'+ addComp.province  + addComp.city + addComp.district + addComp.street  + addComp.streetNumber + '</li><li>定位时间：'+timeValue[0]+'</li></ul></div>';
+      label = new BMap.Label();
+      label.setOffset(new BMap.Size(-85,-135));
+      label.setContent(content);
+      startMk.setLabel(label);
+      label.setStyle({
+        border:"none",
+        width: "200px",
+        height:"140px",
+        background:"url('/Public/dist/img/map/info-window-bg-wx-small.png') no-repeat" 
+      });
+    }); 
+    map.centerAndZoom(newPoints[0], map.getZoom());
+  });
+  
+  // 手动点击终点图标展示信息窗口
+  endMk.addEventListener("click", function(){
+    map.removeOverlay(label);
+    geoc.getLocation(newPoints[ptLen], function(rs) {
+      var addComp = rs.addressComponents;
+      var content='<div class="infoWindow"><ul><li>编号：'+(ptLen+1)+'</li><li>IMEI：'+imeiValue[ptLen]+'</li><li>地址：'+ addComp.province  + addComp.city + addComp.district + addComp.street  + addComp.streetNumber + '</li><li>定位时间：'+timeValue[ptLen]+'</li></ul></div>';
+      label = new BMap.Label();
+      label.setOffset(new BMap.Size(-85,-135));
+      label.setContent(content);
+      endMk.setLabel(label);
+      label.setStyle({
+        border:"none",
+        width: "200px",
+        height:"140px",
+        background:"url('/Public/dist/img/map/info-window-bg-wx-small.png') no-repeat" 
+      });
+    });
+    map.centerAndZoom(newPoints[ptLen], map.getZoom());
+  });
+  // 清除开始展示信息窗口
+  map.addEventListener("click", function(){
+    map.removeOverlay(startMk.getLabel()); 
+  })
+  // 清除终点展示信息窗口
+  map.addEventListener("click", function(){
+    map.removeOverlay(endMk.getLabel()); 
+  })
+};
+
+// 地图轨迹画线及开始终点图标
+function polyLine(newPoints,startMk,endMk,ptLen){
+  var arr=[];
+  for(var i=0; i<=ptLen;i++){
+    if(i==0){
+      map.addOverlay(startMk);
+    }else if(i==ptLen){
+      $.toast("足迹回放完成", "success");
+      map.addOverlay(endMk);
+    }
+    arr.push(newPoints[i]);
+  }
+  var polyline = new BMap.Polyline(arr, {strokeColor:"red", strokeWeight:4, strokeOpacity:0.5});  //定义折线
+  map.addOverlay(polyline);     //添加折线到地图上
+  map.setViewport(newPoints);
+}
+
+// 选择日期时间
+$("#sdatetime1").datetimePicker({
+  title:"选择日期和时间",
+  onChange: function() {
+    $("#selectStudent").val("");
+  }
+});
+$("#edatetime1").datetimePicker({
+  title:"选择日期和时间",
+    onChange: function() {
+    $("#selectStudent").val("");
+  }
+});
+  
+</script>
+</body>
+</html>

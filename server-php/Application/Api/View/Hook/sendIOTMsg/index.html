@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<h1>物联网短信</h1>
+<form action="{:U('Api/Hook/doSendIOTMsg')}">
+    手机号:<input type="text" name="phone" required="required"><br><br>
+    <!--短信命令:<input type="text" name="msg" required="required">-->
+    短信命令:
+    <textarea name="msg" id="" cols="30" rows="10" required="required"></textarea>
+    <input type="submit" value="下发">
+</form>
+</body>
+</html>

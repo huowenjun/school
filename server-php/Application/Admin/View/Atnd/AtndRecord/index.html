@@ -1,0 +1,639 @@
+  <!-- Main Header -->
+  <include file="Public:header" title="考勤记录"/>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">考勤记录</li>
+      </ol>
+    </section>
+     <section class="content">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">校区列表</h3>
+            </div>
+            <div class="box-body">
+              <div class="tree-search">
+                <i class="tree-search-icon" id="searchNodeBtn"></i> 
+                <input type="text" placeholder="搜索关键字" id="searchNodeVal" value="" class="empty fs-12" />
+              </div>
+              <div class="tree-scroll">
+                <ul id="treeDemo" class="ztree js_ztree_height"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-9">
+          <div class="box">
+            <div class="box-header with-border">
+              
+              <!-- 家长权限不显示此记录数 -->
+              <div class="form-inline navbar-form navbar-left">
+                <div class="atnd-num" style="display:none; margin-bottom:15px;">正常考勤记录数：<strong id="normalCount" style="margin-right: 30px; font-size:21px;" ></strong> 异常考勤记录数：<strong id="abnormalCount" style="font-size:21px;" ></strong></div>
+                <input type="hidden" name="typeFlag" id="typeFlag" />
+                <div class="form-group">
+                  <label for="keyword1">学生姓名：</label>
+                  <input id="keyword1" type="text" class="form-control" placeholder="姓名" />
+                </div>
+                <div class="form-group">
+                  <label for="sign_type1">签到类型：</label>
+                  <select id="sign_type1" class="form-control">
+                    <option value="99">全部</option>
+                    <option value="0">出校</option>
+                    <option value="1">进校</option> 
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="">考勤时间：</label>
+                  <input id="sdatetime1" class="form-control dataTime" type="text" value="" placeholder="请输入开始时间">
+                   --
+                  <input id="edatetime1" class="form-control dataTime" type="text" value="" placeholder="请输入结束时间">
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary query" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                  </button>
+                </div>               
+              </div> 
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <table id="attendancerecord_table" class="js-custom-table-data">
+                    <thead>  
+                      <tr>
+                        <th data-field="stu_name" data-align="center">姓名</th>
+                        <th data-field="stu_no" data-align="center">学号</th>
+                        <th data-field="imei" data-align="center">IMEI号</th>
+                        <th data-field="sign_type" data-sortable="true" data-align="center">签到类型</th>
+                        <th data-field="signin_type" data-sortable="true" data-align="center">状态</th>
+                        <th data-field="jc_time" data-sortable="false" data-align="center">签到时间</th> 
+                        <th data-field="shijianduan" data-sortable="false" data-align="center">考勤时间段</th>
+                      </tr>
+                    </thead>        
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+<form id="searchForm" name="searchForm" action="" style="position: fixed; top: 0; right: 0; z-index: 99999;">
+  <input type="hidden" class="prov_id_hide" name="prov_id" value="" placeholder="省/直辖市" />
+  <input type="hidden" class="city_id_hide" name="city_id" value="" placeholder="市" />
+  <input type="hidden" class="county_id_hide" name="county_id" value="" placeholder="区/县" />
+  <input type="hidden" class="s_id_hide" name="s_id" value="" placeholder="学校" />
+  <input type="hidden" class="a_id_hide" name="a_id" value="" placeholder="校区" />
+  <input type="hidden" class="g_id_hide" name="g_id" value="" placeholder="年级" />
+  <input type="hidden" class="c_id_hide" name="c_id" value="" placeholder="班级" />
+  <input type="hidden" class="stu_id_hide" name="stu_id" value="" placeholder="学生" />
+  <input type="hidden" name="keyword" id="keyword" />
+  <input type="hidden" name="sdatetime" id="sdatetime" />
+  <input type="hidden" name="edatetime" id="edatetime" />
+  <input type="hidden" name="sign_type" id="sign_type" />
+</form>
+<!-- REQUIRED JS SCRIPTS -->
+<include file="Public:footer_js"/>
+<!-- 文件树搜索 -->
+<script type="text/javascript" src="/Public/dist/js/jquery.ztree.exhide.min.js"></script>
+<script>
+$(function() {
+  // 表格数据
+  var $table = $('#attendancerecord_table');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+});
+
+// 文件树
+var setting = {
+  check: {
+    enable: false,
+    chkStyle: "radio",
+    radioType: "all" // 在整棵树范围内当做一个分组
+  },
+  view: {
+    dblClickExpand: true
+  },
+  data: {
+    simpleData: {
+      enable: true
+    }
+  },
+  callback: {
+    beforeExpand: beforeExpand,
+    onExpand: onExpand,
+    onCollapse: onCollapse,
+    onClick: zTreeOnClick
+  }
+};
+
+// 保持展开单一路径 start
+var curExpandNode = null;
+function beforeExpand(treeId, treeNode) {
+  var pNode     = curExpandNode ? curExpandNode.getParentNode():null;
+  var treeNodeP = treeNode.parentTId ? treeNode.getParentNode():null;
+  var zTree     = $.fn.zTree.getZTreeObj("treeDemo");
+  for(var i=0, l=!treeNodeP ? 0:treeNodeP.children.length; i<l; i++ ) {
+    if (treeNode !== treeNodeP.children[i]) {
+      zTree.expandNode(treeNodeP.children[i], false);
+    }
+  }
+  while (pNode) {
+    if (pNode === treeNode) {
+      break;
+    }
+    pNode = pNode.getParentNode();
+  }
+  if (!pNode) {
+    singlePath(treeNode);
+  }
+}
+function singlePath(newNode) {
+  if (newNode === curExpandNode) return;
+
+  var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+    rootNodes, tmpRoot, tmpTId, i, j, n;
+
+  if (!curExpandNode) {
+    tmpRoot = newNode;
+    while (tmpRoot) {
+      tmpTId = tmpRoot.tId;
+      tmpRoot = tmpRoot.getParentNode();
+    }
+    rootNodes = zTree.getNodes();
+    for (i=0, j=rootNodes.length; i<j; i++) {
+      n = rootNodes[i];
+      if (n.tId != tmpTId) {
+        zTree.expandNode(n, false);
+      }
+    }
+  } else if (curExpandNode && curExpandNode.open) {
+    if (newNode.parentTId === curExpandNode.parentTId) {
+      zTree.expandNode(curExpandNode, false);
+    } else {
+      var newParents = [];
+      while (newNode) {
+        newNode = newNode.getParentNode();
+        if (newNode === curExpandNode) {
+          newParents = null;
+          break;
+        } else if (newNode) {
+          newParents.push(newNode);
+        }
+      }
+      if (newParents!=null) {
+        var oldNode = curExpandNode;
+        var oldParents = [];
+        while (oldNode) {
+          oldNode = oldNode.getParentNode();
+          if (oldNode) {
+              oldParents.push(oldNode);
+          }
+        }
+        if (newParents.length>0) {
+          zTree.expandNode(oldParents[Math.abs(oldParents.length-newParents.length)-1], false);
+        } else {
+          zTree.expandNode(oldParents[oldParents.length-1], false);
+        }
+      }
+    }
+  }
+  curExpandNode = newNode;
+}
+function onExpand(event, treeId, treeNode) {
+  leftTreeScroll();
+  curExpandNode = treeNode;
+}
+function onCollapse(event, treeId, treeNode) {
+  curExpandNode = treeNode;
+  leftTreeScroll();
+}
+// 保持展开单一路径 end
+
+// 请求树
+$.ajax({
+  type: "get",
+  url: "/index.php/Admin/index/get_tree",
+  dataType : 'json',
+  success: function(msg) {
+    var groupNodes = msg.data;
+    $.fn.zTree.init($("#treeDemo"), setting, groupNodes);
+  },
+  error: function(msg) {
+    dialog.error("请求服务器异常！");
+  }
+});
+
+var user_type = "{$user_type}"; // 用户类型 1学校管理员 2系统用户 3老师 4家长 5省/直辖市教委 6 市教委 7 区/县教委  
+//点击
+function zTreeOnClick(event, treeId, treeNode) {
+  var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+  var nodes   = treeObj.getSelectedNodes();
+  for (var i=0, l=nodes.length; i < l; i++) {
+    treeObj.checkNode(nodes[i], true, true);
+  }
+  if (user_type == '1') {
+    // 点击选择
+    if(treeNode.typeFlag == 'school') {
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'grade') {
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.id); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'class') {
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.getParentNode().id); // 年级
+      $(".c_id_hide").val(treeNode.id); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'student') {
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.getParentNode().getParentNode().id); // 年级
+      $(".c_id_hide").val(treeNode.getParentNode().id); // 班级
+      $(".stu_id_hide").val(treeNode.id); // 学生
+      
+    };
+  };
+  if (user_type == '2' || user_type == '5') {
+    // 点击选择
+    if(treeNode.typeFlag == 'prov') {
+      $(".prov_id_hide").val(treeNode.id); // 省/直辖市
+      $(".city_id_hide").val(''); // 市
+      $(".county_id_hide").val(''); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'city') {
+      $(".prov_id_hide").val(treeNode.getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.id); // 市
+      $(".county_id_hide").val(''); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'county') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.id); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'school') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'grade') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.id); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'class') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.getParentNode().id); // 年级
+      $(".c_id_hide").val(treeNode.id); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'student') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.getParentNode().getParentNode().id); // 年级
+      $(".c_id_hide").val(treeNode.getParentNode().id); // 班级
+      $(".stu_id_hide").val(treeNode.id); // 学生
+      
+    };
+  };
+  if (user_type == '6') {
+    // 点击选择
+    if(treeNode.typeFlag == 'city') {
+      $(".city_id_hide").val(treeNode.id); // 市
+      $(".county_id_hide").val(''); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'county') {
+      $(".city_id_hide").val(treeNode.getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.id); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'school') {
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'grade') {
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.id); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'class') {
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.getParentNode().id); // 年级
+      $(".c_id_hide").val(treeNode.id); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'student') {
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.getParentNode().getParentNode().id); // 年级
+      $(".c_id_hide").val(treeNode.getParentNode().id); // 班级
+      $(".stu_id_hide").val(treeNode.id); // 学生
+      
+    };
+  };
+  if (user_type == '7') {
+    // 点击选择
+    if(treeNode.typeFlag == 'county') {
+      $(".county_id_hide").val(treeNode.id); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'school') {
+      $(".county_id_hide").val(treeNode.getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'grade') {
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.id); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'class') {
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.getParentNode().id); // 年级
+      $(".c_id_hide").val(treeNode.id); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'student') {
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 校区
+      $(".g_id_hide").val(treeNode.getParentNode().getParentNode().id); // 年级
+      $(".c_id_hide").val(treeNode.getParentNode().id); // 班级
+      $(".stu_id_hide").val(treeNode.id); // 学生
+      
+    };
+  };
+  if (user_type == '3') {
+    // 点击选择
+    if(treeNode.typeFlag == 'grade') {
+      $(".g_id_hide").val(treeNode.id); // 年级l
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'class') {
+      $(".g_id_hide").val(treeNode.getParentNode().id); // 年级
+      $(".c_id_hide").val(treeNode.id); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'student') {
+      $(".g_id_hide").val(treeNode.getParentNode().getParentNode().id); // 年级
+      $(".c_id_hide").val(treeNode.getParentNode().id); // 班级
+      $(".stu_id_hide").val(treeNode.id); // 学生
+    };
+  };
+  if (user_type == '4') { 
+    // 点击选择
+    if(treeNode.typeFlag == 'student') {
+      $(".stu_id_hide").val(treeNode.id); // 学生
+    };
+  }; 
+  search();
+}
+// 隐藏域赋值
+function searchForm() {
+  $("#keyword").val($("#keyword1").val());
+  $("#sdatetime").val($("#sdatetime1").val());
+  $("#edatetime").val($("#edatetime1").val());
+  $("#sign_type").val($("#sign_type1").val());
+}
+// //请求Select下拉数据
+// $(function() {
+//   initSelect('sign_type1',g_config.host+'/index.php/Admin/Common/get_list',0,{type:'school'},true);  
+// });
+// 自定义ajax请求
+function ajaxRequest(params) {
+  //form查询域赋值
+  searchForm();
+  $g_params = params;
+  // 需要的数据
+  var url = "/index.php/Admin/Atnd/AtndRecord/query?" + $("#searchForm").serialize();
+  queryList(url,params);
+}
+
+// 考勤数量统计
+function attrCount(){
+  var url = '/index.php/Admin/Atnd/AtndRecord/getStatusCount?' + $("#searchForm").serialize();
+  $.ajax({
+    url: url,
+    async: true,
+    type: 'GET',
+    dataType: 'json',
+    beforeSend: function (){
+      showLoad();
+    },
+    complete: function (){
+      hideLoad();
+    },
+    success: function(res) {
+      if(res.status==1){
+        var attrNum = res.data;
+        success(attrNum);
+      }else{
+        dialog.error(res.info);
+      }
+    }
+  });
+}
+
+var normalCount=$("#normalCount");
+var abnormalCount = $("#abnormalCount");
+function success(attrNum) {
+  normalCount.html(attrNum.zhengc);
+  abnormalCount.html(attrNum.yichang);  
+}
+function showLoad() {
+  normalCount.html('<img class="load" src="/Public/dist/img/load/load.gif">');
+  abnormalCount.html('<img class="load" src="/Public/dist/img/load/load.gif">')
+}
+function hideLoad() {
+  $(".load").css('display', 'none');
+}
+
+// 搜索
+function search(){
+  $(".atnd-num").css('display', 'block');
+  //form查询域赋值
+  searchForm();
+  attrCount(); 
+  var url = "/index.php/Admin/Atnd/AtndRecord/query?" + $("#searchForm").serialize();
+  $g_params.data.page = 1;
+  queryList(url,$g_params);
+}
+
+// 日期
+$.datetimepicker.setLocale('ch'); 
+$('.dataTime').datetimepicker({
+  format:"Y-m-d H:i",      // 格式化日期
+  timepicker:false,    // 关闭时间选项
+  yearStart:2000,      // 设置最小年份
+  yearEnd:2050,        // 设置最大年份
+  todayButton:true    // 关闭选择今天按钮
+});
+
+$('#sdatetime1').datetimepicker({
+  onShow:function(ct) {
+    this.setOptions({
+      maxDate:jQuery('#edatetime1').val()?jQuery('#edatetime1').val():false
+    })
+  },
+  timepicker:true
+});
+jQuery('#edatetime1').datetimepicker({
+  onShow:function(ct) {
+    this.setOptions({
+      minDate:jQuery('#sdatetime1').val()?jQuery('#sdatetime1').val():false
+    })
+  },
+  timepicker:true
+}); 
+
+// 左侧文件树搜索
+$('#searchNodeBtn').click(function() {
+  searchNodeAll('treeDemo',$('#searchNodeVal'));
+  leftTreeScroll();
+});
+$('#searchNodeVal').on('input', function() {
+  searchNodeAll('treeDemo',$('#searchNodeVal'));
+  leftTreeScroll();
+});
+</script>
+</body>
+</html>

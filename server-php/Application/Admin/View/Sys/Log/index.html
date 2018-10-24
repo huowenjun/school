@@ -1,0 +1,178 @@
+  <!-- Main Header -->
+  <include file="Public:header" title="日志管理"/>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">日志管理</li>
+      </ol>
+    </section>
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <form class="form-inline navbar-form navbar-left">
+                <div class="form-group">
+                  <label for="group_id1">角色类型：</label>
+                  <select class="form-control" id="group_id1">
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="name1">姓名：</label>
+                  <input id="name1" type="text" class="form-control" placeholder="请输入姓名" />
+                </div>
+                <div class="form-group">
+                  <label for="username1">账户：</label>
+                  <input id="username1" type="text" class="form-control" placeholder="请输入账户" />
+                </div>
+                <div class="form-group">
+                  <label for="">记录时间：</label>
+                  <input id="sdatetime1" class="form-control dataTime" type="text" value="" placeholder="开始时间">
+                   --
+                  <input id="edatetime1" class="form-control dataTime" type="text" value="" placeholder="结束时间">
+                </div>
+                <div class="form-group">
+                  <label for="">IP 地址 ：</label>
+                  <input id="sl_ip1" type="text" class="form-control" placeholder="请输入IP 地址" />
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary query" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                  </button>
+                </div>             
+              </form>
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <table id="logmanage_table" class="js-custom-table-data">
+                    <thead>  
+                      <tr>
+                        <th data-field="name" data-sortable="false" data-align="center">用户姓名</th>
+                        <th data-field="username" data-sortable="false" data-align="center">用户帐号</th>
+                        <th data-field="group_name" data-sortable="false" data-align="center">角色类型</th>
+                        <th data-field="sl_module_name" data-sortable="false" data-align="center">操作模块</th>
+                        <th data-field="sl_content" data-sortable="false" data-align="center">操作内容</th>
+                        <th data-field="sl_operate_time" data-sortable="true" data-align="center">记录时间</th>
+                        <th data-field="sl_ip" data-sortable="true" data-align="center">IP 地址</th>
+                        <th data-field="record_type" data-sortable="false" data-align="center">记录类型</th>  
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+<form id="searchForm" name="searchForm" action="">
+    <input type="hidden" name="group_id" id="group_id" />
+    <input type="hidden" name="sdatetime" id="sdatetime" />
+    <input type="hidden" name="edatetime" id="edatetime" />
+    <input type="hidden" name="username" id="username" />
+    <input type="hidden" name="name" id="name" />
+    <input type="hidden" name="sl_ip" id="sl_ip">
+</form>
+<!-- REQUIRED JS SCRIPTS -->
+<!-- jQuery 2.2.3 -->
+<include file="Public:footer_js"/>
+
+<script>
+// 请求Select角色下拉数据
+$(function() {
+  initSelect('group_id1',g_config.host+'/index.php/Admin/Common/get_list',0,{type:'group'},true);  
+});
+
+$(function() {
+  // 表格数据
+  var $table = $('#logmanage_table');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",                   // 工具栏
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+});
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  // 需要的数据
+  var url = "/index.php/Admin/Sys/Log/query?" + $("#searchForm").serialize();
+  queryList(url,params);
+}
+//搜索
+function search(){
+  //form查询域赋值
+  $("#group_id").val($("#group_id1").val());
+  $("#sl_ip").val($("#sl_ip1").val());
+  $("#sdatetime").val($("#sdatetime1").val());
+  $("#edatetime").val($("#edatetime1").val());
+  $("#username").val($("#username1").val());
+  $("#name").val($("#name1").val());
+  var url = "/index.php/Admin/Sys/Log/query?" + $("#searchForm").serialize();
+  $g_params.data.page = 1
+  queryList(url,$g_params);
+}
+// 日期
+$.datetimepicker.setLocale('ch'); 
+$('.dataTime').datetimepicker({
+  format:"Y-m-d",      // 格式化日期
+  timepicker:false,    // 关闭时间选项
+  yearStart:2000,      // 设置最小年份
+  yearEnd:2050,        // 设置最大年份
+  todayButton:false    // 关闭选择今天按钮
+});
+
+
+// 日期 时间
+$('.dataTime').datetimepicker({
+  // lang:"ch",            // 语言选择中文
+  format:"Y-m-d H:i", // 格式化日期 时间
+  timepicker:true,      // 时间选项
+  step:5,               // 分钟步数
+  yearStart:2000,       // 设置最小年份
+  yearEnd:2050,         // 设置最大年份
+  todayButton:true      // 选择今天按钮
+});
+$('#sdatetime1').datetimepicker({
+  onShow:function(ct) {
+    this.setOptions({
+      maxDate:jQuery('#edatetime1').val()?jQuery('#edatetime1').val():false
+    })
+  },
+  timepicker:true
+});
+jQuery('#edatetime1').datetimepicker({
+  onShow:function(ct) {
+    this.setOptions({
+      minDate:jQuery('#sdatetime1').val()?jQuery('#sdatetime1').val():false
+    })
+  },
+  timepicker:true
+});
+
+</script>
+</body>
+</html>

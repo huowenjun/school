@@ -1,0 +1,31 @@
+@charset "UTF-8";
+/**
+ *
+ * @authors LJS (1114510520@qq.com)
+ * @date    2017-02-17 14:41:56
+ * @version $Id$
+ */
+
+/*公共部分*/
+* { outline: none; box-sizing: border-box; -moz-box-sizing: border-box; /* Firefox */
+  -webkit-box-sizing: border-box; /* Safari */
+  -webkit-tap-highlight-color: rgba(0,0,0,0); }
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; }
+html{ font-size:100px;}
+body {  margin: 0 auto;  font-family: 'Microsoft YaHei', Arial, Helvetica, sans-serif;  /*-webkit-user-select: none; user-select: none;*/ /*禁止选中文本*/}
+ul,li { list-style: none; }
+em, b, strong { font-weight: normal; }
+i, em { font-style: normal; }
+u, s, ins, del, a { text-decoration: none; }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; }
+table { border-collapse: collapse; border-spacing: 0; }
+img, fieldset, iframe, input { border: none; }
+input, button, textarea, select { font-family: inherit; font-size: inherit; font-weight: inherit; *font-size:100%; }
+th, td { text-align: left; }
+
+.cooperative-products li{ margin:0.5rem 0.75rem; overflow: hidden; }
+.cooperative-products a{  width: 9rem; float: left; margin-right:0.5rem;}
+.cooperative-products img{ width: 9rem; display: block; }
+.cooperative-products a.clear-margin{  margin-right:0;}
+.cooperative-products-list img {width: 20rem; display: block;}
+.cooperative-products-details img{width: 20rem; display: block;}

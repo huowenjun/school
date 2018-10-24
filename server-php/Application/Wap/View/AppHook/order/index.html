@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>订单</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="no">
+<link rel="stylesheet" type="text/css" href="/Public/AppHook/css/phone.css" />
+<script type="text/javascript" src="/Public/AppHook/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/AppHook/js/rem.js"></script>
+</head>
+<body class="buyTicketsBg">
+<div class="main order">
+  <div class="header">
+    <div class="cont">
+      <span class="txt js_date">2018-03-26</span>
+    </div>
+  </div>
+  <!-- 内容 -->
+	<div class="content">
+    <div class="infoList">
+      <div class="list">
+        <div class="rows">
+          <div class="row row1">
+            <span class="top js_currentStartStationName">北京西</span>
+            <span class="bottom js_startTime">19:53</span>
+          </div>
+          <div class="row row2">
+            <span class="top js_trainNumber">Z107</span>
+            <span class="bottom js_runTime">80280</span>
+          </div>
+          <div class="row row3">
+            <span class="top js_currentEndStationName">深圳</span>
+            <span class="bottom js_endTime">18:11</span>
+          </div>
+        </div>
+        <div class="expand">
+          <span class="js_seat">二等座</span> ￥<span class="js_price">500</span>
+        </div>
+      </div>
+    </div>
+    <div class="linkman js_linkman">
+      <span class="js_note">添加乘车人/修改乘车人</span>
+      <span class="js_contactName"></span>
+      <span class="js_idCard2"></span>
+    </div>
+    <div class="linkPeopleInfo">
+      <div class="infoListA">
+        <label for="linkPeople">联系人</label>
+        <span class="input"><input id="linkPeople" type="text" name="" placeholder="添加联系人" /></span>
+      </div>
+      <div class="infoListA">
+        <label for="tel">手机号</label>
+        <span class="input"><input id="tel" type="text" name="" placeholder="用于接收确认短信" /></span>
+      </div>
+    </div>
+    <div class="section">
+      <div style="height: 2.0625rem; line-height: 2.0625rem; color: #919191; font-size: 0.875rem; background: #ffffff; padding-left: 0.625rem; border-bottom: 2px solid #fcfcfc;">支付方式</div>
+      <ul class="ways js_ways">
+        <li class="active" data-val="0">支付宝</li>
+        <li data-val="1">微&nbsp;&nbsp;信</li>
+      </ul>
+    </div>
+    <a class="subBtn2 js_paymentBtn" href="javascript:void(0);">去付款</a>
+  </div>
+</div>
+
+<!-- 选择乘车人 弹出层 -->
+<div class="selectLinkman js_selectLinkman">
+  <div class="info js_info">
+    <div class="btn js_btn">
+      <a class="cancel js_cancel">取消</a>
+      <a class="confirm js_confirm">确定</a>
+    </div>
+    <div class="js_infoHeight">
+      <div class="add js_add">
+        +新增乘车人
+      </div>
+      <div class="passengerList js_passengerList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 添加乘车人 弹出层 -->
+<div class="main addContact js_addContact">
+  <div class="header">
+    <div class="cont">
+      <span class="txt"><em class="js_addEdit">新增</em>乘车人</span>
+      <span class="cancelAdd js_cancelAdd">取消</span>
+    </div>
+  </div>
+  <!-- 内容 -->
+  <div class="content">
+    <form id="form" action="" method="post">
+      <input id="id" type="hidden" name="" value="" />
+      <ul class="formInfo">
+        <li>
+          <label for="name">姓名</label>
+          <span class="input"><input id="name" type="text" name="" value="" placeholder="姓名" /></span>
+        </li>
+        <li>
+          <label for="type">证件类型</label>
+          <span class="input" id="type">身份证</span>
+        </li>
+        <li>
+          <label for="idcard">证件号码</label>
+          <span class="input"><input id="idcard" type="text" name="" placeholder="证件号码" /></span>
+        </li>
+        <li>
+          <label for="mobile">手机号</label>
+          <span class="input"><input id="mobile" type="text" name="" placeholder="手机号" /></span>
+        </li>
+      </ul>
+    </form>
+    <a class="subBtn2 js_subBtn" href="javascript:void(0);">保存</a>
+  </div>
+</div>
+
+<!-- 已选乘客信息 -->
+<form id="selectedInfo">
+  <input type="hidden" class="js_hideName" name="" value="" placeholder="乘客姓名" />
+  <input type="hidden" class="js_hideTel" name="" value="" placeholder="乘客手机号码" />
+  <input type="hidden" class="js_hideIdCard" name="" value="" placeholder="乘客证件号码" />
+  <input type="hidden" class="js_hideSeat" name="" value="" placeholder="选择座位类型名称" />
+</form>
+
+<form id="hiddenForm" name="" action="" style="position: fixed; top: 0; right: 0; z-index: 99999;">
+  <input type="hidden" id="hide_user_id" name="user_id" value="" placeholder="用户id" />
+  <input type="hidden" id="hide_deal_price" name="deal_price" value="" placeholder="充值话费金额" />
+  <input type="hidden" id="hide_type" name="type" value="" placeholder="订单类型 0账户零钱充值 1学生卡余额充值 2话费充值 3提现 4流量充值 5生活缴费(水电煤)" />
+  <input type="hidden" id="hide_deal_name" name="deal_name" value="" placeholder="订单名称(如话费充值)" />
+  <input type="hidden" id="hide_memo" name="memo" value="" placeholder="订单备注(话费充值请传递电话号码!!!)" />
+  <input type="hidden" id="hide_payment_id" name="payment_id" value="" placeholder="支付方式 0支付宝 1微信 2银联" />
+</form>
+
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<!-- 自定义js文件 -->
+<script type="text/javascript" src="/Public/Wechat/js/phone.js"></script>
+<!-- 选择日期时间 -->
+<script type="text/javascript" src="/Public/Wechat/js/picker.js"></script>
+
+<script type="text/javascript" src="/Public/dist/js/custom.js"></script>
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<!-- layer弹出层 -->
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript">
+// 选择支付方式
+$('.js_ways').delegate('li', 'click', function() {
+  $(this).addClass('active').siblings('li').removeClass('active');
+});
+
+$('.js_date').text(getUrlParam('date'));
+$('.js_startTime').text(getUrlParam('startTime'));
+$('.js_currentStartStationName').text(getUrlParam('startName'));
+$('.js_trainNumber').text(getUrlParam('trainNumber'));
+$('.js_runTime').text(getUrlParam('runTime'));
+$('.js_endTime').text(getUrlParam('endTime'));
+$('.js_currentEndStationName').text(getUrlParam('endName'));
+$('.js_seat').text(getUrlParam('seat'));
+$('.js_price').text(getUrlParam('price'));
+
+// 点击添加乘车人
+$('.js_add').click(function() {
+  $('.js_addContact').show();
+  $('.js_addEdit').text('添加');
+});
+
+// 点击编辑乘车人
+$('.js_passengerList').delegate('.js_edit', 'click', function() {
+  var id     = $(this).parents('.js_list').attr('id');
+  var name   = $(this).parents('.js_list').find('.js_name').text();
+  var mobile = $(this).parents('.js_list').attr('mobile');
+  var idcard = $(this).parents('.js_list').find('.js_idCard').text();
+  $('.js_addContact').show();
+  $('.js_addContact #id').val(id);
+  $('.js_addContact #name').val(name);
+  $('.js_addContact #mobile').val(mobile);
+  $('.js_addContact #idcard').val(idcard);
+  $('.js_addEdit').text('编辑');
+})
+
+// 保存乘车人
+$('.js_subBtn').click(function() {
+  var userId = getUrlParam('user_id');
+  var id     = $('#id').val();
+  var name   = $('#name').val();
+  var idcard = $('#idcard').val();
+  var mobile = $('#mobile').val();
+  var bool   = true;
+  if (mobile == '') {
+    dialog.error('请添写乘车人手机号！');
+    bool = false;
+  };
+  if (idcard == '') {
+    dialog.error('请添写乘车人身份证号！');
+    bool = false;
+  };
+  if (name == '') {
+    dialog.error('请添写乘车人姓名！');
+    bool = false;
+  };
+  if (bool) {
+    // ajax 数据请求
+    $.ajax({
+      url: '/index.php/wap/LinkMan/addLinkMan',
+      type: 'post',
+      dataType: 'json',
+      data: {user_id: userId, id: id, name: name, idcard: idcard, mobile: mobile},
+      success: function(msg) {
+        if (msg.status == 0) {
+          dialog.error(msg.info);
+        } else {
+          dialog.success(msg.info, function() {
+            $('.js_addContact').hide();
+            $('#form input').val('');
+            $('.js_selectLinkman').hide();
+            layer.closeAll();
+          });
+        };
+      },
+      error: function() {
+        dialog.error('请求服务器异常！');
+      }
+    })
+  };
+})
+
+// 点击取消添加乘车人
+$('.js_cancelAdd').click(function() {
+  $('.js_addContact').hide();
+  $('#form input').val('');
+})
+
+// 点击确定选中乘车人
+$('.js_confirm').click(function() {
+  $('.js_selectLinkman input[name=radio]').each(function(index, el) {
+    var name   = $('input:checked').parents('.js_list').find('.js_name').text();
+    var idCard = $('input:checked').parents('.js_list').find('.js_idCard').text();
+    var tel    = $('input:checked').parents('.js_list').attr('mobile');
+    $('.js_note').text('');
+    $('.js_contactName').text(name);
+    $('.js_idCard2').text(idCard);
+    $('.js_hideName').val(name);
+    $('.js_hideTel').val(tel);
+    $('.js_hideIdCard').val(idCard);
+    $('.js_hideSeat').val(getUrlParam('seat'));
+  });
+  $('.js_selectLinkman').hide();
+})
+
+// 删除乘车人
+$('.js_passengerList').delegate('.js_del', 'click', function() {
+  var id     = $(this).parents('.js_list').attr('id');
+  var userId = getUrlParam('user_id');
+  // ajax 数据请求
+  $.ajax({
+    url: '/index.php/wap/LinkMan/delLinkMan',
+    type: 'post',
+    dataType: 'json',
+    data: {user_id: userId, id: id},
+    success: function(msg) {
+      if (msg.status == 0) {
+        dialog.error(msg.info);
+      } else {
+        dialog.success(msg.info, function() {
+          linkmanList();
+          layer.closeAll();
+        });
+      };
+    },
+    error: function() {
+      dialog.error('请求服务器异常！');
+    }
+  })
+});
+
+// 点击选择乘车人列表
+$('.js_linkman').click(function() {
+  $('.js_selectLinkman').show();
+  linkmanList();
+})
+
+// 点击取消乘车人列表
+$('.js_cancel').click(function() {
+  $('.js_selectLinkman').hide();
+})
+
+// 点击付款
+$('.js_paymentBtn').click(function() {
+  var bool              = true;
+  var phoneRe           = /^1[34578]\d{9}$/;
+  var userId            = getUrlParam('user_id');
+  var date              = getUrlParam('date');
+  var startTime         = getUrlParam('startTime');
+  var trainNumber       = getUrlParam('trainNumber');
+  var runTime           = getUrlParam('runTime');
+  var endTime           = getUrlParam('endTime');
+  var seat              = getUrlParam('seat');
+  var price             = getUrlParam('price');
+  var contactName       = $('#linkPeople').val();
+  var contactTel        = $('#tel').val();
+  var flightCompanyCode = getUrlParam('flightCompanyCode');
+  var seatCode          = getUrlParam('seatCode');
+  var orgCity           = getUrlParam('orgCity');
+  var dstCity           = getUrlParam('dstCity');
+  var startName;
+  var endName;
+  if (getUrlParam('activeType') == '6') {
+    startName = getUrlParam('startName');
+    endName   = getUrlParam('endName');
+  } else {
+    startName = getUrlParam('orgCity');
+    endName   = getUrlParam('dstCity');
+  };
+  var arr = [];
+  $('#selectedInfo input').each(function(index, el) {
+    arr.push($(this).val());
+  });
+  var passagers = arr.toString();
+
+  if (!phoneRe.test($('#tel').val())) {
+    dialog.error('手机号码格式不正确！');
+    bool = false;
+  };
+  if ($('#linkPeople').val() == '') {
+    dialog.error('请添写联系人！');
+    bool = false;
+  };
+  if ($('.js_note').text() == '添加乘车人/修改乘车人') {
+    dialog.error('请选择乘车人！');
+    bool = false;
+  };
+  if (bool == true) {
+    // ajax 数据请求
+    $.ajax({
+      url: '/index.php/wap/TrainTickets/OrderWrite',
+      type: 'post',
+      dataType: 'json',
+      data: {user_id: userId, from: startName, to: endName, date: date, trainNumber: trainNumber, contactName: contactName, contactTel: contactTel, passagers: passagers, startTime: startTime, flightCompanyCode: flightCompanyCode, seatCode: seatCode},
+      success: function(msg) {
+        var url = g_config.host + '/index.php/Api/Order/getOrder';
+        var tradeNo;
+        if (getUrlParam('activeType') == '6') {
+          if (msg.status == 0) {
+            dialog.error(msg.info);
+          } else {
+            tradeNo = msg.data.ticketTrade.tradeNo;
+            hiddenForm(tradeNo);
+            fpost(url,'hiddenForm',function(data) {
+              var paymentId = $('#hide_payment_id').val();
+              paramToApp(paymentId,data);
+            });
+          };
+        } else {
+          tradeNo = msg.info;
+          hiddenForm(tradeNo);
+          fpost(url,'hiddenForm',function(data) {
+            var paymentId = $('#hide_payment_id').val();
+            paramToApp(paymentId,data);
+          });
+        };
+      },
+      error: function() {
+        dialog.error('请求服务器异常！');
+      }
+    })
+  };
+})
+
+// 隐藏域赋值
+function hiddenForm(tradeNo) {
+  $('#hide_user_id').val(getUrlParam('user_id'));
+  $('#hide_deal_price').val(getUrlParam('price'));
+  $('#hide_type').val(getUrlParam('activeType'));
+  $('#hide_deal_name').val(getUrlParam('typeName'));
+  $('#hide_memo').val(tradeNo);
+  $('#hide_payment_id').val($('.js_ways .active').data('val'));
+}
+
+// 给app（Android & IOS）传参
+function paramToApp(paymentId,data) {
+  var u = navigator.userAgent, app = navigator.appVersion;
+  var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; // g
+  var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
+  if (isAndroid) {
+    Android.callAndroid(paymentId,JSON.stringify(data));
+  } else if (isIOS) {
+    IOS.callIphone(paymentId,data);
+  }
+}
+
+// 获取乘车人列表数据
+function linkmanList() {
+  var userId = getUrlParam('user_id');
+  // ajax 数据请求
+  $.ajax({
+    url: '/index.php/wap/LinkMan/queryLinkMan',
+    type: 'get',
+    dataType: 'json',
+    data: {user_id: userId},
+    success: function(msg) {
+      var html = '';
+      var obj  = msg.data;
+      if (obj == null || obj == '') {
+        $('.js_passengerList').html('<div class="null">抱歉，您还没添加乘车人！</div>');
+        $('.js_note').text('添加乘车人/修改乘车人');
+        $('.js_contactName').text('');
+        $('.js_idCard2').text('');
+      } else {
+        for (var i = 0; i < obj.length; i++) {
+            html += '<div class="list js_list" id="' + obj[i].id + '" mobile="' + obj[i].mobile + '">' +
+                      '<div class="row row1">' +
+                        '<span class="del js_del">X</span>' +
+                        '<img class="js_edit" src="/Public/AppHook/img/icon_edit.png" alt="" />' +
+                      '</div>' +
+                      '<div class="row row2">' +
+                        '<div class="name js_name">' + obj[i].name + '</div>' +
+                        '<div class="idCard js_idCard">' + obj[i].idcard + '</div>' +
+                      '</div>' +
+                      '<div class="row row3">' +
+                        '<input class="radio" type="radio" name="radio" value="" />' +
+                      '</div>' +
+                    '</div>'
+        };
+        $('.js_passengerList').html(html);
+        $('.js_selectLinkman input[name=radio]:eq(0)').attr('checked', true);
+
+        // 获取乘车人列表高度
+        var divH = $('.js_info').height();
+        var btnH = $('.js_btn').outerHeight();
+        var H    = divH - btnH;
+        $('.js_infoHeight').css({
+          'height': H,
+          'overflow-y': 'auto'
+        });
+      };
+    },
+    error: function() {
+      dialog.error('请求服务器异常！')
+    }
+  })
+}
+
+// 获取当前页面网址参数
+function getUrlParam(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+  var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+  if (r != null) {
+    return decodeURI(r[2]);
+  };
+  return null; // 返回参数值
+}
+</script>
+</body>
+</html>

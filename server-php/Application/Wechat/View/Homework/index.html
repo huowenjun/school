@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>家庭作业</title>
+<link rel="stylesheet" href="/Public/Wechat/css/weui.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui2.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/Wechat/css/phone.css" />
+</head>
+<body>
+<div class="header">
+  <div class="custom_cell">
+    <div class="weui-cell__bd" style="text-align: center;">
+      <p>家庭作业</p>
+    </div>
+    <!-- <a class="custom_link" onclick="back();">
+      <span class="weui-cell__ft"></span>
+    </a> -->
+  </div>
+</div>
+<div class="container custom_homework" id="container">
+  <form class="js_form_submit" action="" method="post">
+    <div class="weui_cells weui_cells_form">
+      <div class="weui_cell">
+        <div class="weui_cell_hd"><label for="" class="weui_label">学生：</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <input class="weui_input" type="text" value="" id="selectStudent" name="" />
+          <input class="weui_input" type="hidden" value="" id="selectStudentVal" name="stu_id" />
+        </div>
+        <a href="javascript:;" class="weui_btn weui_btn_mini weui_btn_warn custom_icon_clear">清除</a>
+      </div>
+      <div class="weui_cell">
+        <div class="weui_cell_hd"><label for="" class="weui_label">开始时间：</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <input class="weui_input" type="text" value="" id="stime" name="stime" />
+        </div>
+        <a href="javascript:;" class="weui_btn weui_btn_mini weui_btn_warn custom_icon_clear">清除</a>
+      </div>
+      <div class="weui_cell">
+        <div class="weui_cell_hd"><label for="" class="weui_label">结束时间：</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <input class="weui_input" type="text" value="" id="etime" name="etime" />
+        </div>
+        <a href="javascript:;" class="weui_btn weui_btn_mini weui_btn_warn custom_icon_clear">清除</a>
+      </div>
+    </div>
+    <div class="custom_height_10px"></div>
+    <div class="page-bd-15">
+      <div class="weui_btn bg-blue js_query"><i class="weui_icon_search"></i> 搜索</div>
+    </div>
+  </form>
+  <div class="weui_panel weui_panel_access">
+    <div class="weui_panel_bd">
+      <foreach name='homework' item='v'>
+      <div class="custom_list">
+        <div class="weui_media_box weui_media_appmsg">
+          <div class="weui_media_hd weui_btn_warn">
+            <span class="text">{$v.crs_id}</span>
+          </div>
+          <div class="weui_media_bd">
+            <h4 class="weui_media_title">{$v.c_id}</h4>
+            <h5 class="weui_media_title">教师：{$v.user_id}</h5>
+            <p class="weui_media_desc">布置时间：{$v.create_time}</p>
+            <p class="weui_media_desc">完成时间：{$v.finish_time}</p>
+            <h5 class="weui_media_title">作业名称：{$v.name}</h5>
+          </div>
+        </div>
+        <div class="custom_work_details">
+          <div class="custom_line_dashed"></div>
+          <div class="weui-weixin-page">
+            <div class="weui-weixin-content">
+              <p>{$v.work_content}</p>
+            </div>
+          </div>
+        </div>
+        <a class="weui_panel_ft js_view" href="javascript:;">查看详情</a>
+      </div>
+      <div class="custom_height_10px"></div>
+      </foreach>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<!-- 自定义js文件 -->
+<script type="text/javascript" src="/Public/Wechat/js/phone.js"></script>
+<!-- 选择日期时间 -->
+<script type="text/javascript" src="/Public/Wechat/js/picker.js"></script>
+<!-- 下拉单选 下拉多选 -->
+<script type="text/javascript" src="/Public/Wechat/js/select.js"></script>
+<!-- cookie -->
+<script type="text/javascript" src="/Public/Wechat/js/zepto.cookie.js"></script>
+
+<script type="text/javascript">
+$.ajax({
+  type: "get",
+  dataType: 'json',
+  url: '/index.php/Wechat/Homework/getstuList',
+  success: function(res) {
+    var datas = res.data;
+    // 选择学生
+    $("#selectStudent").select({
+      title: "学生",
+      items: datas,
+      onChange: function(d) {
+        $.alert("你选择了"+d.titles);
+      }
+    });
+  },
+  error: function(msg) {
+    $.toast("请求服务器异常！", "forbidden");
+  }
+});
+
+$(function() {
+
+  // 刷新页面后给搜索条件赋值
+  if($.fn.cookie("selectStudent")) {
+    $("#selectStudent").val($.fn.cookie("selectStudent"));
+  }
+  if($.fn.cookie("selectStudentVal")) {
+    $('#selectStudent').data('values',$.fn.cookie("selectStudentVal"));
+    $("#selectStudentVal").val($.fn.cookie("selectStudentVal"));
+  }
+  if($.fn.cookie("stime")) {
+    $("#stime").val($.fn.cookie("stime"));
+  }
+  if($.fn.cookie("etime")) {
+    $("#etime").val($.fn.cookie("etime"));
+  }
+
+  setTimeout(function() {
+    // 选择日期时间
+    $("#stime").datetimePicker({title:"选择日期",m:1});
+    $("#etime").datetimePicker({title:"选择日期",m:1});
+  },800)
+
+  // 点击搜索
+  $('.custom_homework').delegate('.js_query', 'click', function() {
+    $('#selectStudentVal').val($('#selectStudent').data('values'));
+    // 刷新页面之前先存储搜索条件值
+    $.fn.cookie('selectStudent',$("#selectStudent").val(),{expires:1}); // expires 可以设定保存时间{expires:7,path:'/',domain:'itcast.cn',secure:true}
+    $.fn.cookie('selectStudentVal',$("#selectStudentVal").val(),{expires:1});
+    $.fn.cookie('stime',$("#stime").val(),{expires:1});
+    $.fn.cookie('etime',$("#etime").val(),{expires:1});
+    var sTime = new Date($("#stime").val()).getTime();
+    var eTime = new Date($("#etime").val()).getTime();
+    // console.log('sTime:'+sTime+'<br>'+'eTime:'+eTime)
+    if (eTime-sTime >= 0) {
+      // 时间区域正确
+      $('.js_form_submit').submit();
+    } else {
+      if ($("#stime").val() == '' && $("#etime").val() == '') {
+        $('.js_form_submit').submit();
+      } else {
+        $.toast("请选择结束时间大于开始时间", "forbidden");
+      };
+    };
+  });
+
+  // 科目背景色
+  $('.custom_list .text').each(function() {
+    var text = $(this).text();
+    if (text == "语") {
+      $(this).parents('.weui_media_hd').css('background-color', '#ff6766');
+    };
+    if (text == "数") {
+      $(this).parents('.weui_media_hd').css('background-color', 'yellow');
+    };
+    if (text == "英") {
+      $(this).parents('.weui_media_hd').css('background-color', '#8b8ffa');
+    };
+  });
+
+  // 查看详情/隐藏详情
+  $('.custom_list').delegate('.js_view', 'click', function() {
+    if ($(this).siblings('.custom_work_details').css('display') == 'none') {
+      $(this).siblings('.custom_work_details').show(1000);
+      $(this).addClass('active').text('收起详情');
+    } else {
+      $(this).siblings('.custom_work_details').hide(400);
+      $(this).removeClass('active').text('查看详情');
+    };
+  });
+})
+</script>
+</body>
+</html>

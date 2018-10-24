@@ -1,0 +1,83 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors LJS (1114510520@qq.com)
+ * @date    2017-02-07 17:06:46
+ * @version $Id$
+ */
+
+.header { color: #FFF; font-size: 18px; }
+.header .custom_cell { position: relative; background-color: #00a0e8; padding: 12px 15px; }
+.header .custom_cell .custom_link { position: absolute; left: 4px; top: 5px; width: 40px; height: 40px; cursor: pointer; }
+.header .custom_cell .weui-cell__ft::after {
+  content: " ";
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+  border-width: 0 0 2px 2px;
+  border-style: solid;
+  border-color: #FFF;
+  -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  position: absolute;
+  top: 50%;
+  margin-top: -4px;
+  left: 16px;
+}
+.custom_height_10px { width: 100%; height: 10px; background-color: #eee; }
+.custom_line_dashed { height: 0; border-top: 1px dashed #e5e5e5; margin: 0 15px; }
+.weui_icon_search::before { color: #FFF; }
+.weui_cells { margin-top: 10px; font-size: 16px; }
+.weui-picker-modal .title, .weui_btn { font-size: 16px; }
+
+/* 家庭作业 + 考勤记录 */
+.custom_homework .weui_cell,
+.custom_AtndRecord .weui_cell {
+  position: relative;
+}
+.custom_homework .weui_cell .custom_icon_clear,
+.custom_AtndRecord .weui_cell .custom_icon_clear {
+  position: absolute;
+  right: 10px;
+  top: 11px;
+  font-size: 12px;
+}
+
+/* 家庭作业 */
+.custom_homework h5 { font-size: 15px!important; }
+.custom_homework .custom_list { position: relative; }
+.custom_homework .custom_list::before {
+  content: " ";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 1px;
+  border-top: 1px solid #e5e5e5;
+  color: #e5e5e5;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(.5);
+  transform: scaleY(.5);
+  left: 15px;
+}
+.custom_homework .weui_media_box .text { font-size: 20px; color: #FFF; }
+.custom_homework .weui_media_hd { border-radius: 50px; }
+.custom_homework .custom_work_details { display: none; }
+.custom_homework .weui-weixin-content p { margin-bottom: 4px; }
+.custom_homework .weui_panel_ft.active:after { -webkit-transform:rotate(315deg); transform:rotate(315deg); }
+
+/* 考勤记录 */
+.custom_AtndRecord .weui-table th, .custom_AtndRecord .weui-table td { width: 20%; padding: 10px 6px; line-height: 20px; }
+.custom_AtndRecord .weui-table th { font-size: 14px; font-weight: 600; }
+.custom_AtndRecord .weui-table td { font-size: 13px; line-height: 18px; }
+.custom_AtndRecord .weui-icon-success-no-circle { color: #FFF; font-size: 16px; }
+
+
+
+
+
+
+
+
+

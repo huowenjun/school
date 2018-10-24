@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>智慧金融</title>
+<link rel="stylesheet" href="/Public/SpFinancial/css/weui.css" />
+<link rel="stylesheet" href="/Public/SpFinancial/css/weui2.css" />
+<link rel="stylesheet" href="/Public/SpFinancial/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/SpFinancial/css/custom1.css" />
+<script type="text/javascript" src="/Public/SpFinancial/js/rem.js"></script>
+</head>
+<body style="background-color: #f7f7f7;">
+<div class="banner">  <img src="/Public/SpFinancial/img/banner.png" alt=""></div>
+<div class="home-list">
+  <a href="https://www.mszxyh.com/wapserver/outer/index.html?ChannelId=mszx02489&seq=DZZH_20180206131365&Page=index" ><img  src="/Public/SpFinancial/img/home-list1-1.png" alt=""></a>
+  <a href="https://www.mszxyh.com/wapserver/outer/index.html?ChannelId=mszx02489&seq=DZZH_20180206131365&Page=index" ><img  src="/Public/SpFinancial/img/home-list1-2.png" alt=""></a>
+  <a href="https://school.xinpingtai.com/index.php/Wap/AppHook/livingPayment" ><img  src="/Public/SpFinancial/img/home-list1-3.png" alt=""></a>
+  <a href="https://school.xinpingtai.com/index.php/Wap/AppHook/buyTickets"><img  src="/Public/SpFinancial/img/home-list1-4.png" alt=""></a>
+</div>
+
+<div class="weui_tab tab-bottom" style="height:auto;">
+  <div class="weui_tabbar"  >
+      <a href="javascript:;" id="homePage" class="weui_tabbar_item">
+          <div class="weui_tabbar_icon">
+              <img src="/Public/SpFinancial/img/home1.png" alt="">
+          </div>
+          <p class="weui_tabbar_label">首页</p>
+      </a>
+      <!-- <div style=" width:1px; background:#efefef;"></div> -->
+      <a href="javascript:;"  id="perCenter" class="weui_tabbar_item">
+          <div class="weui_tabbar_icon">
+              <img src="/Public/SpFinancial/img/percenter1.png" alt="">
+          </div>
+          <p class="weui_tabbar_label">个人中心</p>
+      </a>   
+  </div>
+</div>
+<!-- jQuery 1.10.2 -->
+<script type="text/javascript" src="/Public/SpFinancial/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.0.js"></script>
+<script type="text/javascript">
+$('.weui_tab').tab({
+  defaultIndex: 0,
+  activeClass:'weui_bar_item_on',
+  onToggle:function(index){
+    if(index==0){
+      $("#homePage").find('img').attr('src', '/Public/SpFinancial/img/home2.png').parents("a").siblings().find('img').attr('src', '/Public/SpFinancial/img/percenter1.png');
+    }else if(index==1){
+      $("#perCenter").find('img').attr('src', '/Public/SpFinancial/img/percenter2.png').parents("a").siblings().find('img').attr('src', '/Public/SpFinancial/img/home1.png');
+    }
+  }
+})
+
+$('.home-list a').bind("touchstart",function(event){
+  var index = $(this).index()+1;
+  $(this).children('img').attr('src', '/Public/SpFinancial/img/home-list2-'+index+'.png');
+});
+
+$('.home-list a').bind("touchend",function(event){
+  var index = $(this).index()+1;
+  $(this).children('img').attr('src', '/Public/SpFinancial/img/home-list1-'+index+'.png');
+
+  });
+
+
+  //截取链接属性和值
+function getLocationString(name) {  
+  // 如果链接没有参数，或者链接中不存在我们要获取的参数，直接返回空  
+  if(location.href.indexOf("?")==-1 || location.href.indexOf(name+'=')==-1)  
+  {  
+      return '';  
+  }  
+  // 获取链接中参数部分  
+  var queryString = location.href.substring(location.href.indexOf("?")+1);  
+ 
+  // 分离参数对 ?key=value&key2=value2  
+  var parameters = queryString.split("&");  
+ 
+  var pos, paraName, paraValue;  
+  for(var i=0; i<parameters.length; i++)  
+  {  
+      // 获取等号位置  
+      pos = parameters[i].indexOf('=');  
+      if(pos == -1) { continue; }  
+ 
+      // 获取name 和 value  
+      paraName = parameters[i].substring(0, pos);  
+      paraValue = parameters[i].substring(pos + 1);  
+ 
+      // 如果查询的name等于当前name，就返回当前值，同时，将链接中的+号还原成空格  
+      if(paraName == name)  
+      {  
+          return unescape(paraValue.replace(/\+/g, " "));  
+      }  
+  }  
+  return '';  
+};  
+
+
+var code = getLocationString('code');
+// var user_id_val = getLocationString('user_id_val');
+var user_id = getLocationString('user_id');
+// alert(user_id_val+"saasasa");
+
+// var homePageHref = $("#homePage").attr('href');
+$("#homePage").attr('href',"/index.php/Wap/SpFinancial/homePage?code="+code);
+$("#perCenter").on('click', function(event) {
+  if(userId!=null){
+    $("#perCenter").attr('href','/index.php/Wap/SpFinancial/perCenter');
+  }else{
+    $.ajax({
+      type: "post",
+      url: "/index.php/Wap/SpFinancial/login",
+      dataType : 'json',
+      data: {code:code},
+      success: function(res){
+
+        if(res.data.user_id==undefined){
+          if(res.data.only==undefined){
+             wx.miniProgram.redirectTo({url: '/pages/register/register?id='+res.data.id});  
+          }else{
+            wx.miniProgram.redirectTo({url: '/pages/register/register?id='+res.data.id+'&only='+res.data.only})
+          }
+        }else{
+
+          wx.miniProgram.redirectTo({url: '/pages/login/login?user_id='+res.data.user_id});  
+        }
+      },
+       error: function(res){
+         $.toast("请求服务器异常！", "forbidden");
+       }
+    })
+  }
+})
+
+
+var user_id_v;
+function session(){
+$.ajax({
+     type: "get",
+     async: false,
+     url: "/index.php/Wap/SpFinancial/session",
+     dataType : 'json', 
+     success: function(res){
+      if(res.status==1){
+        user_id_v = res.data.user_id;
+      }
+     }
+  })
+  return user_id_v;
+}
+
+var userId = session();
+
+</script>
+</body>
+</html>

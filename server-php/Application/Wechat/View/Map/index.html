@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>学生位置</title>
+<link rel="stylesheet" href="/Public/Wechat/css/weui.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui2.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/Wechat/css/phone.css" />
+</head>
+<body>
+<div class="header">
+  <div class="custom_cell">
+    <div class="weui-cell__bd" style="text-align: center;">
+      <p>学生位置</p>
+    </div>
+  </div>
+</div>
+<div class="container custom_AtndRecord" id="container">
+  <div class="weui_cells weui_cells_form">
+    <div class="weui_cell">
+      <div class="weui_cell_hd"><label for="" class="weui_label">班级：</label></div>
+      <div class="weui_cell_bd weui_cell_primary">
+        <input class="weui_input" type="text" value="" id='selectClass' />
+      </div>
+    </div>
+    <div class="weui_cell">
+      <div class="weui_cell_hd"><label for="" class="weui_label">学生：</label></div>
+      <div class="weui_cell_bd weui_cell_primary">
+        <input class="weui_input" type="text" value="" id='selectTeacher' />
+      </div>
+    </div>
+    <div class="weui_cell">
+      <div class="weui_cell_hd"><label for="" class="weui_label">开始时间：</label></div>
+      <div class="weui_cell_bd weui_cell_primary">
+        <input class="weui_input" type="text" value="" id='stime' />
+      </div>
+    </div>
+  </div>
+  <div class="custom_height_10px"></div>
+  <div class="page-bd-15">
+    <a href="javascript:;" class="weui_btn bg-blue"><i class="weui_icon_search"></i> 搜索</a>
+  </div>
+  <div class="weui_panel weui_panel_access">
+    <!-- #地图 -->
+
+    <!-- /地图 -->
+  </div>
+  <div class="custom_height_10px"></div>
+</div>
+
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<!-- 自定义js文件 -->
+<script type="text/javascript" src="/Public/Wechat/js/phone.js"></script>
+<!-- 选择日期时间 -->
+<script type="text/javascript" src="/Public/Wechat/js/picker.js"></script>
+<!-- 下拉单选 下拉多选 -->
+<script type="text/javascript" src="/Public/Wechat/js/select.js"></script>
+
+<script type="text/javascript">
+$(function() {
+  // 选择班级
+  $("#selectClass").select({
+    title: "班级",
+    items: [
+      {
+        title: "一年级2班",
+        value: "001",
+      },
+      {
+        title: "二年级4班",
+        value: "002",
+      },
+      {
+        title: "五年级6班",
+        value: "003",
+      }
+    ],
+    onChange: function(d) {
+     $.alert("你选择了"+d.titles);
+    }
+  });
+  // 选择学生
+  $("#selectTeacher").select({
+    title: "学生",
+    items: [
+      {
+        title: "张三",
+        value: "001",
+      },
+      {
+        title: "李四",
+        value: "002",
+      },
+      {
+        title: "王武",
+        value: "003",
+      },
+      {
+        title: "赵六",
+        value: "004",
+      }
+    ],
+    onChange: function(d) {
+     $.alert("你选择了"+d.titles);
+    }
+  });
+
+  // 选择日期时间
+  $("#stime").datetimePicker({title:"选择日期和时间"});
+
+})
+</script>
+</body>
+</html>

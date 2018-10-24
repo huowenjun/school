@@ -1,0 +1,111 @@
+/*body{ font-size:100px;}*/
+.swiper-pagination-bullet{
+  width:15px;
+  height:15px;
+  background:#fff;
+  margin:0 5px;
+} 
+.pagination {
+  position: absolute;
+  left: 0;
+  text-align: center;
+  margin: 0;
+  bottom:5px;
+  width: 100%;
+  z-index: 9999;
+}
+.swiper-pagination-switch {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 7.5px;
+  background: #fff;
+  margin: 0 3px;
+  cursor: pointer;
+}
+.swiper-active-switch {
+  background: #fff;
+}
+.swiper-slide{
+  font-size: 24px;
+  position:relative;
+  opacity:0;
+  transition: opacity 0.2s ease-in-out;
+}
+.swiper-slide-active{
+  opacity:1;
+}
+.swiper-slide .img{
+  position:absolute;
+}
+.inner{
+  position:relative;
+  display:block;
+  width:1000px;
+  height:500px;
+  margin:0 auto;
+}
+.swiper-slide{
+  overflow: hidden;
+  background:url("/Public/dist/img/chart/bg2.jpg") no-repeat center bottom; 
+  width:100%;
+}
+.swiper-slide .page{
+  margin: 40px 2% 0;
+}
+.swiper-slide .num-box{
+  text-align: center;
+  vertical-align: middle;
+}
+.swiper-slide .num-box h3{
+  color: #38AEFF;
+  font-weight: bold;
+  font-size: 35px;
+}
+.swiper-slide .num-box span{
+  color: #fff;
+  padding: 0 0 0 10px;
+  font-size: 12px;
+}
+.swiper-slide .num-box p{
+  color: #84DF56;
+  font-size:45px;
+  font-weight: bold;
+}
+.swiper-slide .con{ 
+  border-radius: 2px;
+  border:1px solid #3eacdf;
+  background:rgba(255, 255, 255, 0.2);
+  font-family: "方正兰亭黑";
+
+}
+.swiper-slide .page-left{
+  float: left;
+  width: 25%;
+}
+.swiper-slide .page-left .con{
+  padding: 20px 0 0 0;
+
+}
+.swiper-slide .page-left .num-box{
+  padding: 0 5%;
+
+}
+.swiper-slide .page-right{
+  float: right;
+   width: 7%;
+}
+.swiper-slide .page-right .num-box h3{
+  font-size: 23px;
+  text-align: left;
+  padding: 0 0 0 30px;
+}
+.swiper-slide .page-right .num-box span{
+  font-size: 12px;
+}
+
+.swiper-slide .page-right .con{
+  margin-bottom: 10px;
+}
+
+#monitorMap{ width:95%; margin:0 auto 30px;}

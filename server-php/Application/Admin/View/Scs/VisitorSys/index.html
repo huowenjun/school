@@ -1,0 +1,96 @@
+  <!-- Main Header -->
+  <include file="Public:header" title="访客系统"/>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">访客系统</li>
+      </ol>
+    </section>
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-body">
+              <div class="col-md-12">
+                <form class="form-horizontal" id="ringingToneFrom" method="post" action="">     
+                  <div class="form-group">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="col-md-3 control-label" for=""><span class="xing">*</span> 来访人姓名：</label>
+                        <div class="col-md-8">
+                          <input type="text" placeholder="请输入来访人姓名" id="" name="" class="form-control" />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-md-3 control-label" for=""><span class="xing">*</span> 来访人身份证号：</label>
+                        <div class="col-md-8">
+                          <input type="text" placeholder="来访人身份证号" id="" name="" class="form-control" />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="" class="col-md-3 control-label"><span class="xing">*</span> 来访时间：</label>
+                        <div class="col-md-8">
+                        <input id="sdatetime1" class="form-control" type="text" value="" placeholder="来访时间">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="col-md-3 control-label" for=""><span class="xing">*</span> 接待人：</label>
+                        <div class="col-md-8">
+                          <input type="text" placeholder="接待人" id="" name="" class="form-control" />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-md-3 control-label" for=""><span class="xing">*</span> 事由：</label>
+                        <div class="col-md-8">
+                          <input type="text" placeholder="事由" id="" name="" class="form-control" />
+                        </div>
+                      </div>
+                    </div>  
+                  </div>
+                </form>
+                <div class="modal-footer" style="text-align:center;">
+                  <button type="button" class="btn btn-success save">
+                      <span class="glyphicon glyphicon-save"></span> 保存
+                  </button>
+                   <button type="button" class="btn btn-default layui-layer-close">
+                      <span class="glyphicon glyphicon-remove"></span> 取消
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+<!-- REQUIRED JS SCRIPTS -->
+<include file="Public:footer_js"/>
+<script>
+  
+// 日期
+$.datetimepicker.setLocale('ch'); 
+$('#sdatetime1').datetimepicker({
+  // lang:"ch",            // 语言选择中文
+  format:"Y-m-d H:i", // 格式化日期 时间
+  timepicker:true,      // 时间选项
+  step:5,               // 分钟步数
+  yearStart:2000,       // 设置最小年份
+  yearEnd:2050,         // 设置最大年份
+  todayButton:true      // 选择今天按钮
+});
+</script>
+</body>
+</html>

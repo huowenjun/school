@@ -1,0 +1,49 @@
+
+
+.modal-dialog{
+
+    max-height: 700px;
+    overflow-y: auto;
+
+}
+.stepy-step {
+    border: 1px solid #E0E8EF;
+    border-radius: 3px;
+    clear: left;
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    position: relative;
+}
+.stepy-step legend {
+    background: none repeat scroll 0 0 #eeeeee;
+    border-radius: 3px;
+    color: #AAAAAA;
+    font-size: 14px;
+    margin: 0;
+    padding: 5px 2px 5px 10px;
+    text-align: center;
+    text-transform: uppercase;
+}
+.map-icon{
+    background:url("location.png")  no-repeat;
+    padding:0 0 0 18px;
+}
+.spinner.input-group .input-group-addon a.spin-up,.spinner.input-group .input-group-addon a.spin-down{
+    height:12px;width:12px;font-size:14px;display:block;text-align:center;text-decoration:none;position:relative; color:#000;
+}
+
+.spinner.input-group .input-group-addon a.spin-up .icon-sort-down,.spinner.input-group .input-group-addon a.spin-down .icon-sort-down{
+    position:relative;
+    top:8px
+}
+.spinner.input-group .input-group-addon a.spin-up:hover,.spinner.input-group .input-group-addon a.spin-down:hover{
+    color:#999;
+}
+.spinner.input-group input{
+    text-align:center;
+}
+.spinner.input-group.input-group-lg .input-group-addon a.spin-up,.spinner.input-group.input-group-lg .input-group-addon a.spin-down{font-size:16px;height:12px;;}
+.spinner.input-group.input-group-sm .input-group-addon a.spin-up,.spinner.input-group.input-group-sm .input-group-addon a.spin-down{font-size:12px;height:9px}
+.input-group-addon {
+    padding: 2px 12px;
+}

@@ -1,0 +1,627 @@
+
+  <!-- Main Header -->
+  <include file="Public:header" title="系统用户"/>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">系统用户</li>
+      </ol>
+    </section>
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <form class="form-inline navbar-form navbar-left">
+                <div class="form-group">
+                  <label for="username1">账户：</label>
+                  <input id="username1" type="text" class="form-control" placeholder="请输入账户" />
+                </div>
+                <div class="form-group">
+                  <label for="name1">姓名：</label>
+                  <input id="name1" type="text" class="form-control" placeholder="请输入姓名" />
+                </div>
+                <div class="form-group">
+                  <label for="group_type1">角色类型：</label>
+                  <select class="form-control" id="group_type1">
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="">时间段：</label>
+                  <input id="begin_time1" class="form-control dataTime" placeholder="开始时间"  type="text" value="">
+                   至
+                  <input id="end_time1" class="form-control dataTime" placeholder="结束时间" type="text" value="">
+                </div>
+
+
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary query" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                  </button>
+                </div>  
+                <div class="form-group">
+                  <button type="button" class="btn btn-success select_add" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-plus"></span>  添加
+                  </button>
+                </div>
+                
+              </form>
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div id="toolbar">
+                  <div id="remove" class="btn btn-danger" style=" margin:0 0 10px 0;">
+                    <i class="fa fa-fw fa-close"></i>删除
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <table id="admmin_user_table" class="js-custom-table-data">
+                    <thead>  
+                      <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-align="center" data-formatter="editFormatter" data-events="operateEvents" name="editFormatter">操作</th>
+                        <th data-field="username" data-sortable="true" data-align="center">账号</th>
+                        <th data-field="name" data-sortable="true" data-align="center">姓名</th>
+                        <th data-field="user_type" data-sortable="true" data-align="center">角色类型</th>
+                        <th data-field="sex" data-sortable="true" data-align="center">性别</th>
+                        <th data-field="phone" data-sortable="true" data-align="center">手机</th>
+                        <th data-field="email" data-sortable="true" data-align="center">邮箱</th>
+                        <th data-field="info" data-sortable="false" data-align="center">统计信息</th>
+                        <th data-align="center" data-formatter="viewInviterFormatter" data-events="viewInviterEvents" name="viewInviterFormatter">查看</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <form id="searchForm" name="searchForm" action="">
+      <input type="hidden" name="username" id="username2" value="" />
+      <input type="hidden" name="name" id="name2" value="" />
+      <input type="hidden" name="group_type" id="group_type" />
+      <input type="hidden" name="begin_time" id="begin_time" value="" />
+      <input type="hidden" name="end_time" id="end_time" value="" />
+  </form>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+  <script type="text/javascript" src="/Public/dist/js/jquery.form.js"></script>
+</div>
+<!-- ./wrapper -->
+
+<!--add-start -->
+<div class="" style="display:none;" id="modalWindow">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal" action="/index.php/Admin/Upload/upload_image.html" enctype="multipart/form-data" method="post" id="iconFileFrom" style="display:none;">
+        <input type="file" id="icon_files" name="icon_files" value="" style="display:block" />
+      </form>
+      <form class="form-horizontal"  action="" method="post" onsubmit="return false" id="formWindow">
+        <input type="hidden" class="primaryKey" name="user_id" id="user_id">
+        <input type="hidden" class="primaryKeys js_input_grade prov_id_hide" id="prov_id" name="prov_id" value="" placeholder="省" />
+        <input type="hidden" class="primaryKeys js_input_grade city_id_hide" id="city_id" name="city_id" value="" placeholder="市" />
+        <input type="hidden" class="primaryKeys js_input_grade county_id_hide" id="county_id" name="county_id" value="" placeholder="区" />
+        <div class="row">
+          <div class="col-md-12">
+            <div class="clearfix">
+              <p class="note pull-right">注：<span class="xing">*</span>标记为必填项</p>
+            </div>
+            <div class="form-group">
+              <label class="col-md-2 control-label" for="username"><span class="xing">*</span>账号：</label>
+              <div class="col-md-10">
+                <input type="text" placeholder="请输入账号" id="username" name="username" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-2 control-label" for="password"><span class="xing">*</span>密码：</label>
+              <div class="col-md-10">
+                <input type="password" placeholder="请输入密码" id="password" name="password" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-2 control-label" for="name"><span class="xing">*</span>姓名：</label>
+              <div class="col-md-10">
+                <input type="text" placeholder="请输入姓名" id="name" name="name" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-2 control-label" for="type"><span class="xing">*</span>角色：</label>
+              <div class="col-md-10">
+                <select id="type"  name='type' class="form-control input-sm js_type"></select>
+              </div>
+            </div>
+            <div class="form-group region" style=" display:none;" >
+              <label class="col-md-2 control-label" for="type"><span class="xing">*</span>选择地区：</label>
+              <div class="col-md-10">
+                <ul id="treeArea" class="ztree" style=" border:1px solid #ccc;"></ul>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-2 control-label" for="sex"><span class="xing">*</span>性别：</label>
+              <div class="col-md-10">
+                <label class="checkbox-inline">
+                  <input type="radio" name="sex" class="flat-green men" value="1" checked=""> 男
+                </label>
+                <label class="checkbox-inline">
+                  <input type="radio" name="sex" class="flat-green women" value="0"> 女
+                </label> 
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-2 control-label" for="phone"><span class="xing">*</span>手机：</label>
+              <div class="col-md-10">
+                <input type="text" placeholder="请输入手机号" id="phone" name="phone" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-2 control-label" for="email"><span class="xing">*</span>邮箱：</label>
+              <div class="col-md-10">
+                <input type="text" placeholder="请输入邮箱" id="email" name="email" class="form-control">
+              </div>
+            </div>
+
+
+            <div class="form-group tpyeHide">
+              <label class="col-md-2 control-label" for="company_name">企业名称：</label>
+              <div class="col-md-10">
+                <input type="text" placeholder="企业名称" id="company_name" name="company_name" class="form-control">
+              </div>
+            </div>
+            <div class="form-group tpyeHide">
+              <label class="col-md-2 control-label" for="address">企业地址：</label>
+              <div class="col-md-10">
+                <input type="text" placeholder="企业地址" id="address" name="address" class="form-control">
+              </div>
+            </div> 
+         <!--    <div class="form-group tpyeHide">
+              <label class="col-md-2 control-label" for="identify_number">身份证号码：</label>
+              <div class="col-md-10">
+                <input type="text" placeholder="身份证号码" id="identify_number" name="identify_number" class="form-control">
+              </div>
+            </div> -->
+            <div class="form-group tpyeHide uploadFile">
+              <label class="col-md-2 control-label" for="icon_files">营业执照上传：</label>
+              <div class="col-md-10">
+                <label class="upload_btn" for="icon_files"><i class="fa fa-fw fa-upload"></i>点击上传</label>
+                <input type="hidden" id="f_tb" name="identify_business_licence" />
+                <span class="hint">仅支持png/jpg/gif/jpeg格式</span>
+              </div>
+            </div>
+            <div class="form-group tpyeHide">
+              <label class="col-md-2 control-label"></label>
+              <div class="col-md-10">
+                <div class="imgHide"><img id="icon_m_tb" src="" alt="" width="100" /></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>  
+    </div>
+  </div>
+  <div class="modal-footer" style="text-align:center;">
+    <button type="button" class="btn btn-success save">
+        <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+     <button type="button" class="btn btn-default layui-layer-close">
+        <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+<!--add-end-->
+<!-- REQUIRED JS SCRIPTS -->
+<include file="Public:footer_js"/>
+
+<script type="text/javascript" src="/Public/dist/js/jquery.form.js"></script>
+<script>
+
+
+// H5上传文件
+$('#icon_files').change(function() {
+  var file = this.files[0];             // 获取input type=file文件所有数据，因为input type=file 可以多选，所以files是个数组
+  var fr   = new FileReader();          // H5的新api，文件预览对象
+  fr.onloadend = function(e) {          // 当转换完成之后fr.onloadend，执行函数，转换完的数据就是e
+    var imgSrc = e.target.result;       // file数据中的图片信息就是e.target.result，这是图片预览地址
+    $('#icon_m_tb').attr('src',imgSrc); // 预览图片
+    // 提交图片表单
+    $('#iconFileFrom').ajaxSubmit(function(msg) {
+        console.log(msg);
+      // 成功返回的数据
+      if (msg.status==1) {
+        var imgSrc = msg.data.url;
+        $('#f_tb').val(imgSrc);
+        $('#icon_m_tb').attr('src',imgSrc);
+        dialog.notify('文件上传成功');
+      }else{
+        alert('上传失败，请重新上传');
+        $('#icon_files').val('');
+        $('#f_tb').val('');
+        $('#icon_m_tb').attr('src','');
+      };
+    });
+  }
+  fr.readAsDataURL(file);               // 把file数据转为DataURL数据
+});
+
+
+//请求Select角色下拉数据
+$(function() {
+  initSelect('type',g_config.host+'/index.php/Admin/Sys/AdminUser/get_group',0,{type:'group'},true);
+});
+
+$(function() {
+  initSelect('group_type1',g_config.host+'/index.php/Admin/Common/get_list',0,{type:'group'},true);  
+});
+
+$(function() {
+  // 表格数据
+  var $table = $('#admmin_user_table');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",                   // 工具栏
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+});
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  searchForm();
+  // 需要的数据
+  var url = "/index.php/Admin/Sys/AdminUser/query?" + $("#searchForm").serialize();
+  queryList(url,params);
+}
+
+// 隐藏域赋值
+function searchForm() {
+   $("#username2").val($("#username1").val());
+  $("#name2").val($("#name1").val());
+  $("#begin_time").val($("#begin_time1").val());
+  $("#end_time").val($("#end_time1").val());
+  $("#group_type").val($("#group_type1").val());
+}
+
+function search(){
+   searchForm();
+  // 需要的数据
+  var url = "/index.php/Admin/Sys/AdminUser/query?" + $("#searchForm").serialize();
+  $g_params.data.page = parseInt($('.pagination li.active a').text());
+  queryList(url,$g_params);
+}
+
+// 文件树
+  var ajaxTreeNodesCheckbox = null;
+  var settingCheckbox = {
+    check: {
+      enable: true,
+      chkStyle: "checkbox",
+      radioType: "all" // 在整棵树范围内当做一个分组
+    },
+    view: {
+      dblClickExpand: true
+    },
+    data: {
+      key: {
+        title: "title"
+      },
+      simpleData: {
+        enable: true
+      }
+    },
+    callback: {
+      beforeExpand: beforeExpandCheckbox,
+      onExpand: onExpandCheckbox,
+      onCheck: zTreeOnCheckCheckbox
+    }
+  };
+  // 保持展开单一路径 start
+  var curExpandNodeCheckbox = null;
+  function beforeExpandCheckbox(treeId, treeNode) {
+    var pNode     = curExpandNodeCheckbox ? curExpandNodeCheckbox.getParentNode():null;
+    var treeNodeP = treeNode.parentTId ? treeNode.getParentNode():null;
+    var zTree     = $.fn.zTree.getZTreeObj("treeArea");
+    for(var i=0, l=!treeNodeP ? 0:treeNodeP.children.length; i<l; i++ ) {
+      if (treeNode !== treeNodeP.children[i]) {
+        zTree.expandNode(treeNodeP.children[i], false);
+      }
+    }
+    while (pNode) {
+      if (pNode === treeNode) {
+        break;
+      }
+      pNode = pNode.getParentNode();
+    }
+    if (!pNode) {
+      singlePathCheckbox(treeNode);
+    }
+  }
+  function singlePathCheckbox(newNode) {
+    if (newNode === curExpandNodeCheckbox) return;
+
+    var zTree = $.fn.zTree.getZTreeObj("treeArea"),
+      rootNodes, tmpRoot, tmpTId, i, j, n;
+
+    if (!curExpandNodeCheckbox) {
+      tmpRoot = newNode;
+      while (tmpRoot) {
+        tmpTId = tmpRoot.tId;
+        tmpRoot = tmpRoot.getParentNode();
+      }
+      rootNodes = zTree.getNodes();
+      for (i=0, j=rootNodes.length; i<j; i++) {
+        n = rootNodes[i];
+        if (n.tId != tmpTId) {
+          zTree.expandNode(n, false);
+        }
+      }
+    } else if (curExpandNodeCheckbox && curExpandNodeCheckbox.open) {
+      if (newNode.parentTId === curExpandNodeCheckbox.parentTId) {
+        zTree.expandNode(curExpandNodeCheckbox, false);
+      } else {
+        var newParents = [];
+        while (newNode) {
+          newNode = newNode.getParentNode();
+          if (newNode === curExpandNodeCheckbox) {
+            newParents = null;
+            break;
+          } else if (newNode) {
+            newParents.push(newNode);
+          }
+        }
+        if (newParents!=null) {
+          var oldNode = curExpandNodeCheckbox;
+          var oldParents = [];
+          while (oldNode) {
+            oldNode = oldNode.getParentNode();
+            if (oldNode) {
+                oldParents.push(oldNode);
+            }
+          }
+          if (newParents.length>0) {
+            zTree.expandNode(oldParents[Math.abs(oldParents.length-newParents.length)-1], false);
+          } else {
+            zTree.expandNode(oldParents[oldParents.length-1], false);
+          }
+        }
+      }
+    }
+    curExpandNodeCheckbox = newNode;
+  }
+  function onExpandCheckbox(event, treeId, treeNode) {
+    curExpandNodeCheckbox = treeNode;
+  }
+
+$(function(){
+  // 请求树
+  $.ajax({
+    type: "get",
+    url: "/index.php/Admin/index/get_tree?type=county&range=all",
+    dataType : 'json',
+    success: function(msg) {
+      ajaxTreeNodesCheckbox = msg.data;
+      $.fn.zTree.init($("#treeArea"), settingCheckbox, ajaxTreeNodesCheckbox);
+    },
+    error: function(msg) {
+      dialog.error("请求服务器异常！");
+    }
+  });
+
+})
+
+function zTreeOnCheckCheckbox(event, treeId, treeNode) {
+  // 获取所有被选中的节点
+  var treeObj = $.fn.zTree.getZTreeObj("treeArea");
+  var nodes   = treeObj.getCheckedNodes(true);
+  var grade   = [];
+  for (var i = 0; i < 8; i++) {
+    grade[i] = [];
+    for (var t = 0; t < nodes.length; t++) {
+      if(nodes[t].level==i) {
+        grade[i].push(nodes[t].id);
+      }
+    };
+    $('.js_input_grade').eq(i).val(grade[i].join()); // 隐藏域赋值(地区、学校、校区、年级、班级、学生)
+  };
+}
+
+// 点击添加
+$('.select_add').click(function() {
+  $(".tpyeHide").show();
+  var treeObj = $.fn.zTree.getZTreeObj("treeArea");
+  treeObj.checkAllNodes(false);
+  $('.primaryKey').val('');
+  $('#f_tb').val('');
+  $('#icon_m_tb').attr('src','');
+  // $("#username").removeAttr("readonly");
+  // $("#password").removeAttr("readonly");
+  edit(0);
+  checkRegion();
+})
+
+//新增/编辑
+function edit(id){
+  $("#username").removeAttr("disabled"); 
+  var url = '/index.php/Admin/Sys/AdminUser/get';
+  custom_edit(id,url,{user_id:id},'formWindow','modalWindow');
+}
+
+//编辑状态(启用,禁止)特殊字段处理
+function setEditDataEx(data){
+  $("#username").attr("disabled","true");
+   $(".tpyeHide").hide();
+  if(data.type==9||data.type==10||data.type==11){
+    $(".tpyeHide").show();
+    $("#f_tb").val(data.identify_business_licence);
+    $("#icon_m_tb").attr('src',data.identify_business_licence);
+  }
+  // $("#username").attr("readonly");
+  // $("#password").attr("readonly");
+   fnAjax(data.user_id);
+   checkRegion();
+  if(data.sex == 1){
+    $('.men').iCheck('check');   //将输入框的状态设置为checked 
+    $('.women').iCheck('uncheck'); //移除 checked 状态 
+    // $('.men').parent('.iradio_flat-green').addClass('checked').attr('aria-checked', true);
+    // $('.women').parent('.iradio_flat-green').removeClass('checked').attr('aria-checked', false);
+  }
+  else if(data.sex == 0){
+    $('.men').iCheck('uncheck');   //将输入框的状态设置为checked 
+    $('.women').iCheck('check'); //移除 checked 状态 
+    // $('.men').parent('.iradio_flat-green').removeClass('checked').attr('aria-checked', false);
+    // $('.women').parent('.iradio_flat-green').addClass('checked').attr('aria-checked', true);
+  }
+};
+function fnAjax(userId) {
+  $.ajax({
+    type: "get",
+    url: "/index.php/Admin/index/get_tree?type=county&range=all&user_id=" + userId,
+    dataType : 'json',
+    success: function(msg) {
+      ajaxTreeNodesCheckbox = msg.data;
+      $.fn.zTree.init($("#treeArea"), settingCheckbox, ajaxTreeNodesCheckbox);
+    },
+    error: function(msg) {
+      dialog.error("请求服务器异常！");
+    }
+  });
+}
+
+//单选
+$('input[type="checkbox"].flat-green, input[type="radio"].flat-green').iCheck({
+  checkboxClass: 'icheckbox_flat-green',
+  radioClass: 'iradio_flat-green'
+});
+
+//保存数据
+function save() {
+  // var re = /^\d{6}(18|19|20)?\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|[xX])$/;
+  // var identifyumberNumber = $("#identify_number").val();
+  // if (!re.test(identifyumberNumber)) {
+  //   dialog.error('输入的身份证格式不正确！');
+  //   return false;
+  // }
+  var username = $("#username").val(); 
+  var url = g_config.host + '/index.php/Admin/Sys/AdminUser/checkUser';
+  dpost(url,{username:username},saveUserCallback);
+  function saveUserCallback(data) {
+    if( data.status ==0 ) {
+    if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+    g_loadingIndex = -1;
+      dialog.confirm('账号已存在是否要保存',function(){  
+     $("#user_id").val(data.info);
+      var url = g_config.host + '/index.php/Admin/Sys/AdminUser/edit';
+      fpost(url,'formWindow',btnCallbackRefreshTable1); }); 
+
+    }else {
+      var url = g_config.host + '/index.php/Admin/Sys/AdminUser/edit';
+      fpost(url,'formWindow',btnCallbackRefreshTable1);
+    }
+  }
+}
+
+// 切换角色 是否选择区域
+function checkRegion() {
+  if($(".js_type option:selected").val()==2){
+    $(".region").hide();
+  }else{
+    $(".region").show();
+  }
+}
+$('.js_type').change(function() {
+  checkRegion();
+});
+
+//删除
+function del(){
+  var url = g_config.host + "/index.php/Admin/Sys/AdminUser/delete";
+  var ids    = getIdSelections($('.js-custom-table-data'),'user_id');
+  var strIds = ids.join(',');
+  var data   = {};
+  data.id  = strIds;
+  if (ids.length == 0) {
+    dialog.notify('请先选择要删除的记录');
+      return;
+  } else {
+    dialog.confirm('您确定要删除当前选项吗？',function(){dpost(url,data,btnCallbackRefreshTable1);});
+  }
+}
+
+// 自定义查看表格中的操作内容
+function viewInviterFormatter(value, row, index) {
+  if(row.type==9||row.type==10||row.type==11||row.type==12||row.type==13||row.type==14){
+    return [
+      '<button type="button" class="btn btn-primary table-btn viewInviter" style="margin:0 10px 0 0;" data-color="#39B3D7" data-opacity="0.95">',
+      '<i class="fa fa-eye"></i> 查看邀请人',
+      '</button>'
+    ].join('');
+  }
+}
+
+//获取用户id
+window.viewInviterEvents = {
+  'click .viewInviter': function (e, value, row, index) {   
+    viewInviteretails(row.user_id)
+  }
+};
+
+// 跳转到展示邀请人页面及传值
+function viewInviteretails(id) {
+  layer.open({
+    type: 2,
+    title: '查看邀请人',
+    shadeClose: true,
+    shade: 0.2,
+    area: ['70%', '70%'],
+    content: "/index.php/Admin/Referrer/Referrer/showUserList?user_id="+id
+  });
+}
+
+// 日期 时间
+$.datetimepicker.setLocale('ch'); 
+$('.dataTime').datetimepicker({
+  // lang:"ch",            // 语言选择中文
+  format:"Y-m-d H:i", // 格式化日期 时间
+  timepicker:true,      // 时间选项
+  step:5,               // 分钟步数
+  yearStart:2000,       // 设置最小年份
+  yearEnd:2050,         // 设置最大年份
+  todayButton:true      // 选择今天按钮
+});
+
+$('#begin_time1').datetimepicker({
+  onShow:function(ct) {
+    this.setOptions({
+      maxDate:jQuery('#end_time1').val()?jQuery('#end_time1').val():false
+    })
+  },
+  timepicker:true
+});
+jQuery('#end_time1').datetimepicker({
+  onShow:function(ct) {
+    this.setOptions({
+      minDate:jQuery('#begin_time1').val()?jQuery('#begin_time1').val():false
+    })
+  },
+  timepicker:true
+}); 
+</script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+
+  <!-- Main Header -->
+  <include file="Public:header" title="App版本管理" />
+  <!--Main Sidebar-->
+  <include file="Public:left_nav" />
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">App版本管理</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <!-- Your Page Content Here -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab1" data-toggle="tab">App版本管理</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab1">
+                <nav class="navbar navbar-default">
+                  <!-- container-fluid -->
+                  <div class="container-fluid">
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="form-inline navbar-form navbar-left">
+                      <div class="form-group">
+                        <button type="button" class="btn btn-success btn-sm add">
+                          <i class="fa fa-plus"></i> 添加
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.container-fluid -->
+                </nav>
+
+                <!-- table -->
+                <div class="content-wrap">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div id="toolbar">
+                        <div id="remove" class="btn btn-danger btn-sm" style="margin-top:12px">
+                          <i class="fa fa-trash"></i> 删除
+                        </div>
+                      </div>
+                      <table id="table_data" class="js-custom-table-data">
+                        <thead>
+                          <tr>
+                            <th data-field="state" data-checkbox="true"></th>
+                            <th data-align="center" data-formatter="editFormatter" data-events="operateEvents" name="editFormatter">操作</th>
+                            <th data-align="center" data-sortable="false" data-field="v_code" name="">版本号</th>
+                            <th data-align="center" data-sortable="false" data-field="v_name" name="">版本名</th>
+                            <th data-align="center" data-sortable="false" data-field="v_upgrade" name="">强制升级(是/否)</th>
+                            <th data-align="center" data-sortable="false" data-field="v_path" name="">apk路径</th>
+                            <th data-align="center" data-sortable="false" data-field="v_memo" name="">备注</th>
+                            <th data-align="center" data-sortable="false" data-field="v_time" name="">添加时间</th>
+                          </tr>
+                        </thead>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <include file="Public:footer" />
+
+</div>
+<!-- ./wrapper -->
+
+<!-- 弹出层 -->
+<div class="shade" style="" id="modalWindow">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal" action="" method="post" onsubmit="return false" id="formWindow">
+        <input class="primaryKey" type="hidden" name="v_id" id="v_id" />
+        <div class="row">
+          <div class="col-md-12">
+            <div class="clearfix">
+              <p class="note pull-right">注：<span class="xing">*</span>标记为必填项</p>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="v_code"><span class="xing">*</span> 版本号：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="版本号" id="v_code" name="v_code" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="v_name"><span class="xing">*</span> 版本名：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="版本名" id="v_name" name="v_name" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="v_yon"><span class="xing">*</span> 强制升级：</label>
+                  <div class="col-md-8">
+                    <select id="v_yon" name="v_upgrade" class="form-control">
+                      <option value="0">否</option>
+                      <option value="1">是</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="v_path"><span class="xing"></span> apk路径：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="apk路径" id="v_path" name="v_path" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="v_memo"><span class="xing">*</span> 备注：</label>
+                  <div class="col-md-8">
+                    <textarea class="form-control" id="v_memo" name="v_memo" placeholder="最多输入200字！" maxlength="200"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-footer" style="text-align:center;">
+    <button type="button" class="btn btn-success btn-sm save">
+      <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+    <button type="button" class="btn btn-default btn-sm layui-layer-close">
+      <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+
+<include file="Public:footer_js" />
+
+<script type="text/javascript">
+$(function() {
+  // 表格数据
+  var $table    = $('#table_data');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",                   // 工具栏
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+})
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  // 需要的数据
+  var url =  "/index.php/Admin/AppVersions/Versions/get";
+  queryList(url,params);
+}
+
+// 查询
+function search() {
+  var url = "/index.php/Admin/AppVersions/Versions/get";
+  $g_params.data.page = parseInt($('.active .pagination li.active a').text());
+  queryList(url,$g_params);
+}
+
+// 新增/编辑
+function edit(id) {
+  var url = g_config.host + "/index.php/Admin/AppVersions/Versions/get";
+  custom_edit(id,url,{v_id:id},'formWindow','modalWindow');
+}
+
+// 保存数据
+function save() {
+  var url = g_config.host + '/index.php/Admin/AppVersions/Versions/edit';
+  fpost(url,'formWindow',btnCallbackRefreshTable1);
+}
+
+// 删除
+function del() {
+  var url    = g_config.host + "/index.php/Admin/AppVersions/Versions/del";
+  var ids    = getIdSelections($('.js-custom-table-data'),'v_id');
+  var strIds = ids.join(',');
+  var data   = {};
+  data.v_id  = strIds;
+
+  if (ids.length == 0) {
+    dialog.notify('请先选择要删除的记录');
+    return;
+  } else {
+    dialog.confirm('您确定要删除当前选项吗？',function(){dpost(url,data,btnCallbackRefreshTable1);});
+  }
+}
+</script>
+</body>
+</html>

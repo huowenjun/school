@@ -1,0 +1,358 @@
+
+  <!-- Main Header -->
+  <include file="Public:header" title="订单管理" />
+  <!--Main Sidebar-->
+  <include file="Public:left_nav" />
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">订单管理</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <!-- Your Page Content Here -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab1" data-toggle="tab">订单管理</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab1">
+                <nav class="navbar navbar-default">
+                  <!-- container-fluid -->
+                  <div class="container-fluid">
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="form-inline navbar-form navbar-left">
+                      <div class="form-group">
+                        <label for="user_name1">用户账号：</label>
+                        <input id="user_name1" type="text" class="form-control input-sm" placeholder="" />
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label" for="deal_name1">订单名称：</label>
+                        <input id="deal_name1" type="text" class="form-control input-sm" placeholder="" />
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label" for="type1">订单类型：</label>
+                        <select id="type1" class="form-control input-sm">
+                          <option value="">请选择</option>
+                          <option value="0">零钱充值</option>
+                          <option value="1">学生卡充值</option>
+                          <option value="2">话费充值</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label" for="order_status1">订单状态：</label>
+                        <select id="order_status1" class="form-control input-sm">
+                          <option value="">请选择</option>
+                          <option value="0">未支付</option>
+                          <option value="1">已支付(过期)</option>
+                          <option value="2">已支付(无库存)</option>
+                          <option value="3">交易成功</option>
+                          <option value="4">充值中</option>
+                          <option value="5">充值失败</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label" for="is_paid1">支付状态：</label>
+                        <select id="is_paid1" class="form-control input-sm">
+                          <option value="">请选择</option>
+                          <option value="0">未支付</option>
+                          <option value="1">已支付</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label" for="create_time1">下单时间：</label>
+                        <input id="create_time1" type="text" class="form-control input-sm dataTime" placeholder="" />
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label" for="pay_time1">支付时间：</label>
+                        <input id="pay_time1" type="text" class="form-control input-sm dataTime" placeholder="" />
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label" for="is_refund1">是否退款：</label>
+                        <select id="is_refund1" class="form-control input-sm">
+                          <option value="">请选择</option>
+                          <option value="0">否</option>
+                          <option value="1">是</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label" for="notice_sn1">支付订单号：</label>
+                        <input id="notice_sn1" type="text" class="form-control input-sm" placeholder="" />
+                      </div>
+                      <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-sm query">
+                          <i class="fa fa-search"></i> 查询
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.container-fluid -->
+                </nav>
+
+                <!-- table -->
+                <div class="content-wrap">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <table id="table_data" class="js-custom-table-data">
+                        <thead>
+                          <tr>
+                            <!-- <th data-field="state" data-checkbox="true"></th> -->
+                            <th data-align="center" data-formatter="viewDetailsFormatter" data-events="operateEvents" name="viewDetailsFormatter">操作</th>
+                            <th data-align="center" data-sortable="false" data-field="id" name="">订单ID</th>
+                            <th data-align="center" data-sortable="false" data-field="deal_name" name="">订单名称</th>
+                            <th data-align="center" data-sortable="false" data-field="user_name" name="">用户账号</th>
+                            <th data-align="center" data-sortable="false" data-field="type" name="">订单类型</th>
+                            <th data-align="center" data-sortable="false" data-field="order_status" name="">订单状态</th>
+                            <th data-align="center" data-sortable="false" data-field="is_paid" name="">支付状态</th>
+                            <th data-align="center" data-sortable="false" data-field="total_price" name="">应付总额</th>
+                            <th data-align="center" data-sortable="true" data-field="create_time" name="">下单时间</th>
+                            <th data-align="center" data-sortable="true" data-field="pay_time" name="">支付时间</th>
+                            <th data-align="center" data-sortable="false" data-field="is_refund" name="">是否退款</th>
+                            <th data-align="center" data-sortable="false" data-field="payment_id" name="">支付方式</th>
+                             <th data-align="center" data-formatter="refundFormatter" data-events="refundEvents" name="refundFormatter">退款操作</th>
+                          </tr>
+                        </thead>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <include file="Public:footer" />
+</div>
+<!-- ./wrapper -->
+
+<!-- 弹出层 -->
+<div class="shade" style="" id="modalWindow">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal" action="" method="post" onsubmit="return false" id="formWindow">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="id">订单ID：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="id" name="id" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="deal_name">订单名称：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="deal_name" name="deal_name" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="user_name">用户账号：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="user_name" name="user_name" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="type">订单类型：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="type" name="type" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="order_status">订单状态：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="order_status" name="order_status" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="is_paid">支付状态：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="is_paid" name="is_paid" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="total_price">应付总额：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="total_price" name="total_price" class="form-control" readonly />
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="create_time">下单时间：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="create_time" name="create_time" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="pay_time">支付时间：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="pay_time" name="pay_time" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="is_refund">是否退款：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="is_refund" name="is_refund" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="payment_id">支付方式：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="payment_id" name="payment_id" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="notice_sn">支付订单号：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="notice_sn" name="notice_sn" class="form-control" readonly />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="outer_notice_sn">外部订单号：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="outer_notice_sn" name="outer_notice_sn" class="form-control" readonly />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 隐藏域 -->
+<form id="searchForm" name="searchForm" action="" style="position: fixed; top: 0; right: 0; z-index: 99999;">
+  <input type="hidden" id="user_name_hide" name="user_name" value="" />
+  <input type="hidden" id="deal_name_hide" name="deal_name" value="" />
+  <input type="hidden" id="type_hide" name="type" value="" />
+  <input type="hidden" id="order_status_hide" name="order_status" value="" />
+  <input type="hidden" id="is_paid_hide" name="is_paid" value="" />
+  <input type="hidden" id="create_time_hide" name="create_time" value="" />
+  <input type="hidden" id="pay_time_hide" name="pay_time" value="" />
+  <input type="hidden" id="is_refund_hide" name="is_refund" value="" />
+  <input type="hidden" id="notice_sn_hide" name="notice_sn" value="" />
+</form>
+
+<include file="Public:footer_js" />
+
+<script type="text/javascript">
+// 根据登陆角色权限 展示相应按钮
+var user_type = "{$user_type}"; // 用户类型 1学校管理员 2系统用户 3老师 4家长 5省委 6市委 7县委
+
+$(function() {
+  // 表格数据
+  var $table    = $('#table_data');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",                   // 工具栏
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+
+  // 日期
+  $.datetimepicker.setLocale('ch'); // 设置中文
+  $('.dataTime').datetimepicker({
+    format:"Y-m-d H:i:s", // 格式化日期 时间
+    timepicker:true,      // 时间选项
+    step:5,               // 分钟步数
+    yearStart:2000,       // 设置最小年份
+    yearEnd:2050,         // 设置最大年份
+    todayButton:true      // 选择今天按钮
+  });
+})
+
+// 隐藏域赋值
+function searchForm() {
+  $("#user_name_hide").val($("#user_name1").val());
+  $("#deal_name_hide").val($("#deal_name1").val());
+  $("#type_hide").val($("#type1").val());
+  $("#order_status_hide").val($("#order_status1").val());
+  $("#is_paid_hide").val($("#is_paid1").val());
+  $("#create_time_hide").val($("#create_time1").val());
+  $("#pay_time_hide").val($("#pay_time1").val());
+  $("#is_refund_hide").val($("#is_refund1").val());
+  $("#notice_sn_hide").val($("#notice_sn1").val());
+}
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  searchForm();
+  // 需要的数据
+  var url = "/index.php/Admin/DealOrder/DealOrder/query?" + $("#searchForm").serialize();
+  queryList(url,params);
+}
+
+// 查询
+function search() {
+  // form查询域赋值
+  searchForm();
+  var url = "/index.php/Admin/DealOrder/DealOrder/query?" + $("#searchForm").serialize();
+  $g_params.data.page = parseInt($('.active .pagination li.active a').text());
+  queryList(url,$g_params);
+}
+
+// 新增/编辑
+function edit(id) {
+  var url = g_config.host + '/index.php/Admin/DealOrder/DealOrder/get';
+  custom_viewDetails(id,url,{id:id},'formWindow','modalWindow');
+}
+
+// 自定义查看表格中的操作内容
+function refundFormatter(value, row, index) {
+  var is_refund = row.is_refund;
+  var is_paid = row.is_paid;
+  if(is_refund!="否"&&is_paid!="未支付"){
+    return [
+      '<button type="button" class="btn btn-success table-btn refund" data-color="#39B3D7" data-opacity="0.95">',
+      '<span class="glyphicon glyphicon-ok-circle"></span> 退款',
+      '</button>'
+    ].join('');
+
+  }
+}
+
+//获取订单号
+window.refundEvents = {
+  'click .refund': function (e, value, row, index) {   
+    refundHandle(row.notice_sn);
+  }
+};
+
+// 退款处理
+function refundHandle(data) {
+  var url = g_config.host + "/index.php/Admin/Refund/Refund/refund";
+  dialog.confirm('您确定要退款吗？',function(){dpost(url,{notice_sn:data},btnCallbackRefreshTable1);});
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors LJS (1114510520@qq.com)
+ * @date    2017-02-07 17:06:46
+ * @version $Id$
+ */
+
+/* 公共部分 */
+* { /*outline: none;*/ box-sizing: border-box; -moz-box-sizing: border-box; /* Firefox */
+  -webkit-box-sizing: border-box; /* Safari */
+  -webkit-tap-highlight-color: rgba(0,0,0,0); }
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td { margin: 0; padding: 0; }
+html, body { min-height: 100%; }
+body { width: 20rem; margin: 0 auto; line-height:1.4286; font-family: 'Microsoft YaHei', Arial, Helvetica, sans-serif; font-size: 12px; /*-webkit-user-select: none; user-select: none;*/ /*禁止选中文本*/ }
+ul,li { list-style: none; }
+em, b, strong { font-weight: normal; }
+i, em { font-style: normal; }
+u, s, ins, del, a { text-decoration: none; }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; }
+table { border-collapse: collapse; border-spacing: 0; }
+img, fieldset, iframe, input { border: none; }
+input, button, textarea, select { font-family: inherit; font-size: inherit; font-weight: inherit; *font-size:100%; }
+th, td { text-align: left; }
+a { text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: rgba(0,0,0,0); /*此属性是苹果手持设备的浏览器属性，意思是：点击它，它就会出现一个半透明的灰色背景。webkit是苹果浏览器引擎，tap点击，highlight背景高亮，color颜色，颜色用数值调节*/ }
+/*a:focus, input:focus { outline: none; -moz-outline: none; }*/
+.body { background: #e8eae9; }
+/*.clearFix:after { clear: both; display: block; visibility: hidden; height: 0px; line-height: 0px; content:'\20'; }
+.clearFix { zoom: 1; }*/
+.clear { *zoom: 1; }
+.clear:after { content:""; display: table; clear: both; }
+
+/* 按钮文字间距 start */
+.btnLetter { width: 72px; letter-spacing: 24px; text-indent:24px; text-align: center; }
+/* 按钮文字间距 end */
+
+/* 文字两端对齐 start */
+.textLetter { width: 72px; text-align: justify; }
+.textLetter:after {content: ''; display: inline-block; width: 100%; height: 0; }
+/* 文字两端对齐 end */
+.bg { background: #fcfcfc; }
+.subBtn { display: block; margin: 2.0625rem 0.5625rem 2.0625rem 0.5625rem; background-color: #00bad2; width: 18.9rem; height: 2.1875rem; line-height: 2.1875rem; border-radius: 4px; color: #ffffff; text-align: center; font-size: 0.875rem; }
+.subBtn2 { display: block; margin: 2.0625rem 0.5625rem 2.0625rem 0.5625rem; background-color: #00bad2; width: 18.9rem; height: 2.1875rem; line-height: 2.1875rem; border-radius: 4px; color: #ffffff; text-align: center; font-size: 0.875rem; }
+.subBtn.disabled, .subBtn2.disabled { background-color: #cccccc; color: #999999; }
+
+/*@media screen and (min-width: 768px) {
+  html { font-size: 62.1px!important; }
+}*/

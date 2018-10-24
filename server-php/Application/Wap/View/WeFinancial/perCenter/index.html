@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>个人中心</title>
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui.css" />
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui2.css" />
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/WeFinancial/css/custom1.css" />
+<script type="text/javascript" src="/Public/WeFinancial/js/rem.js"></script>
+</head>
+<body style="background-color: #f7f7f7;">
+<div class="per-info tcenter">
+  <img  class="per-info-bg" src="/Public/WeFinancial/img/percenter-top.png" alt="">
+  <label for="img_files" class="head-portrait-box"></label>
+  <p class="per-phone"></p>
+  <p class="per-type"></p>
+  <p class="per-address"></p>     
+</div>
+<div class="member-group group-con">
+  <div class="member-data-list">
+  </div>
+  <div class="percenter-list">
+    <a class="percenter-list1 invitecode" href="/Wap/WeFinancial/inviteCode" ><img  src="/Public/WeFinancial/img/percenter-list1-1.png" alt=""></a>
+    <a class="percenter-list2" href="/Wap/WeFinancial/capitalDetails" ><img  src="/Public/WeFinancial/img/percenter-list1-2.png" alt=""></a>
+  </div>
+</div>
+
+<div class="depositor-group group-con" > 
+ <p>会员申请申请成功后，会下发业务二维码，通过二维码信息发展会员和储户，利润互利。</p>
+  <div class="depositor-list">
+    <a class="depositor-btn" href="/index.php/Wap/WeFinancial/memberShip">会员申请</a>
+    <a class="depositor-btn" href="#">我的账户</a>
+  </div>
+</div>
+
+<div class="weui_tab tab-bottom" style="height:auto;">
+  <div class="weui_tabbar"  >
+      <a href="/index.php/Wap/WeFinancial/homePage" id="homePage" class="weui_tabbar_item">
+          <div class="weui_tabbar_icon">
+              <img src="/Public/WeFinancial/img/home1.png" alt="">
+          </div>
+          <p class="weui_tabbar_label">首页</p>
+      </a>
+      <!-- <div style=" width:1px; background:#efefef;"></div> -->
+      <a href="/index.php/Wap/WeFinancial/perCenter"  id="perCenter" class="weui_tabbar_item">
+          <div class="weui_tabbar_icon">
+              <img src="/Public/WeFinancial/img/percenter1.png" alt="">
+          </div>
+          <p class="weui_tabbar_label">个人中心</p>
+      </a>   
+  </div>
+</div>
+<form class="form-horizontal" action="/index.php/Admin/Upload/upload_image.html" enctype="multipart/form-data" method="post" id="iconFileFrom" style="display:none;">
+  <input type="file" id="img_files" name="img_files" value="" style="display:block"  accept="image/*" />
+</form>
+<!-- jQuery 1.10.2 -->
+<script type="text/javascript" src="/Public/WeFinancial/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/dist/js/jquery.form.js"></script>
+<!-- 弹出层 -->
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<!-- 自定义js文件 -->
+<script type="text/javascript">
+// tab
+$('.weui_tab').tab({
+  defaultIndex: 1,
+  activeClass:'weui_bar_item_on',
+  onToggle:function(index){
+    if(index==0){
+      $("#homePage").find('img').attr('src', '/Public/WeFinancial/img/home2.png').parents("a").siblings().find('img').attr('src', '/Public/WeFinancial/img/percenter1.png');
+    }else if(index==1){
+      $("#perCenter").find('img').attr('src', '/Public/WeFinancial/img/percenter2.png').parents("a").siblings().find('img').attr('src', '/Public/WeFinancial/img/home1.png');
+    }
+  }
+})
+
+// 个人中心页列表
+$('.percenter-list a').bind("touchstart",function(event){
+  var index = $(this).index()+1;
+  $(this).children('img').attr('src', '/Public/WeFinancial/img/percenter-list2-'+index+'.png');
+});
+
+$('.percenter-list a').bind("touchend",function(event){
+  var index = $(this).index()+1;
+  $(this).children('img').attr('src', '/Public/WeFinancial/img/percenter-list1-'+index+'.png');
+});
+
+
+
+// //上传图片
+$('#img_files').change(function() {
+  var file = this.files[0]; // 获取input type=file文件所有数据，因为input type=file 可以多选，所以files是个数组
+  if(file.size>2097152){
+     dialog.error("上传图片请小于2M");
+     return false;
+  }
+  
+  var reader   = new FileReader();  // H5的新api，文件预览对象
+  reader.onload=function(){
+  var imgSrc=reader.result; // 通过 reader.result 来访问生成的 DataURL
+  headPortraitBox.html('<img src="'+imgSrc+'" class=" head-portrait">');
+  
+    // 提交图片表单
+    $('#iconFileFrom').ajaxSubmit(function(msg) {
+      // 成功返回的数据
+      if (msg.status==1) {
+        var imgSrc = msg.data.url;
+         $.ajax({
+             type: "post",
+             url: "/index.php/Wap/WeFinancial/editUserHeadPortrait",
+             dataType : 'json',
+             data: {user_id:user_id,head_portrait:imgSrc},
+             success: function(res){
+               headPortraitBox.html('<img src="'+res.data.head_portrait+'" class=" head-portrait">');
+            },
+             error: function(res){
+               $.toast("请求服务器异常！", "forbidden");
+             }
+          })
+      }else{
+        
+      }
+    });
+  }
+  reader.readAsDataURL(file);               // 把file数据转为DataURL数据
+})
+
+
+  //截取链接属性和值
+function getLocationString(name) {  
+  // 如果链接没有参数，或者链接中不存在我们要获取的参数，直接返回空  
+  if(location.href.indexOf("?")==-1 || location.href.indexOf(name+'=')==-1)  
+  {  
+      return '';  
+  }  
+  // 获取链接中参数部分  
+  var queryString = location.href.substring(location.href.indexOf("?")+1);  
+ 
+  // 分离参数对 ?key=value&key2=value2  
+  var parameters = queryString.split("&");  
+ 
+  var pos, paraName, paraValue;  
+  for(var i=0; i<parameters.length; i++)  
+  {  
+      // 获取等号位置  
+      pos = parameters[i].indexOf('=');  
+      if(pos == -1) { continue; }  
+ 
+      // 获取name 和 value  
+      paraName = parameters[i].substring(0, pos);  
+      paraValue = parameters[i].substring(pos + 1);  
+ 
+      // 如果查询的name等于当前name，就返回当前值，同时，将链接中的+号还原成空格  
+      if(paraName == name)  
+      {  
+          return unescape(paraValue.replace(/\+/g, " "));  
+      }  
+  }  
+  return '';  
+};  
+
+// var take_user_id = localStorage.getItem("user_id"); // 本地获取获取user_id
+
+// 请求个人信息
+var perPhone=$(".per-phone");
+var perType=$(".per-type");
+var perAddress=$(".per-address");
+var invitecode = $(".invitecode")
+var invitecodeurl  = invitecode.attr('href');
+var headPortraitBox=$(".head-portrait-box");
+var user_id="";
+var memberGroup =$(".member-group");
+var depositorGroup =$(".depositor-group");
+var memberDataList =$(".member-data-list");
+
+
+$.ajax({
+   type: "get",
+   url: "/index.php/Wap/WeFinancial/userAccount",
+   success: function(res){
+     if(res.status == 1 ){
+            console.log( res.data)
+        headPortraitBox.html('<img src="'+res.data.userInfo.head_portrait+'" class=" head-portrait">');
+        invitecode.attr('href',invitecodeurl+"?user_id="+res.data.userInfo.user_id);
+        user_id =res.data.userInfo.user_id;
+        var classify =res.data.userInfo.classify;
+        var province =res.data.userInfo.province;
+        var city =res.data.userInfo.city;
+        
+        perAddress.html(province+city)
+        console.log(classify);
+
+       if(classify==0){ //储户
+          memberGroup.hide();
+          depositorGroup.show();
+       }else if(classify==12){ //会员
+          memberGroup.show();
+          depositorGroup.hide();
+          var memberData = "";
+          $.each(res.data.num, function(key,value) {
+             memberData+='<dl>';
+             memberData+='<dt>'+value.value+'</dt>';
+             memberData+='<dd>'+value.name+'</dd>';
+             memberData+='</dl>';
+             memberDataList.html(memberData);
+          });
+
+          var memberDataLeng= res.data.num.length;
+          memberDataList.find('dl').css('width', 19.8/memberDataLeng+'rem');
+        }
+        
+        
+        perPhone.text(res.data.userInfo.phone);
+        perType.text(res.data.userInfo.type);
+         
+     }else{
+        $.toast(res.info,"forbidden");
+       setTimeout("location.href='/index.php/Wap/Index/goto_bindPhone';", 2000); 
+     }
+  },
+   error: function(res){
+     $.toast("请求服务器异常！", "forbidden");
+   }
+})
+
+
+    //截取链接属性和值
+// function getLocationString(name) {  
+//   // 如果链接没有参数，或者链接中不存在我们要获取的参数，直接返回空  
+//   if(location.href.indexOf("?")==-1 || location.href.indexOf(name+'=')==-1)  
+//   {  
+//       return '';  
+//   }  
+//   // 获取链接中参数部分  
+//   var queryString = location.href.substring(location.href.indexOf("?")+1);  
+ 
+//   // 分离参数对 ?key=value&key2=value2  
+//   var parameters = queryString.split("&");  
+ 
+//   var pos, paraName, paraValue;  
+//   for(var i=0; i<parameters.length; i++)  
+//   {  
+//       // 获取等号位置  
+//       pos = parameters[i].indexOf('=');  
+//       if(pos == -1) { continue; }  
+ 
+//       // 获取name 和 value  
+//       paraName = parameters[i].substring(0, pos);  
+//       paraValue = parameters[i].substring(pos + 1);  
+ 
+//       // 如果查询的name等于当前name，就返回当前值，同时，将链接中的+号还原成空格  
+//       if(paraName == name)  
+//       {  
+//           return unescape(paraValue.replace(/\+/g, " "));  
+//       }  
+//   }  
+//   return '';  
+// };  
+
+// var code = getLocationString('code');
+// var perCenterHref = $("#perCenter").attr('href');
+// $("#perCenter").attr('href',perCenterHref+"?code="+code);
+// var homePageHref = $("#homePage").attr('href');
+// $("#homePage").attr('href',homePageHref+"?code="+code);
+// /index.php/Wap/SpFinancial/perCenter
+// alert(code);
+// $("#perCenter").on('click', function(event) {
+//   $.ajax({
+//        type: "post",
+//        url: "/index.php/Wap/SpFinancial/login",
+//        dataType : 'json',
+//        data: {code:code},
+//        success: function(res){
+//         alert(res.data.id);
+//        wx.miniProgram.redirectTo({url: '/pages/login/login'});  
+//           // if(res.data.only==""){
+//           //    wx.miniProgram.redirectTo({url: '/pages/register/register?id='+res.data.id});  
+//           // }else{
+//           //   wx.miniProgram.redirectTo({url: '/pages/register/register?id='+res.data.id+'&only='+res.data.only})
+//           // }
+//         // }
+//       },
+//        error: function(res){
+//          $.toast("请求服务器异常！", "forbidden");
+//        }
+//     })
+// })
+
+
+
+// // 获取openid值
+// var code = getLocationString('code');
+// var perCenterHref = $("#perCenter").attr('href');
+// $("#perCenter").attr('href',perCenterHref+"?code="+code);
+// var homePageHref = $("#homePage").attr('href');
+// $("#homePage").attr('href',homePageHref+"?code="+code);
+
+
+//     //截取链接属性和值
+// function getLocationString(name) {  
+//   // 如果链接没有参数，或者链接中不存在我们要获取的参数，直接返回空  
+//   if(location.href.indexOf("?")==-1 || location.href.indexOf(name+'=')==-1)  
+//   {  
+//       return '';  
+//   }  
+//   // 获取链接中参数部分  
+//   var queryString = location.href.substring(location.href.indexOf("?")+1);  
+ 
+//   // 分离参数对 ?key=value&key2=value2  
+//   var parameters = queryString.split("&");  
+ 
+//   var pos, paraName, paraValue;  
+//   for(var i=0; i<parameters.length; i++)  
+//   {  
+//       // 获取等号位置  
+//       pos = parameters[i].indexOf('=');  
+//       if(pos == -1) { continue; }  
+ 
+//       // 获取name 和 value  
+//       paraName = parameters[i].substring(0, pos);  
+//       paraValue = parameters[i].substring(pos + 1);  
+ 
+//       // 如果查询的name等于当前name，就返回当前值，同时，将链接中的+号还原成空格  
+//       if(paraName == name)  
+//       {  
+//           return unescape(paraValue.replace(/\+/g, " "));  
+//       }  
+//   }  
+//   return '';  
+// };  
+    
+</script>
+</body>
+</html>

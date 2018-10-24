@@ -1,0 +1,32 @@
+type：1上线 或者 3下线 或者 2切换账号  
+
+imei：学生卡的唯一标识
+devicetoken: 家长端移动APP token  IOS and 安卓
+mobtype: 手机类型   1 IOS 2 安卓
+mobilenumber：家长登录账号
+mobmac：手机的MAC地址
+mobinfo: 手机型号（苹果、三星等等）
+ntime: 上线 / 下线 /切换账号  时间
+token: imei的值 + devicetoken的值 + mobilenumber的值 + shuhaixinxi + mobmac的值 md5 小写
+stuname: 和IMEI对应的学生姓名
+
+JSON 数组格式
+
+type 等于 1 和 2时 传下面的值
+
+[{"mobmac":"864394010382135","mobtype":"2","devicetoken":"AqaPMx7BJEdVagUz2hTiE-Br6JrmjbaNsL9PUXwNkt0L","mobilenumber":"15652933152","imei":"867587027700168","mobinfo":"sfsdfdsfd","ntime":"2017-03-2 10:55:55","stuname":"张三","token":"466ce4d8f4b7fa58482e2ca8783b7742"},{"mobmac":"864394010382135","mobtype":"2","devicetoken":"AqaPMx7BJEdVagUz2hTiE-Br6JrmjbaNsL9PUXwNkt0L","mobilenumber":"15652933152","imei":"867587027705340","mobinfo":"sfsdfdsfd","ntime":"2017-03-2210:55:55","stuname":"李四","token":"87cfa560c9f9d66d8fe998ad1c88cc1d"},{"mobmac":"864394010382135","mobtype":"2","devicetoken":"AqaPMx7BJEdVagUz2hTiE-Br6JrmjbaNsL9PUXwNkt0L","mobilenumber":"15652933152","imei":"867587027681137","mobinfo":"sfsdfdsfd","ntime":"2017-03-22 10:55:55","stuname":"王五","token":"56be36da684e417c6738d4e826743dd8"}]
+
+
+[{"mobilenumber":"15652933152","mobtype":"0","devicetoken":"sdfsdgadg4545s4xcber5t5w1esdv15","parentid":"1541","token":"6078a75f73c5a7395701ce1e0fcb4d17"}]
+type 等于 3时 只传 devicetoken
+
+
+接口地址：
+http://school.xinpingtai.com/parenttoken.php?type=1&data=
+
+teacher端
+[{"teacher_id":"864394010382135","mobtype":"2","device_token_teacher":"AqaPMx7BJEdVagUz2hTiE-Br6JrmjbaNsL9PUXwNkt0L","techer_mobile":"15652933152"}]
+
+TYPE 等于3的时候  只传 device_token_teacher
+接口地址：
+http://school.xinpingtai.com/teachertoken.php?type=1&data=

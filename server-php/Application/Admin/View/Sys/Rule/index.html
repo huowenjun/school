@@ -1,0 +1,276 @@
+  <!-- Main Header -->
+  <include file="Public:header" title="角色权限"/>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">角色权限</li>
+      </ol>
+    </section>
+    <section class="content">
+      <div class="row">
+        <div class="col-md-9">
+          <div class="box">
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <table id="rolepermission_table" class="js-custom-table-data"  data-click-to-select="true" data-select-item-name="radioName">
+                    <thead>  
+                      <tr>
+                        <th data-field="state" data-radio="true">选择</th>
+                        <th data-field="title" data-sortable="true" data-align="center">角色名称</th>
+                        <th data-field="desc" data-sortable="false" data-align="center">备注</th>
+                        <th data-field="status" data-sortable="true" data-align="center">状态</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">具有的权限</h3>
+            </div>
+            <div class="box-body ">
+              <ul id="treeJurisdiction" class="ztree"></ul>
+            </div>
+            <div class="box-footer"style="text-align:center;">
+              <input type="hidden" name="roleId" id="roleId"/>
+              <input type="hidden" name="addJurisdictionIds" id="addJurisdictionIds"/>
+              <button type="button" class="btn btn-success jurisdiction-ids">
+                  <span class="glyphicon glyphicon-save"></span> 保存
+              </button>
+              <button type="button" class="btn btn-primary reset-jurisdiction">
+                  <span class="glyphicon glyphicon-repeat"></span> 重置
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED JS SCRIPTS -->
+<include file="Public:footer_js"/>
+<script>
+$(function() {
+  // 表格数据
+  var $table = $('#rolepermission_table');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",
+    toggle:"table",                       // 表格
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+});
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  // 需要的数据
+  var url = "/index.php/Admin/Sys/Rule/get_group";
+  queryList(url,params);
+}
+
+// 文件树
+var setting = {
+  check: {
+    enable: true,
+    chkStyle: "checkbox",
+    radioType: "all" // 在整棵树范围内当做一个分组
+  },
+  view: {
+    dblClickExpand: true
+  },
+  data: {
+    simpleData: {
+      enable: true
+    }
+  },
+  callback: {
+      beforeExpand: beforeExpandCheckbox,
+      onExpand: onExpandCheckbox,
+    }
+  };
+  // 保持展开单一路径 start
+  var curExpandNodeCheckbox = null;
+  function beforeExpandCheckbox(treeId, treeNode) {
+    var pNode     = curExpandNodeCheckbox ? curExpandNodeCheckbox.getParentNode():null;
+    var treeNodeP = treeNode.parentTId ? treeNode.getParentNode():null;
+    var zTree     = $.fn.zTree.getZTreeObj("treeJurisdiction");
+    for(var i=0, l=!treeNodeP ? 0:treeNodeP.children.length; i<l; i++ ) {
+      if (treeNode !== treeNodeP.children[i]) {
+        zTree.expandNode(treeNodeP.children[i], false);
+      }
+    }
+    while (pNode) {
+      if (pNode === treeNode) {
+        break;
+      }
+      pNode = pNode.getParentNode();
+    }
+    if (!pNode) {
+      singlePathCheckbox(treeNode);
+    }
+  }
+  function singlePathCheckbox(newNode) {
+    if (newNode === curExpandNodeCheckbox) return;
+
+    var zTree = $.fn.zTree.getZTreeObj("treeJurisdiction"),
+      rootNodes, tmpRoot, tmpTId, i, j, n;
+
+    if (!curExpandNodeCheckbox) {
+      tmpRoot = newNode;
+      while (tmpRoot) {
+        tmpTId = tmpRoot.tId;
+        tmpRoot = tmpRoot.getParentNode();
+      }
+      rootNodes = zTree.getNodes();
+      for (i=0, j=rootNodes.length; i<j; i++) {
+        n = rootNodes[i];
+        if (n.tId != tmpTId) {
+          zTree.expandNode(n, false);
+        }
+      }
+    } else if (curExpandNodeCheckbox && curExpandNodeCheckbox.open) {
+      if (newNode.parentTId === curExpandNodeCheckbox.parentTId) {
+        zTree.expandNode(curExpandNodeCheckbox, false);
+      } else {
+        var newParents = [];
+        while (newNode) {
+          newNode = newNode.getParentNode();
+          if (newNode === curExpandNodeCheckbox) {
+            newParents = null;
+            break;
+          } else if (newNode) {
+            newParents.push(newNode);
+          }
+        }
+        if (newParents!=null) {
+          var oldNode = curExpandNodeCheckbox;
+          var oldParents = [];
+          while (oldNode) {
+            oldNode = oldNode.getParentNode();
+            if (oldNode) {
+                oldParents.push(oldNode);
+            }
+          }
+          if (newParents.length>0) {
+            zTree.expandNode(oldParents[Math.abs(oldParents.length-newParents.length)-1], false);
+          } else {
+            zTree.expandNode(oldParents[oldParents.length-1], false);
+          }
+        }
+      }
+    }
+    curExpandNodeCheckbox = newNode;
+  }
+  function onExpandCheckbox(event, treeId, treeNode) {
+    curExpandNodeCheckbox = treeNode;
+  }
+
+
+
+
+//获取选择权限id集合
+function jurisdictionIds(){
+  var addJurisdictionIds="";
+  var treeObj = $.fn.zTree.getZTreeObj("treeJurisdiction");
+  var nodes = treeObj.getCheckedNodes(true);
+  $.each(nodes,function(i,v){
+    if(addJurisdictionIds){
+      addJurisdictionIds+=",";
+    }
+    addJurisdictionIds+=v.id;
+  });
+  $("#addJurisdictionIds").val(addJurisdictionIds);
+  jurisdictionSave();
+} 
+
+//点击保存
+$('.jurisdiction-ids').click(function() {
+     jurisdictionIds();
+});
+
+//请求权限树
+function treeJurisdiction(roleId){
+  $("#roleId").val(roleId);
+  $.ajax({
+     type: "get",
+     url: "/index.php/Admin/Sys/Rule/query?id="+roleId,
+     dataType : 'json', 
+     success: function(msg){
+        var groupNodes = msg.data;
+        $.fn.zTree.init($("#treeJurisdiction"), setting, groupNodes);
+     },
+     error: function(msg){
+       dialog.error("请求服务器异常！");
+     }
+  })
+}
+
+//获取角色id
+function roleId(){
+  var roleId = getIdSelections($('.js-custom-table-data'),'id');
+  treeJurisdiction(roleId);
+}
+
+//点击单选框
+$(function() {
+  $('table').click(function(){
+    $("tbody tr").each(function(i){
+      if($(this).hasClass('selected')){
+        roleId()
+      }
+    });   
+  });
+}); 
+
+//保存权限
+function jurisdictionSave() {
+    var roleId=$("#roleId").val();
+    var addJurisdictionIds = $("#addJurisdictionIds").val();
+    var url = g_config.host + '/index.php/Admin/Sys/Rule/edit';
+    dpost(url,{id:roleId,rules:addJurisdictionIds},treeJurisdictionBtnCallback);
+}
+function treeJurisdictionBtnCallback(data) {
+  if(g_loadingIndex > -1) dialog.closeLoding(g_loadingIndex);
+  g_loadingIndex = -1;
+  if( data.status == 1 ) {
+    dialog.success1(data.info,function(){ treeJurisdiction(roleId); });
+  } else {
+    dialog.error(data.info);
+  }
+}
+
+//点击重置
+$('.reset-jurisdiction').click(function() {
+  resetJurisdiction();
+});
+
+//重置当前角色的权限的
+function resetJurisdiction(){
+  var treeObj = $.fn.zTree.getZTreeObj("treeJurisdiction");
+  treeObj.checkAllNodes(false);
+}
+</script>
+</body>
+</html>

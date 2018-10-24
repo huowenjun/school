@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>个人中心</title>
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui.css" />
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui2.css" />
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/WeFinancial/css/custom1.css" />
+<script type="text/javascript" src="/Public/WeFinancial/js/rem.js"></script>
+</head>
+<body style="background-color: #f7f7f7;">
+<div class="depositor-info">
+  <div class="depositor-basic-info">
+    <dl>
+      <dt>基本信息</dt>
+      <dd><p class="user-info"></p><p class="user-type-info"></p><p class="address-info"></p></dd>
+    </dl>
+
+  </div>
+  <div class="depositor-upload-info">
+    <dl>
+      <dt>上传图片信息</dt>
+      <dd>
+        <div id="upload">
+          <div id="img-container">
+            <!-- <div class="img-thumb img-item"><img class="thumb-icon" src="/Public/WeFinancial/img/home1.png"><a href="javscript:;" class="img-remove">x</a></div>
+            <div class="img-up-add img-item"> 
+             <span class="img-add-icon">+</span> 
+            </div> -->
+            <input type="file" name="files" id="imgFileInput" accept="image/*" >
+          </div>
+        </div>
+        <p class="instru-size"></p>
+        <p class="instru">在民生慧选宝里至少存储2000元钱后的截屏</p>
+      </dd>
+      <a class="upload-submit">提交申请</a>
+      <p class="check-info"></p>
+    </dl>
+     
+  </div>
+  <div class="depositor-instru-info">
+    <dl>
+      <dt>注：</dt>
+      <dd><p>1.您提交的图片必须属实，一旦审核出来将列入黑名单，不再有会员申请权利；</p><p>2.您提交审核后，我们将在1到5个工作日内完成审核；</p></dd>
+    </dl>
+  </div>
+  <div id="result"></div>
+</div>
+
+
+
+
+
+<!-- hint-shade -->
+<div class="hint-shade"></div> 
+
+<!-- hint-->
+<div class="hint-win">
+  <img class="hint-diagram" src="/Public/WeFinancial/img/hint-diagram.jpg">
+  <a href="javscript:;" class="hint-remove js-hint-remove">x</a>
+  <dl class="hint-text">
+    <dt>提示</dt>
+    <dd></dd>
+  </dl>
+  <a href="javscript:;" class="confirm-btn js-hint-remove">确定</a>
+ </div>
+
+
+<!-- jQuery 1.10.2 -->
+<script type="text/javascript" src="/Public/WeFinancial/js/jquery-1.10.2.min.js"></script>
+<!-- <script type="text/javascript" src="/Public/dist/js/jquery.form.js"></script> -->
+
+<!-- 弹出层 -->
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<script type="text/javascript" src="/Public/WeFinancial/js/member-ship-upload.js" ></script>
+<!-- 自定义js文件 -->
+<script type="text/javascript">
+// tab
+$('.weui_tab').tab({
+  defaultIndex: 1,
+  activeClass:'weui_bar_item_on',
+  onToggle:function(index){
+    if(index==0){
+      $("#homePage").find('img').attr('src', '/Public/WeFinancial/img/home2.png').parents("a").siblings().find('img').attr('src', '/Public/WeFinancial/img/percenter1.png');
+    }else if(index==1){
+      $("#perCenter").find('img').attr('src', '/Public/WeFinancial/img/percenter2.png').parents("a").siblings().find('img').attr('src', '/Public/WeFinancial/img/home1.png');
+    }
+  }
+})
+
+// 个人中心页列表
+$('.percenter-list a').bind("touchstart",function(event){
+  var index = $(this).index()+1;
+  $(this).children('img').attr('src', '/Public/WeFinancial/img/percenter-list2-'+index+'.png');
+});
+
+$('.percenter-list a').bind("touchend",function(event){
+  var index = $(this).index()+1;
+  $(this).children('img').attr('src', '/Public/WeFinancial/img/percenter-list1-'+index+'.png');
+});
+
+// 预初始化上传元素 点击上传图片
+var upload = imgUpload('#upload');
+$(".upload-submit")[0].onclick = function (e) {
+  upload();
+}
+
+// 提示窗
+var dialogHint = {
+  hint: function(message,fn) {
+    $(".hint-win").show();
+    $(".hint-shade").show();
+    $(".hint-text dd").html(message);
+    $(".confirm-btn").addClass('js-hint-remove');
+    $(".confirm-btn").removeClass('js-hint-confirm');
+    if (typeof(fn) == "function"){
+      $(".confirm-btn").removeClass('js-hint-remove');
+      $(".confirm-btn").addClass('js-hint-confirm');
+
+      $(".js-hint-confirm").click(function(e){
+        e.preventDefault();
+        fn();
+        $(".hint-win").hide();
+        $(".hint-shade").hide();
+      })
+    
+    }
+
+  },
+}
+// 关闭提示框
+$(".js-hint-remove").click(function(e){
+  e.preventDefault();
+  $(".hint-win").hide();
+  $(".hint-shade").hide();
+})
+
+// 加载个人信息
+var userInfo = $(".user-info");
+var userTypeInfo = $(".user-type-info");
+var addressInfo = $(".address-info");
+$.ajax({
+   type: "get",
+   url: "/index.php/Wap/WeFinancial/userAccount",
+   success: function(res){
+      if(res.status == 1 ){
+        var province =res.data.userInfo.province;
+        var city =res.data.userInfo.city;
+        userInfo.html(res.data.userInfo.username);
+        userTypeInfo.html(res.data.userInfo.type);
+        addressInfo.html(province+city)
+      }else{
+        dialogHint.hint(res.info);
+        setTimeout("location.href='/index.php/Wap/Index/goto_bindPhone';", 2000); 
+      }
+    },
+    error: function(res){
+      dialogHint.hint("请求服务器异常！");
+    }
+})
+
+
+
+</script>
+</body>
+</html>

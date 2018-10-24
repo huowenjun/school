@@ -1,0 +1,385 @@
+
+  <!-- Main Header -->
+  <include file="Public:header" title="学校管理" />
+  <!--Main Sidebar-->
+  <include file="Public:left_nav" />
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">学校管理</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <!-- Your Page Content Here -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab1" data-toggle="tab">学校管理</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab1">
+                <nav class="navbar navbar-default">
+                  <!-- container-fluid -->
+                  <div class="container-fluid">
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="form-inline navbar-form navbar-left">
+                      <div class="form-group">
+                        <label for="keyword1">学校名称：</label>
+                        <input id="keyword1" type="text" class="form-control input-sm" placeholder="请输入学校名称" />
+                      </div>
+                      <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-sm query">
+                          <i class="fa fa-search"></i> 查询
+                        </button>
+                      </div>
+                      <div class="form-group">
+                        <button type="button" class="btn btn-success btn-sm add">
+                          <i class="fa fa-plus"></i> 添加
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.container-fluid -->
+                </nav>
+
+                <!-- table -->
+                <div class="content-wrap">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div id="toolbar">
+                        <div id="remove" class="btn btn-danger btn-sm" style="margin-top:12px">
+                          <i class="fa fa-trash"></i> 删除
+                        </div>
+                      </div>
+                      <table id="table_data" class="js-custom-table-data">
+                        <thead>
+                          <tr>
+                            <th data-field="state" data-checkbox="true"></th>
+                            <th data-align="center" data-formatter="operateFormatter" data-events="operateEvents" name="operateFormatter">操作</th>
+                            <th data-align="center" data-sortable="true" data-field="region_id" name="">地区</th>
+                            <th data-align="center" data-sortable="true" data-field="name" name="">学校名称</th>
+                            <th data-align="center" data-sortable="true" data-field="build_time" name="">成立时间</th>
+                            <th data-align="center" data-sortable="false" data-field="main_zrr" name="">主责任人</th>
+                            <th data-align="center" data-sortable="true" data-field="main_phone" name="">主责任人电话</th>
+                            <th data-align="center" data-sortable="true" data-field="sub_zzr" name="">副责任人</th>
+                            <th data-align="center" data-sortable="true" data-field="sub_phone" name="">副责任人电话</th>
+                            <th data-align="center" data-sortable="true" data-field="tel" name="">学校电话内线</th>
+                            <th data-align="center" data-sortable="true" data-field="address" name="">学校地址</th>
+                            <th data-align="center" data-sortable="true" data-field="valid" name="">有效状态</th>
+                            <th data-align="center" data-sortable="true" data-field="create_time" name="">创建时间</th>
+                            <th data-align="center" data-sortable="true" data-field="memo" name="">备注</th>
+                          </tr>
+                        </thead>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <include file="Public:footer" />
+
+</div>
+<!-- ./wrapper -->
+
+<!-- 弹出层 -->
+<div class="shade" style="" id="modalWindow">
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form class="form-horizontal" action="" method="post" onsubmit="return false" id="formWindow">
+        <input class="primaryKey" type="hidden" name="s_id" id="s_id" />
+        <input class="primaryKey" type="hidden" name="u_id" id="u_id" />
+        <div class="row">
+          <div class="col-md-12">
+            <div class="clearfix">
+              <p class="note pull-right">注：<span class="xing">*</span>标记为必填项</p>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="county_id"><span class="xing">*</span> 地区：</label>
+                  <div class="col-md-5">
+                    <input id="regionname" type="text" class="form-control" readonly value="" style="width:100%;" placeholder="请选择区域" name="regionname" />
+                    <input id="county_id" name="county_id" type="hidden" class="form-control" value="" />
+                  </div>
+                  <div class="col-md-4"><div class="btn btn-primary" onclick="showMenuArea();">选择区域</div></div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="name"><span class="xing">*</span> 学校名称：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="学校名称" id="name" name="name" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="build_time"><span class="xing">*</span> 成立时间：</label>
+                  <div class="col-md-8">
+                    <input type="text" id="build_time" name="build_time" class="form-control dataTime" placeholder="成立时间" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="main_zrr"><span class="xing">*</span> 主责任人：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="主责任人" id="main_zrr" name="main_zrr" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="sub_zzr"><span class="xing">*</span> 副责任人：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="副责任人" id="sub_zzr" name="sub_zzr" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="memo"><span class="xing"></span> 备注：</label>
+                  <div class="col-md-8">
+                    <textarea class="form-control" id="memo" name="memo" placeholder="最多输入200字！" maxlength="200"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="valid"><span class="xing">*</span> 有效状态：</label>
+                  <div class="col-md-8">
+                    <select id="valid" name="valid" class="form-control">
+                      <option value="0">有效</option>
+                      <option value="1">无效</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="tel"><span class="xing">*</span> 学校电话内线：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="格式：0427-43275670 或 010-23237788" id="tel" name="tel" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="address"><span class="xing">*</span> 学校地址：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="学校地址" id="address" name="address" class="form-control" />
+                  </div>
+                </div>
+				        <div class="form-group">
+                  <label class="col-md-3 control-label" for="main_phone"><span class="xing">*</span> 主责任人电话：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="主责任人电话" id="main_phone" name="main_phone" class="form-control" />
+                  </div>
+                </div>
+				        <div class="form-group">
+                  <label class="col-md-3 control-label" for="sub_phone"><span class="xing">*</span> 副责任人电话：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="副责任人电话" id="sub_phone" name="sub_phone" class="form-control" />
+                  </div>
+                </div>
+				        <div class="form-group">
+                  <label class="col-md-3 control-label" for="user_name"><span class="xing">*</span> 用户名：</label>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="登陆用户名" id="user_name" name="user_name" class="form-control" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+ <!-- 行政区域 文件树 -->
+  <div id="menuContentArea" class="menuContent" style="display:none; position: absolute;">
+    <ul id="treeArea" class="ztree" style="margin-top:0; background:#fff; border:1px solid #ccc;"></ul>
+  </div>
+  <div class="modal-footer" style="text-align:center;">
+    <button type="button" class="btn btn-success btn-sm save">
+      <span class="glyphicon glyphicon-save"></span> 保存
+    </button>
+    <button type="button" class="btn btn-default btn-sm layui-layer-close">
+      <span class="glyphicon glyphicon-remove"></span> 取消
+    </button>
+  </div>
+</div>
+
+<!-- 隐藏域 -->
+<form id="searchForm" name="searchForm" action="">
+  <input type="hidden" id="keyword" name="keyword" value="" />
+</form>
+
+<include file="Public:footer_js" />
+
+<script type="text/javascript">
+$(function() {
+
+  // 表格数据
+  var $table    = $('#table_data');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",                   // 工具栏
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+
+  // 日期
+  $.datetimepicker.setLocale('ch'); // 设置中文
+  $('.dataTime').datetimepicker({
+    // lang:"ch",           // 语言选择中文
+    format:"Y-m-d",      // 格式化日期
+    timepicker:false,    // 关闭时间选项
+    yearStart:1900,      // 设置最小年份
+    yearEnd:2050,        // 设置最大年份
+    todayButton:true     // 关闭选择今天按钮
+  });
+})
+
+// 隐藏域赋值
+function searchForm() {
+  $("#keyword").val($("#keyword1").val());
+}
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  searchForm();
+  // 需要的数据
+  var url =  "/index.php/Admin/School/SchManage/query?" + $("#searchForm").serialize();
+  queryList(url,params);
+}
+
+// 查询
+function search() {
+  // form查询域赋值
+  searchForm();
+  var url = "/index.php/Admin/School/SchManage/query?" + $("#searchForm").serialize();
+  $g_params.data.page = parseInt($('.active .pagination li.active a').text());
+  queryList(url,$g_params);
+}
+
+//新增/编辑
+function edit(id) {
+  $("#user_name").removeAttr("disabled"); 
+  
+  var url = g_config.host + "/index.php/Admin/School/SchManage/get";
+  custom_edit(id,url,{s_id:id},'formWindow','modalWindow');
+}
+
+//保存数据
+function save() {
+  var url = g_config.host + '/index.php/Admin/School/SchManage/edit';
+  fpost(url,'formWindow',btnCallbackRefreshTable1);
+}
+
+//编辑状态特殊字段处理
+function setEditDataEx(data){
+  $("#user_name").attr('disabled', 'true');
+}
+//删除
+function del() {
+  var url    = g_config.host + "/index.php/Admin/School/SchManage/del";
+  var ids    = getIdSelections($('.js-custom-table-data'),'s_id');
+  var strIds = ids.join(',');
+  var data   = {};
+  data.s_id    = strIds;
+
+  if (ids.length == 0) {
+    dialog.notify('请先选择要删除的记录');
+    return;
+  } else {
+    dialog.confirm('您确定要删除当前选项吗？',function(){dpost(url,data,btnCallbackRefreshTable1);});
+  }
+}
+
+// 行政区域 文件树
+var settingArea = {
+  view: {
+    dblClickExpand: true
+  },
+  data: {
+    simpleData: {
+      enable: true
+    }
+  },
+  callback: {
+    // beforeClick: beforeClick,
+    onClick: onClickArea,
+  }
+};
+// function beforeClick(treeId, treeNode) {
+//   var check = (treeNode && !treeNode.isParent);
+//   if (!check) alert("只能选择城市...");
+//   return check;
+// }
+function onClickArea(e, treeId, treeNode) {
+  if(treeNode) {
+    $("#regionname").val(treeNode.name);
+    $("#county_id").val(treeNode.id);
+  }
+  $("#menuContentArea").hide();
+}
+function showMenuArea() {
+  var cityObj = $("#regionname");
+  var cityOffset = $("#regionname").offset();
+  // 弹出层定位
+  var parBoxOffset = $('.layui-layer').position();
+  $("#menuContentArea").css({left:cityOffset.left - parBoxOffset.left + "px", top:cityOffset.top - parBoxOffset.top + "px", width:cityObj.outerWidth() + "px"}).slideDown("fast");
+  $("body").bind("mousedown", onBodyDownArea);
+}
+function hideMenuArea() {
+  $("#menuContentArea").fadeOut("fast");
+  $("body").unbind("mousedown", onBodyDownArea);
+}
+function onBodyDownArea(event) {
+  if (!(event.target.id == "menuBtn" || event.target.id == "menuContentArea" || $(event.target).parents("#menuContentArea").length>0)) {
+    hideMenuArea();
+  }
+}
+$(document).ready(function() {
+  $.fn.zTree.init($("#treeArea"), settingArea);
+});
+
+// 获取数据(文件树)
+$(function() {
+  $.ajax({
+    type: "get",
+    url: "/index.php/Admin/Common/get_list?type=region",
+    dataType : 'json', 
+    success: function(msg) {
+      var zNodes=msg.data;
+      console.log(zNodes)
+      $.fn.zTree.init($("#treeArea"), settingArea, zNodes);
+    },
+    error: function(msg) {
+      alert( "error: " + msg );
+    }
+  })
+})
+// 行政区域 文件树 end
+
+
+</script>
+
+</body>
+</html>

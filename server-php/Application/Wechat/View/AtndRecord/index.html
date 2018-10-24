@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>考勤记录</title>
+<link rel="stylesheet" href="/Public/Wechat/css/weui.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui2.css" />
+<link rel="stylesheet" href="/Public/Wechat/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/Wechat/css/phone.css" />
+</head>
+<body>
+<div class="header">
+  <div class="custom_cell">
+    <div class="weui-cell__bd" style="text-align: center;">
+      <p>考勤记录</p>
+    </div>
+  </div>
+</div>
+<div class="container custom_AtndRecord" id="container">
+  <form class="js_form_submit" action="" method="post">
+    <div class="weui_cells weui_cells_form">
+      <!-- <div class="weui_cell">
+        <div class="weui_cell_hd"><label for="" class="weui_label">班级：</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <input class="weui_input" type="text" value="" id='selectClass' name="c_id" />
+        </div>
+        <a href="javascript:;" class="weui_btn weui_btn_mini weui_btn_warn custom_icon_clear">清除</a>
+      </div> -->
+      <div class="weui_cell">
+        <div class="weui_cell_hd"><label for="" class="weui_label">学生：</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <input class="weui_input" type="text" value="" id='selectStudent' name="stu_id" />
+        </div>
+        <a href="javascript:;" class="weui_btn weui_btn_mini weui_btn_warn custom_icon_clear">清除</a>
+      </div>
+      <div class="weui_cell">
+        <div class="weui_cell_hd"><label for="" class="weui_label">签到日期：</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <input class="weui_input" type="text" value="" id='stime' name="sdate" />
+        </div>
+        <a href="javascript:;" class="weui_btn weui_btn_mini weui_btn_warn custom_icon_clear">清除</a>
+      </div>
+    </div>
+    <div class="custom_height_10px"></div>
+    <div class="page-bd-15">
+      <div class="weui_btn bg-blue js_query"><i class="weui_icon_search"></i> 搜索</div>
+    </div>
+  </form>
+  <div class="weui_panel weui_panel_access">
+    <table class="weui-table weui-border-tb">
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>状态</th>
+          <th>签到类型</th>
+          <th>签到时间</th>
+          <th>考勤时间段</th>
+        </tr>
+      </thead>
+      <tbody>
+        <foreach name='attendance' item='vo'>
+        <tr>
+          <td>{$vo.stu_name}</td>
+          <td>{$vo.signin_type}</td>
+          <td>{$vo.sign_type}</td>
+          <td>{$vo.jc_time}</td>
+          <td>{$vo.shijianduan}</td>
+        </tr>
+        </foreach>
+      </tbody>
+    </table>
+  </div>
+  <div class="custom_height_10px"></div>
+</div>
+
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<!-- 自定义js文件 -->
+<script type="text/javascript" src="/Public/Wechat/js/phone.js"></script>
+<!-- 选择日期时间 -->
+<script type="text/javascript" src="/Public/Wechat/js/picker.js"></script>
+<!-- 下拉单选 下拉多选 -->
+<script type="text/javascript" src="/Public/Wechat/js/select.js"></script>
+<!-- cookie -->
+<script type="text/javascript" src="/Public/Wechat/js/zepto.cookie.js"></script>
+
+<script type="text/javascript">
+
+// ajax班级
+// $.ajax({
+//   type: "get",
+//   dataType: 'json',
+//   url: '/index.php/Wechat/AtndRecord/getclassList',
+//   success: function(res) {
+//     var dataClass = res.data;
+//     console.log('dataClass：'+dataClass)
+//     // 选择班级
+//     $("#selectClass").select({
+//       title: "班级",
+//       items: dataClass,
+//       onChange: function(d) {
+//         $.alert("你选择了"+d.titles);
+//       }
+//     });
+//   },
+//   error: function(msg) {
+//     $.toast("请求服务器异常！", "forbidden");
+//   }
+// });
+
+// ajax学生
+$.ajax({
+  type: "get",
+  dataType: 'json',
+  url: '/index.php/Wechat/Homework/getstuList',
+  success: function(res) {
+    var dataStudent = res.data;
+    console.log('dataStudent重组之前：'+dataStudent)
+
+    var studentData = [];
+    for (var i = 0; i < dataStudent.length; i++) {
+      var data = {
+        title:dataStudent[i].title,
+        value:dataStudent[i].value
+      }
+      studentData.push(data);
+    };
+    console.log('studentData重组之后：'+studentData)
+
+    // 选择班级
+    $("#selectStudent").select({
+      title: "学生",
+      items: studentData,
+      onChange: function(d) {
+        $.alert("你选择了"+d.titles);
+      }
+    });
+  },
+  error: function(msg) {
+    $.toast("请求服务器异常！", "forbidden");
+  }
+});
+
+$(function() {
+  // 选择日期
+  $("#stime").datetimePicker({title:"选择日期",m:1});
+
+  // 刷新页面后给搜索条件赋值
+  // if($.fn.cookie("class")) {
+  //   $("#selectClass").val($.fn.cookie("class"));
+  // }
+  if($.fn.cookie("student")) {
+    $("#selectStudent").val($.fn.cookie("student"));
+  }
+  if($.fn.cookie("stime")) {
+    $("#stime").val($.fn.cookie("stime"));
+  }
+
+  // 点击搜索
+  $('.custom_AtndRecord').delegate('.js_query', 'click', function() {
+    // 刷新页面之前先存储搜索条件值
+    // $.fn.cookie('class',$("#selectClass").val(),{expires:1}); // expires 可以设定保存时间{expires:7,path:'/',domain:'itcast.cn',secure:true}
+    $.fn.cookie('student',$("#selectStudent").val(),{expires:1});
+    $.fn.cookie('stime',$("#stime").val(),{expires:1});
+    $('.js_form_submit').submit();
+  });
+})
+</script>
+</body>
+</html>

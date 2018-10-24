@@ -1,0 +1,48 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors LJS (1114510520@qq.com)
+ * @date    2017-02-07 17:06:46
+ * @version $Id$
+ */
+
+/* tab */
+.weui_tabbar:before { border-top:none;}
+.weui_tabbar_item.weui_bar_item_on .weui_tabbar_label { color: #0073c6;}
+.weui_tabbar_label { text-align: center; color: #2f2f2f; font-size: 0.666667rem; }
+.weui_tabbar { box-shadow: 0 -0.253333rem 0.133333rem #efefef; background-color: #fff;}
+.weui_tabbar_icon { margin: 0 auto;  width: 1.146667rem; height: 1.146667rem;}
+
+/* 主页 */
+.banner img{ display: block; width: 20.0rem;}
+.home-list{ margin-bottom:2.666667rem;}
+.home-list img{width: 20.0rem; display: block;}
+
+/* 头像 */
+.head-portrait-box{ position: absolute; top: 2.27rem;  left:50%; width: 3.73rem; height: 3.73rem; border-radius: 3.733333rem; margin-left:-1.95rem;   border:solid 0.16rem #fff; }
+.head-portrait{ width: 3.73rem; height: 3.73rem; border-radius: 3.73rem;}
+
+/* 个人中心 */
+.percenter-list  img{width: 15.173333rem; display: block; margin:0 auto; }
+.per-info{ color:#fff; font-size: 0.8rem;}
+.per-info-bg{ width: 100%;background:#fff; position: relative; overflow: hidden;  display: block; }
+.per-phone{position: absolute; top:7.2rem; left:0;  right: 0;  text-align: center; font-weight: bold;}
+.per-type{position: absolute; top: 8.32rem;  left:0;  right: 0; text-align: center; }
+.data-list{ background:#fff; overflow: hidden; padding: 0.746667rem 0; margin-bottom: 1.066667rem; }
+.data-list dl{ float: left; width: 6.6rem;  text-align: center; font-size: 0.693333rem; border-right: 0.026667rem solid #efefef;  }
+.data-list dl.clear-margin{ border-right: none; }
+.data-list dl dt{ color: #0178ca; font-weight: bold;font-size: 0.8rem; }
+
+/* 邀请二维码 */
+
+.share-info{ background: #e60443; height:100%; color: #fff; font-weight: bold; }
+.share-info-bg{width:20.0rem;  display:block;  position: relative; }
+.share-info-bottom-bg {width:20.0rem; position: absolute; bottom: 0; left: 50%; margin-left:-10rem;  display:block;}
+.per-name{position: absolute; top: 7.093333rem; left:0;  right: 0;  text-align: center;  font-size: 0.96rem; }
+.twe-code img{position: absolute; bottom: 12.66rem; left:50%;  width: 6.29rem;  margin-left:-3.15rem;   }
+.share-txt{position: absolute; bottom: 6.51rem; left:0;  right: 0;  text-align: center;  font-size: 0.8rem; }
+.share-txt span{ margin-right:0.96rem;}
+.share-list img{ position: absolute; bottom: 2.67rem; left: 50%; width: 15.17rem; margin-left:-7.8rem;}
+.sharebg { background-color:#000; bottom: 0; height: 100%; opacity: 0; position: fixed; right: 0; top: 0; width: 20.0rem; display:none;z-index: 9999; }
+.sharebg img { position: absolute; top:0.266667rem; right: 1.333333rem; width: 5.066667rem;}
+.sharebg-active { opacity: .8; display:block; }

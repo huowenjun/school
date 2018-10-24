@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>智慧金融</title>
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui.css" />
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui2.css" />
+<link rel="stylesheet" href="/Public/WeFinancial/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/WeFinancial/css/custom1.css" />
+<script type="text/javascript" src="/Public/WeFinancial/js/rem.js"></script>
+</head>
+<body style="background-color: #f7f7f7;">
+
+<div class="banner">  <img src="/Public/WeFinancial/img/banner.png" alt=""></div>
+<div class="home-list">
+  <!-- <a href="https://www.mszxyh.com/wapserver/outer/index.html?ChannelId=mszx02489&seq=DZZH_20180206131365&Page=index" ><img  src="/Public/WeFinancial/img/home-list1-1.png" alt=""></a>
+  <a href="https://www.mszxyh.com/wapserver/outer/index.html?ChannelId=mszx02489&seq=DZZH_20180206131365&Page=index" ><img  src="/Public/WeFinancial/img/home-list1-2.png" alt=""></a>
+ -->
+  <a href="/html/wx-wait/index.html" ><img  src="/Public/WeFinancial/img/home-list1-1.png" alt=""></a>
+  <a href="/html/wx-wait/index.html" ><img  src="/Public/WeFinancial/img/home-list1-2.png" alt=""></a>
+  <a href="/Wap/AppHook/livingPayment" ><img  src="/Public/WeFinancial/img/home-list1-3.png" alt=""></a>
+  <a href="/Wap/AppHook/buyTickets"><img  src="/Public/WeFinancial/img/home-list1-4.png" alt=""></a>
+</div>
+
+<div class="weui_tab tab-bottom" style="height:auto;">
+  <div class="weui_tabbar"  >
+      <a href="/index.php/Wap/WeFinancial/homePage" id="homePage" class="weui_tabbar_item">
+          <div class="weui_tabbar_icon">
+              <img src="/Public/WeFinancial/img/home1.png" alt="">
+          </div>
+          <p class="weui_tabbar_label">首页</p>
+      </a>
+      <!-- <div style=" width:1px; background:#efefef;"></div> -->
+      <a href="/index.php/Wap/WeFinancial/perCenter"  id="perCenter" class="weui_tabbar_item">
+          <div class="weui_tabbar_icon">
+              <img src="/Public/WeFinancial/img/percenter1.png" alt="">
+          </div>
+          <p class="weui_tabbar_label">个人中心</p>
+      </a>   
+  </div>
+</div>
+<!-- jQuery 1.10.2 -->
+<script type="text/javascript" src="/Public/WeFinancial/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<!-- 自定义js文件 -->
+<script type="text/javascript">
+
+// tab
+$('.weui_tab').tab({
+  defaultIndex: 0,
+  activeClass:'weui_bar_item_on',
+  onToggle:function(index){
+    if(index==0){
+      $("#homePage").find('img').attr('src', '/Public/WeFinancial/img/home2.png').parents("a").siblings().find('img').attr('src', '/Public/WeFinancial/img/percenter1.png');
+    }else if(index==1){
+      $("#perCenter").find('img').attr('src', '/Public/WeFinancial/img/percenter2.png').parents("a").siblings().find('img').attr('src', '/Public/WeFinancial/img/home1.png');
+    }
+  }
+})
+
+// 首页列表
+$('.home-list a').bind("touchstart",function(event){
+  var index = $(this).index()+1;
+  $(this).children('img').attr('src', '/Public/WeFinancial/img/home-list2-'+index+'.png');
+});
+
+$('.home-list a').bind("touchend",function(event){
+  var index = $(this).index()+1;
+  $(this).children('img').attr('src', '/Public/WeFinancial/img/home-list1-'+index+'.png');
+
+  });
+
+</script>
+</body>
+</html>

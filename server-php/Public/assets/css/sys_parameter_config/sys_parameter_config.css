@@ -1,0 +1,23 @@
+
+.stepy-step {
+    border: 1px solid #E0E8EF;
+    border-radius: 3px;
+    clear: left;
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    position: relative;
+}
+.stepy-step legend {
+    background: none repeat scroll 0 0 #eeeeee;
+    margin: 0;
+    border-radius: 3px;
+    color: #AAAAAA;
+    font-size: 14px;
+    padding: 5px 2px 5px 10px;
+    text-align: center;
+    text-transform: uppercase;
+}
+#tab-context{
+  border-radius:0 0 4px 4px; 
+  border: 1px solid #bbb; 
+  border-top:none;"

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>在线咨询</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/Public/bootstrap/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/Public/dist/font/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/Public/dist/font/ionicons/2.0.1/css/ionicons.min.css" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/Public/dist/css/AdminLTE.min.css" />
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/_all-skins.min.css" />
+  <!-- AdminLTE皮肤默认选择的skin-blue。也可以选择其他的皮肤。确保你应用皮肤类body标签更改生效 -->
+  <link rel="stylesheet" href="/Public/dist/css/skins/skin-blue.min.css" />
+  <!-- 自定义公共css -->
+  <link rel="stylesheet" href="/Public/dist/css/custom.css" />
+
+  <!-- 日期 时间 -->
+  <link rel="stylesheet" href="/Public/plugins/datetimepicker/jquery.datetimepicker.css" />
+</head>
+
+<body class="hold-transition skin-blue-light sidebar-mini">
+<div class="wrapper">
+  <div class="online">
+    <!-- Main Header -->
+    <include file="Public:header" title="在线咨询" />
+    <!--Main Sidebar-->
+    <include file="Public:left_nav" />
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <ol class="breadcrumb">
+          <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+          <li class="active">在线咨询</li>
+        </ol>
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <!-- Your Page Content Here -->
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title"></h3>
+                <div class="box-tools pull-right">
+                  <a href="publish.html" class="btn btn-primary btn-sm js_startQuest">
+                    <i class="fa fa-question"></i> 在线提问
+                  </a>
+                </div>
+                <!-- /.box-tools -->
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body chat" id="chat-box">
+                <div class="row">
+                  <div class="col-md-12">
+                    <!-- container-fluid -->
+                    <div class="container-fluid">
+                      <!-- Collect the nav links, forms, and other content for toggling -->
+                      <form class="" action="" method="get" id="WirelessConfigForm">
+                        <input type="hidden" id="p" name="p" value="{$p}" />
+                        <div class="form-inline navbar-form navbar-left">
+                          <if condition="($userType neq 4)">
+                          <div class="form-group">
+                            <label for="campus1">提问人：</label>
+                            <select id="campus" name="campus" class="form-control input-sm">
+                              <option value="">选择提问人</option>
+                              <foreach name="sendName" item="v" key="k">
+                                <option value="{$v['send_user']}" <if condition="($campus eq $v['send_user'])"> selected </if>>{$v['name']}</option>
+                              </foreach>
+                            </select>
+                          </div>
+                          </if>
+                          <div class="form-group">
+                            <label for="stime1">时间段：</label>
+                            <input id="stime1" name="stime" class="form-control input-sm dataTime" placeholder="" type="text" value="{$sdate}" />
+                            <span>-</span>
+                            <input id="etime1" name="etime" class="form-control input-sm dataTime" placeholder="" type="text" value="{$edate}" />
+                          </div>
+                          <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                              <i class="fa fa-search"></i> 查询
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <!-- /.container-fluid -->
+                    <hr style="margin-top: 5px;" />
+                    <foreach name="result" item="v" key="k">
+                      <div class="user-block item">
+                        <img class="img-circle" src="/Public/dist/img/users.png" alt="User Image">
+                        <div class="username">
+                          <a href="/index.php/Admin/Parent/Online/details.html?id={$v['id']}">{$v['title']}</a>
+                        </div>
+                        <div class="description">{$v['create_time']}</div>
+                        <div class="message">
+                          <div class="text">
+                            {$v['content']|htmlspecialchars_decode|stripslashes}
+                          </div>
+                        </div>
+                        <div class="direct-chat-info clearfix">
+                          <span class="direct-chat-timestamp pull-left">{$v['send_user']|get_user_name=###}</span>
+                        </div>
+                      </div><hr />
+                    </foreach>
+                  </div>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer clearfix js_page">
+                {$page}
+              </div>
+              <!-- /.box-footer -->
+            </div>
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <include file="Public:footer" />
+  </div>
+</div>
+<!-- ./wrapper -->
+
+<include file="Public:footer_js" />
+
+<script type="text/javascript">
+// 根据登陆角色权限 展示相应按钮
+var user_type = "{$user_type}"; // 用户类型 1学校管理员 2系统用户 3老师 4家长 5省委 6市委 7县委
+if (user_type == '4') {
+  $('.js_startQuest').show();
+} else {
+  $('.js_startQuest').hide();
+}
+
+$(function() {
+  // 日期
+  $.datetimepicker.setLocale('ch'); // 设置中文
+  $('#stime1').datetimepicker({
+    format:'Y-m-d',
+    onShow:function(ct) {
+      this.setOptions({
+        maxDate:jQuery('#etime1').val()?jQuery('#etime1').val():false
+      })
+    },
+    timepicker:false
+  });
+  jQuery('#etime1').datetimepicker({
+    format:'Y-m-d',
+    onShow:function(ct) {
+      this.setOptions({
+        minDate:jQuery('#stime1').val()?jQuery('#stime1').val():false
+      })
+    },
+    timepicker:false
+  });
+})
+</script>
+</body>
+</html>

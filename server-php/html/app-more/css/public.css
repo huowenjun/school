@@ -1,0 +1,36 @@
+
+.subNav .row {
+  width: 100%;
+  display: flex;
+  font-size: 14px;
+}
+.subNav .col {
+   margin-bottom: 1px;
+}
+.subNav .col-25 {
+  width: 25%;
+}
+.subNav .col a {
+  position: relative;
+  display: block;
+  height: 40px;
+  margin-right: 1px;
+  padding-top: 34px;
+  background: #fff;
+  text-align: center;
+  font-size: .85em;
+  color: #3f3f3f;
+}
+.subNav .col a em{
+  display:block;
+  margin-top: 12px;
+}
+.subNav .col a .icon {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  transform: translateX(-50%);
+}

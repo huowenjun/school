@@ -1,0 +1,394 @@
+
+  <!-- Main Header -->
+  <include file="Public:header" title="设备管理"/>
+  <!-- Main Side Menu -->
+  <include file="Public:left_nav"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <ol class="breadcrumb">
+        <li><a href="/index.php/Admin/Index.html"><i class="fa fa-home"></i> 首页</a></li>
+        <li class="active">设备管理</li>
+      </ol>
+    </section>   
+    <section class="content">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">客户列表</h3>
+            </div>
+            <div class="box-body">
+              <div class="tree-search">
+                <i class="tree-search-icon" id="searchNodeBtn"></i> 
+                <input type="text" placeholder="搜索关键字" id="searchNodeVal" value="" class="empty fs-12" />
+              </div>
+              <div class="tree-scroll">
+                <ul id="treeDemo" class="ztree js_ztree_height"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="box">
+            <div class="box-header with-border">
+              
+             <div class="row">
+                <div  class="device-num col-md-3 text-center" style="display:none;">
+                  <h5><strong><i class="fa fa-inbox"></i> 未绑定 / 设备总数</strong></h5>
+                  <p style="font-size: 20px;">
+                     <span id="unboundCount">0</span>/
+                     <span id="totalDeviceCount">0</span>
+                  </p>
+                </div>
+                <!-- <div class="col-md-3 text-center">
+                  <h5><strong><i class="fa fa-envelope-o"></i> 剩余 / 短信总数</strong></h5>
+                  <p style="font-size: 20px;">
+                    <span id="surplusCount">0</span>/
+                    <span id="totalSms">0</span>
+                  </p>
+                </div> -->
+                <div class="col-md-push-6"></div>
+              </div>
+              <div class="form-inline navbar-form navbar-left">
+                <div class="form-group">
+                  <input id="keyword1" type="text" class="form-control" placeholder="请输入IMEI" />
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary query" data-color="#39B3D7" data-opacity="0.95">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                  </button>
+                </div>
+              </div> 
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <div id="toolbar">
+                    <div id="remove" class="btn btn-danger btn-sm" style="margin-top:12px">
+                      <i class="fa fa-trash"></i> 删除
+                    </div>
+                  </div>
+                  <table id="devicemanage_table" class="js-custom-table-data">
+                    <thead>  
+                      <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-align="center" data-formatter="viewFormatter" data-events="operateEvents" name="viewFormatter">查看</th>
+                        <th data-field="imei" data-sortable="true" data-align="center">IMEI</th>
+                        <th data-field="rfid" data-sortable="true" data-align="center">RFID</th>
+                        <th data-field="model" data-sortable="true" data-align="center">机型</th>
+                        <th data-field="sw_version" data-sortable="true" data-align="center">软件版本号</th>
+                        <th data-field="hw_version" data-sortable="true" data-align="center">硬件版本号</th>
+                        <th data-field="u_id" data-sortable="true" data-align="center">客户名称</th>
+                        <th data-field="produce_time" data-sortable="true" data-align="center">生产日期</th>
+                        <th data-field="out_time" data-sortable="true" data-align="center">出货日期</th>
+                        <th data-field="expire_time" data-sortable="true" data-align="center">到期时间</th>
+                        <th data-field="status" data-sortable="true" data-align="center">是否绑定</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>  
+             
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <include file="Public:footer"/>
+</div>
+<!-- ./wrapper -->
+
+<!-- 隐藏表单域 -->
+<form id="searchForm" name="searchForm" action="" style="position: fixed; top: 0; right: 0; z-index: 99999;">
+  <input type="hidden" class="prov_id_hide" name="prov_id" value="" placeholder="省" />
+  <input type="hidden" class="city_id_hide" name="city_id" value="" placeholder="市" />
+  <input type="hidden" class="county_id_hide" name="county_id" value="" placeholder="区" />
+  <input type="hidden" class="s_id_hide" name="s_id" value="" placeholder="学校" />
+  <input type="hidden" class="a_id_hide" name="a_id" value="" placeholder="校区" />
+  <input type="hidden" id="keyword" name="keyword" value="" placeholder="学生" />
+</form>
+
+<!-- REQUIRED JS SCRIPTS -->
+
+<include file="Public:footer_js"/>
+<!-- 文件树搜索 -->
+<script type="text/javascript" src="/Public/dist/js/jquery.ztree.exhide.min.js"></script>
+<script>
+// 文件树
+var setting = {
+  check: {
+    enable: false,
+    chkStyle: "radio",
+    radioType: "all" // 在整棵树范围内当做一个分组
+  },
+  view: {
+    dblClickExpand: false
+  },
+  data: {
+    simpleData: {
+      enable: true
+    }
+  },
+  callback: {
+    // beforeClick: beforeClick,
+    beforeExpand: beforeExpand,
+    onExpand: onExpand,
+    onCollapse: onCollapse,
+    onClick: zTreeOnClick
+  }
+};
+
+// 保持展开单一路径 start
+var curExpandNode = null;
+function beforeExpand(treeId, treeNode) {
+  var pNode     = curExpandNode ? curExpandNode.getParentNode():null;
+  var treeNodeP = treeNode.parentTId ? treeNode.getParentNode():null;
+  var zTree     = $.fn.zTree.getZTreeObj("treeDemo");
+  for(var i=0, l=!treeNodeP ? 0:treeNodeP.children.length; i<l; i++ ) {
+    if (treeNode !== treeNodeP.children[i]) {
+      zTree.expandNode(treeNodeP.children[i], false);
+    }
+  }
+  while (pNode) {
+    if (pNode === treeNode) {
+      break;
+    }
+    pNode = pNode.getParentNode();
+  }
+  if (!pNode) {
+    singlePath(treeNode);
+  }
+}
+function singlePath(newNode) {
+  if (newNode === curExpandNode) return;
+
+  var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+    rootNodes, tmpRoot, tmpTId, i, j, n;
+
+  if (!curExpandNode) {
+    tmpRoot = newNode;
+    while (tmpRoot) {
+      tmpTId = tmpRoot.tId;
+      tmpRoot = tmpRoot.getParentNode();
+    }
+    rootNodes = zTree.getNodes();
+    for (i=0, j=rootNodes.length; i<j; i++) {
+      n = rootNodes[i];
+      if (n.tId != tmpTId) {
+        zTree.expandNode(n, false);
+      }
+    }
+  } else if (curExpandNode && curExpandNode.open) {
+    if (newNode.parentTId === curExpandNode.parentTId) {
+      zTree.expandNode(curExpandNode, false);
+    } else {
+      var newParents = [];
+      while (newNode) {
+        newNode = newNode.getParentNode();
+        if (newNode === curExpandNode) {
+          newParents = null;
+          break;
+        } else if (newNode) {
+          newParents.push(newNode);
+        }
+      }
+      if (newParents!=null) {
+        var oldNode = curExpandNode;
+        var oldParents = [];
+        while (oldNode) {
+          oldNode = oldNode.getParentNode();
+          if (oldNode) {
+              oldParents.push(oldNode);
+          }
+        }
+        if (newParents.length>0) {
+          zTree.expandNode(oldParents[Math.abs(oldParents.length-newParents.length)-1], false);
+        } else {
+          zTree.expandNode(oldParents[oldParents.length-1], false);
+        }
+      }
+    }
+  }
+  curExpandNode = newNode;
+}
+function onExpand(event, treeId, treeNode) {
+  leftTreeScroll();
+  curExpandNode = treeNode;
+}
+function onCollapse(event, treeId, treeNode) {
+  curExpandNode = treeNode;
+  leftTreeScroll();
+}
+
+// 请求树
+$.ajax({
+  type: "get",
+  url: "/index.php/Admin/index/get_tree?type=area",
+  dataType : 'json',
+  success: function(msg) {
+    var groupNodes = msg.data;
+    $.fn.zTree.init($("#treeDemo"), setting, groupNodes);
+  },
+  error: function(msg) {
+    dialog.error("请求服务器异常！");
+  }
+});
+// 保持展开单一路径 end
+var user_type = "{$user_type}"; // 用户类型 1学校管理员 2系统用户 3老师 4家长 5省/直辖市教委 6 市教委 7 区/县教委  
+function zTreeOnClick(event, treeId, treeNode) {
+  var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+  var nodes   = treeObj.getSelectedNodes();
+  for (var i=0, l=nodes.length; i < l; i++) {
+    treeObj.checkNode(nodes[i], true, true);
+  }
+  if (user_type == '1') {
+    // 点击选择
+    if(treeNode.typeFlag == 'school') {
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    
+    search();
+  };
+  if (user_type == '2') {
+    // 点击选择
+    if(treeNode.typeFlag == 'prov') {
+      $(".prov_id_hide").val(treeNode.id); // 省/直辖市
+      $(".city_id_hide").val(''); // 市
+      $(".county_id_hide").val(''); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'city') {
+      $(".prov_id_hide").val(treeNode.getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.id); // 市
+      $(".county_id_hide").val(''); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'county') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.id); // 区/县
+      $(".s_id_hide").val(''); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'school') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.id); // 学校
+      $(".a_id_hide").val(''); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    if(treeNode.typeFlag == 'area') {
+      $(".prov_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().getParentNode().id); // 省/直辖市
+      $(".city_id_hide").val(treeNode.getParentNode().getParentNode().getParentNode().id); // 市
+      $(".county_id_hide").val(treeNode.getParentNode().getParentNode().id); // 区/县
+      $(".s_id_hide").val(treeNode.getParentNode().id); // 学校
+      $(".a_id_hide").val(treeNode.id); // 校区
+      $(".g_id_hide").val(''); // 年级
+      $(".c_id_hide").val(''); // 班级
+      $(".stu_id_hide").val(''); // 学生
+    };
+    search();
+  };
+}
+$(function() {
+  // 表格数据
+  var $table = $('#devicemanage_table');
+  var $g_params = {};
+  // table 功能设置
+  $table.bootstrapTable({
+    toolbar:"#toolbar",                   // 工具栏
+    toggle:"table",                       // 表格
+    showToggle:true,                      // 是否显示(表格样式)切换
+    showColumns:true,                     // 是否显示列(功能:[显示/隐藏]列)
+    showExport:true,                      // 是否显示导出
+    pagination:true,                      // 分页
+    pageList:[10, 25, 50, 100],           // 每页行数
+    ajax:"ajaxRequest",                   // 数据地址
+    sidePagination:"server"               // 服务器
+  });
+});
+
+// 自定义ajax请求
+function ajaxRequest(params) {
+  $g_params = params;
+  // 需要的数据
+  var url =  "/index.php/Admin/Device/DeviceManage/query?" + $("#searchForm").serialize();
+  queryList(url,params);
+}  
+
+// 隐藏域赋值
+function searchForm() {
+  $("#keyword").val($("#keyword1").val());
+}
+// 查询
+function search(){
+  $(".device-num").css('display', 'block');
+  searchForm()
+  //form查询域赋值
+  var url = "/index.php/Admin/Device/DeviceManage/query?" + $("#searchForm").serialize();
+  $g_params.data.page = parseInt($('.pagination li.active a').text());
+  queryList(url,$g_params,function(res) {
+    $("#unboundCount").html(res.data.weibangding);
+    $("#totalDeviceCount").html(res.data.all);
+  });
+}
+
+//删除
+function del() {
+  var url    = g_config.host + "/index.php/Admin/Device/DeviceManage/del";
+  var ids    = getIdSelections($('.js-custom-table-data'),'dc_id');
+  var strIds = ids.join(',');
+  var data   = {};
+  data.id    = strIds;
+  if (ids.length == 0) {
+    dialog.notify('请先选择要删除的记录');
+    return;
+  } else {
+    dialog.confirm('您确定要删除当前选项吗？',function(){dpost(url,data,btnCallbackRefreshTable1);});
+  }
+}
+
+// 左侧文件树搜索
+$('#searchNodeBtn').click(function() {
+  searchNodeAll('treeDemo',$('#searchNodeVal'));
+  leftTreeScroll();
+});
+$('#searchNodeVal').on('input', function() {
+  searchNodeAll('treeDemo',$('#searchNodeVal'));
+  leftTreeScroll();
+});
+</script>
+</body>
+</html>

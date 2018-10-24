@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>个人中心</title>
+<link rel="stylesheet" href="/Public/SpFinancial/css/weui.css" />
+<link rel="stylesheet" href="/Public/SpFinancial/css/weui2.css" />
+<link rel="stylesheet" href="/Public/SpFinancial/css/weui3.css" />
+<!-- 自定义css文件 -->
+<link rel="stylesheet" href="/Public/SpFinancial/css/custom1.css" />
+<script type="text/javascript" src="/Public/SpFinancial/js/rem.js"></script>
+</head>
+<body style="background-color: #f7f7f7;">
+<div class="per-info tcenter">
+  <img  class="per-info-bg" src="/Public/SpFinancial/img/percenter-top.png" alt="">
+  <div class="head-portrait-box"></div>
+  <p class="per-phone "></p>
+  <p class="per-type"></p>   
+</div>
+
+<div class="data-list">
+  <dl>
+   <dt class="data-0">0</dt>
+   <dd>第三代理商（人）</dd>
+  </dl>
+  <dl>
+   <dt class="data-1">0</dt>
+   <dd>会员（人）</dd>
+  </dl>
+  <dl class="clear-margin">
+   <dt class="data-2">0</dt>
+   <dd>区/县代理商（人）</dd>
+  </dl>
+</div>
+
+<div class="percenter-list">
+  <a class="percenter-list1" href="/index.php/Wap/SpFinancial/inviteCode" ><img  src="/Public/SpFinancial/img/percenter-list1-1.png" alt=""></a>
+  <a class="percenter-list2" href="/index.php/Wap/SpFinancial/capitalDetails" ><img  src="/Public/SpFinancial/img/percenter-list1-2.png" alt=""></a>
+</div>
+
+<div class="weui_tab tab-bottom" style="height:auto;">
+  <div class="weui_tabbar"  >
+      <a href="/index.php/Wap/SpFinancial/homePage" id="homePage" class="weui_tabbar_item">
+          <div class="weui_tabbar_icon">
+              <img src="/Public/SpFinancial/img/home1.png" alt="">
+          </div>
+          <p class="weui_tabbar_label">首页</p>
+      </a>
+      <!-- <div style=" width:1px; background:#efefef;"></div> -->
+      <a href="/index.php/Wap/SpFinancial/perCenter"  id="perCenter" class="weui_tabbar_item">
+          <div class="weui_tabbar_icon">
+              <img src="/Public/SpFinancial/img/percenter1.png" alt="">
+          </div>
+          <p class="weui_tabbar_label">个人中心</p>
+      </a>   
+  </div>
+</div>
+<!-- jQuery 1.10.2 -->
+<script type="text/javascript" src="/Public/SpFinancial/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/Public/Wechat/js/zepto.js"></script>
+<!-- <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.0.js"></script> -->
+<script type="text/javascript">
+$('.weui_tab').tab({
+  defaultIndex: 1,
+  activeClass:'weui_bar_item_on',
+  onToggle:function(index){
+    if(index==0){
+      $("#homePage").find('img').attr('src', '/Public/SpFinancial/img/home2.png').parents("a").siblings().find('img').attr('src', '/Public/SpFinancial/img/percenter1.png');
+    }else if(index==1){
+      $("#perCenter").find('img').attr('src', '/Public/SpFinancial/img/percenter2.png').parents("a").siblings().find('img').attr('src', '/Public/SpFinancial/img/home1.png');
+    }
+  }
+})
+
+
+
+
+$('.percenter-list a').bind("touchstart",function(event){
+  var index = $(this).index()+1;
+  $(this).children('img').attr('src', '/Public/SpFinancial/img/percenter-list2-'+index+'.png');
+});
+
+$('.percenter-list a').bind("touchend",function(event){
+  var index = $(this).index()+1;
+  $(this).children('img').attr('src', '/Public/SpFinancial/img/percenter-list1-'+index+'.png');
+});
+
+
+
+  //截取链接属性和值
+function getLocationString(name) {  
+  // 如果链接没有参数，或者链接中不存在我们要获取的参数，直接返回空  
+  if(location.href.indexOf("?")==-1 || location.href.indexOf(name+'=')==-1)  
+  {  
+      return '';  
+  }  
+  // 获取链接中参数部分  
+  var queryString = location.href.substring(location.href.indexOf("?")+1);  
+ 
+  // 分离参数对 ?key=value&key2=value2  
+  var parameters = queryString.split("&");  
+ 
+  var pos, paraName, paraValue;  
+  for(var i=0; i<parameters.length; i++)  
+  {  
+      // 获取等号位置  
+      pos = parameters[i].indexOf('=');  
+      if(pos == -1) { continue; }  
+ 
+      // 获取name 和 value  
+      paraName = parameters[i].substring(0, pos);  
+      paraValue = parameters[i].substring(pos + 1);  
+ 
+      // 如果查询的name等于当前name，就返回当前值，同时，将链接中的+号还原成空格  
+      if(paraName == name)  
+      {  
+          return unescape(paraValue.replace(/\+/g, " "));  
+      }  
+  }  
+  return '';  
+};  
+
+var user_id_v;
+function session(){
+$.ajax({
+     type: "get",
+     async: false,
+     url: "/index.php/Wap/SpFinancial/session",
+     dataType : 'json', 
+     success: function(res){
+      if(res.status==1){
+        user_id_v = res.data.user_id;
+      }
+     }
+  })
+  return user_id_v;
+}
+
+var userId = session();
+
+var perPhone=$(".per-phone");
+var perType=$(".per-type");
+$.ajax({
+   type: "post",
+   url: "/index.php/Wap/SpFinancial/userAccount",
+   dataType : 'json',
+   data: {user_id:userId},
+   success: function(res){
+    $(".head-portrait-box").append('<img src="'+res.data.userInfo.head_portrait+'" class=" head-portrait">');
+    perPhone.text(res.data.userInfo.phone);
+    perType.text(res.data.userInfo.type);
+      $.each(res.data.num, function(key,value) {
+        $(".data-"+key).text(value.value);
+      });
+  },
+   error: function(res){
+     $.toast("请求服务器异常！", "forbidden");
+   }
+})
+
+
+
+
+
+
+
+
+    //截取链接属性和值
+// function getLocationString(name) {  
+//   // 如果链接没有参数，或者链接中不存在我们要获取的参数，直接返回空  
+//   if(location.href.indexOf("?")==-1 || location.href.indexOf(name+'=')==-1)  
+//   {  
+//       return '';  
+//   }  
+//   // 获取链接中参数部分  
+//   var queryString = location.href.substring(location.href.indexOf("?")+1);  
+ 
+//   // 分离参数对 ?key=value&key2=value2  
+//   var parameters = queryString.split("&");  
+ 
+//   var pos, paraName, paraValue;  
+//   for(var i=0; i<parameters.length; i++)  
+//   {  
+//       // 获取等号位置  
+//       pos = parameters[i].indexOf('=');  
+//       if(pos == -1) { continue; }  
+ 
+//       // 获取name 和 value  
+//       paraName = parameters[i].substring(0, pos);  
+//       paraValue = parameters[i].substring(pos + 1);  
+ 
+//       // 如果查询的name等于当前name，就返回当前值，同时，将链接中的+号还原成空格  
+//       if(paraName == name)  
+//       {  
+//           return unescape(paraValue.replace(/\+/g, " "));  
+//       }  
+//   }  
+//   return '';  
+// };  
+
+// var code = getLocationString('code');
+// var perCenterHref = $("#perCenter").attr('href');
+// $("#perCenter").attr('href',perCenterHref+"?code="+code);
+// var homePageHref = $("#homePage").attr('href');
+// $("#homePage").attr('href',homePageHref+"?code="+code);
+// /index.php/Wap/SpFinancial/perCenter
+// alert(code);
+// $("#perCenter").on('click', function(event) {
+//   $.ajax({
+//        type: "post",
+//        url: "/index.php/Wap/SpFinancial/login",
+//        dataType : 'json',
+//        data: {code:code},
+//        success: function(res){
+//         alert(res.data.id);
+//        wx.miniProgram.redirectTo({url: '/pages/login/login'});  
+//           // if(res.data.only==""){
+//           //    wx.miniProgram.redirectTo({url: '/pages/register/register?id='+res.data.id});  
+//           // }else{
+//           //   wx.miniProgram.redirectTo({url: '/pages/register/register?id='+res.data.id+'&only='+res.data.only})
+//           // }
+//         // }
+//       },
+//        error: function(res){
+//          $.toast("请求服务器异常！", "forbidden");
+//        }
+//     })
+// })
+
+
+
+// // 获取openid值
+// var code = getLocationString('code');
+// var perCenterHref = $("#perCenter").attr('href');
+// $("#perCenter").attr('href',perCenterHref+"?code="+code);
+// var homePageHref = $("#homePage").attr('href');
+// $("#homePage").attr('href',homePageHref+"?code="+code);
+
+
+//     //截取链接属性和值
+// function getLocationString(name) {  
+//   // 如果链接没有参数，或者链接中不存在我们要获取的参数，直接返回空  
+//   if(location.href.indexOf("?")==-1 || location.href.indexOf(name+'=')==-1)  
+//   {  
+//       return '';  
+//   }  
+//   // 获取链接中参数部分  
+//   var queryString = location.href.substring(location.href.indexOf("?")+1);  
+ 
+//   // 分离参数对 ?key=value&key2=value2  
+//   var parameters = queryString.split("&");  
+ 
+//   var pos, paraName, paraValue;  
+//   for(var i=0; i<parameters.length; i++)  
+//   {  
+//       // 获取等号位置  
+//       pos = parameters[i].indexOf('=');  
+//       if(pos == -1) { continue; }  
+ 
+//       // 获取name 和 value  
+//       paraName = parameters[i].substring(0, pos);  
+//       paraValue = parameters[i].substring(pos + 1);  
+ 
+//       // 如果查询的name等于当前name，就返回当前值，同时，将链接中的+号还原成空格  
+//       if(paraName == name)  
+//       {  
+//           return unescape(paraValue.replace(/\+/g, " "));  
+//       }  
+//   }  
+//   return '';  
+// };  
+    
+</script>
+</body>
+</html>

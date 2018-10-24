@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>我的收藏</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <link rel="stylesheet" href="/Public/Store/pc_store/css/pc_store.css" />
+</head>
+<body>
+<!-- header -->
+<div class="headerbg">
+  <div class="header">
+    <div class="textLeft fl">欢迎光临数海在线商城！</div>
+    <a class="textRight fr" href="/index.php/Admin/Index">返回管理平台</a>
+    <div class="textLeft fr">&nbsp;|&nbsp;</div>
+    <a class="textRight fr" href="/index.php/Admin/Mall/Store">返回商城首页</a>
+  </div>
+</div>
+<div class="headBg">
+  <div class="logo-search wid clearFix">
+    <div class="logo">
+      <a href="/index.php/Admin/Mall/Store">
+        <img src="/Public/Store/pc_store/img/pic_logo.png" width="209" height="46" />
+      </a>
+    </div>
+    <div class="search">
+      <div id="sousuo_Cont">
+        <div class="search-cen one clearFix">
+          <input type="text" id="keyword" class="keyword" name="" placeholder="搜索我的收藏中的所有商品" />
+          <p>
+            <a class="js_sousuo">搜索</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /header -->
+
+<!-- content -->
+<div class="mercury-cont js-mercury-cont">
+  <!-- 商品信息编辑栏 -->
+  <div class="fav-floatbar" style="overflow: hidden;">
+    <div class="fav-bar-height">
+      <div class="fav-bar-float">
+        <div class="fav-bar-float-layout clearfix">
+          <div class="fav-select">
+            <ul>
+              <li class="fav-sel-item fav-sel-item-first J_SelItemsTags">
+                <span class="fav-sel-link fav-sel-select">全部商品 <em class="js_commodity_sum"></em></span>
+              </li>
+            </ul>
+          </div>
+          <div class="fav-tools">
+            <div class="fav-tool-showbtn J_FavTools_Open">
+              批量管理
+            </div>
+            <ul class="fav-tool-list">
+              <li class="fav-tool-item J_SelectAll">
+                <i class="icon-selall"></i>
+                全选
+              </li>
+              <li class="fav-tool-item J_DeleteItems">
+                <i class="icon-delitem"></i>
+                删除
+              </li>
+              <li class="fav-tool-item fav-tool-hidebtn J_FavTools_Close">取消管理</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 商品 -->
+  <div id="fav-list">
+    <div class="hint_msg js_hint_msg">
+      <img src="/Public/Store/pc_store/img/empty_box.png" />
+      <span class="txt">您还没有收藏商品，快去<a href="/index.php/Admin/Mall/Store"> 商城首页 </a>收藏吧！</span>
+    </div>
+    <ul class="img-item-list J_FavList clearfix"></ul>
+  </div>
+</div>
+<!-- /content -->
+
+<!-- #page -->
+<div class="page">
+  <div id="pagination3"></div>
+</div>
+<!-- /page -->
+
+<!-- footer -->
+<div class="footer">
+  <div class="foot">
+    <div class="footNav">
+      <a href="javascript:void(0);">关于数海</a>
+      <span>|</span>
+      <a href="javascript:void(0);">客服中心</a>
+      <span>|</span>
+      <a href="javascript:void(0);">信平台</a>
+      <span>|</span>
+      <a href="javascript:void(0);">大数据</a>
+      <span>|</span>
+      <a href="javascript:void(0);">新媒体广告</a>
+      <span>|</span>
+      <a href="javascript:void(0);">微营销</a>
+    </div>
+    <p class="text">数海信息技术有限公司 备案/许可证编号为：京ICP备15018821号</p>
+  </div>
+</div>
+<!-- /footer -->
+
+<form id="hide_form" action="" method="get">
+  <input type="hidden" id="keyword_hide" name="keyword" value="" placeholder="搜索关键字" />
+  <input type="hidden" id="pagesize_hide" name="pagesize" value="20" placeholder="设置每页显示数据数量" />
+  <input type="hidden" id="page_hide" name="page" value="1" placeholder="页码默认是第1页" />
+</form>
+
+<!-- jquery-1.10.2.min.js -->
+<script type="text/javascript" src="/Public/Store/pc_store/js/jquery-1.10.2.min.js"></script>
+<!-- 分页 -->
+<script type="text/javascript" src="/Public/Store/pc_store/js/jquery.pagination.min.js"></script>
+<!-- 自定义公共js -->
+<script type="text/javascript" src="/Public/dist/js/dialog.js"></script>
+<!-- layer弹出层 -->
+<script type="text/javascript" src="/Public/plugins/layer/layer.js"></script>
+
+<script type="text/javascript">
+$(function() {
+  // 商品结构
+  function fndata(obj) {
+    for (var i = 0; i < obj.length; i++) {
+    html += '<li class="J_FavListItem fav-item">' +
+              '<input type="hidden" class="js_hide_keyid" keyId="' + obj[i].collect_id + '" />' +
+              '<div class="img-controller-box J_FavImgController">' +
+                '<div class="img-controller-img-box">';
+                if (obj[i].coupon_url != '') {
+    html +=       '<a href="' + obj[i].coupon_url + '" class="img-controller-img-link" title="' + obj[i].shop_name + '">';
+                } else {
+    html +=       '<a href="' + obj[i].url_pc_short + '" class="img-controller-img-link" title="' + obj[i].shop_name + '">';
+                };
+    html +=         '<img class="img-controller-img" src="' + obj[i].image + '" alt="' + obj[i].shop_name + '" />' +
+                  '</a>' +
+                '</div>' +
+                '<div class="delete-box">' +
+                  '<div class="delete-btn-bg"></div>' +
+                  '<div class="delete-btn J_DeleteItem" title="删除宝贝"></div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="img-item-title">';
+              if (obj[i].coupon_url != '') {
+    html +=     '<a class="img-item-title-link" title="' + obj[i].shop_name + '" href="' + obj[i].coupon_url + '">' + obj[i].shop_name + '</a>';
+              } else {
+    html +=     '<a class="img-item-title-link" title="' + obj[i].shop_name + '" href="' + obj[i].url_pc_short + '">' + obj[i].shop_name + '</a>';
+              };
+    html +=   '</div>' +
+              '<div class="price-container">' +
+                '<div class="g_price-box">' +
+                  '<div class="g_price">' +
+                    '<span>¥</span>' +
+                    '<strong>' + obj[i].price + '</strong>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="edit-pop">' +
+                '<div class="edit-pop-bg"></div>' +
+                '<div class="edit-pop-border"></div>' +
+                '<div class="edit-pop-btn J_Edit_Pop_Btn">' +
+                  '<i class="edit-icon"></i>' +
+                  '<div class="item-pk-txt J_Item_PKtxt"></div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="del-pop">' +
+                '<div class="del-pop-bg"></div>' +
+                  '<div class="del-pop-box">' +
+                  '<div class="txt">确定删除？</div>' +
+                  '<div class="btns">' +
+                    '<div class="J_DeleteItem_Ok btn-ok">确定</div>' +
+                    '<div class="J_DeleteItem_Close btn-close">取消</div>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</li>'
+    };
+  }
+
+  // ajax 商品数据请求
+  var url = '/index.php/Admin/Mall/MyCollection/query?';
+  function fnAjax(url) {
+    $.ajax({
+      type: 'get',
+      url: url,
+      dataType: 'json',
+      success: function(msg) {
+        var obj     = msg.data.list;
+        var sumPage = msg.data.count;
+        $('.js_commodity_sum').text(sumPage);
+        if (sumPage > 0) {
+          html = '';
+          fndata(obj);
+          $('.J_FavList').html(html);
+          // 从新设置分页
+          var page = parseInt($('#page_hide').val());
+          $("#pagination3").pagination("setPage", page, Math.ceil(sumPage/pageSize));
+        } else {
+          $('.js_hint_msg').show();
+          $('.J_FavList').html('');
+        };
+      },
+      error: function(msg) {
+        dialog.error('请求服务器异常！');
+      }
+    });
+  }
+
+  // 分页
+  var pageSize = $('#pagesize_hide').val();       // 获取显示个数
+  var page     = parseInt($('#page_hide').val()); // 获取当前页数
+  $("#pagination3").pagination({
+    currentPage: page,      // 当前页数
+    totalPage: 0,           // 总页数
+    isShow: true,           // 是否显示首尾页
+    count: 7,               // 显示分页按钮个数
+    homePageText: "首页",   // 首页文本
+    endPageText: "尾页",    // 尾页文本
+    prevPageText: "上一页", // 上一页文本
+    nextPageText: "下一页", // 下一页文本
+    callback: function(current) { // 回调,current(当前页数)
+      $("#page_hide").val(current);
+      hide_form();
+      fnAjax(url + $('#hide_form').serialize());
+      $('.J_SelectAll').removeClass('fav-tool-item-selall');
+    }
+  });
+
+  // 隐藏域赋值
+  function hide_form() {
+    $("#keyword_hide").val($("#keyword").val());
+  }
+
+  // 点击搜索
+  $(document).delegate('.js_sousuo', 'click', function() {
+    hide_form();
+    fnAjax(url + $('#hide_form').serialize());
+  });
+
+  // 获取当前页面网址参数
+  function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+    var r   = window.location.search.substr(1).match(reg);  // 匹配目标参数
+    if (r != null) {
+      return decodeURI(r[2]);
+    };
+    return null; // 返回参数值
+  }
+
+  hide_form();
+  fnAjax(url + $('#hide_form').serialize());
+
+  // 批量管理
+  $('.js-mercury-cont').delegate('.J_FavTools_Open', 'click', function() {
+    $('.js-mercury-cont').addClass('list-edit-items edit-pop-select');
+    $('.J_FavListItem').removeClass('del-pop-show');
+  });
+
+  // 取消管理
+  $('.js-mercury-cont').delegate('.J_FavTools_Close', 'click', function() {
+    $('.js-mercury-cont').removeClass('list-edit-items edit-pop-select');
+    $('.J_SelectAll').removeClass('fav-tool-item-selall');
+    $('.J_FavListItem').removeClass('edit-pop-select');
+  });
+
+  // 鼠标滑过商品时
+  $('.js-mercury-cont').delegate('.J_FavListItem', 'mouseover', function() {
+    if (!$('.js-mercury-cont').hasClass('edit-pop-select') && !$(this).hasClass('del-pop-show')) {
+      $(this).addClass('fav-item-hover');
+    }
+  });
+  $('.js-mercury-cont').delegate('.J_FavListItem', 'mouseout', function() {
+    $(this).removeClass('fav-item-hover');
+  });
+
+  // 选择商品
+  $('.js-mercury-cont').delegate('.J_Edit_Pop_Btn', 'click', function() {
+    $(this).parents('.J_FavListItem').toggleClass('edit-pop-select');
+    if ($('.js-mercury-cont').find('.J_FavListItem').length > $('.js-mercury-cont').find('.edit-pop-select').length) {
+      $('.J_SelectAll').removeClass('fav-tool-item-selall');
+    } else {
+      $('.J_SelectAll').addClass('fav-tool-item-selall');
+    };
+  });
+
+  // 单选商品
+  $('.js-mercury-cont').delegate('.J_DeleteItem', 'click', function() {
+    $(this).parents('.J_FavListItem').addClass('del-pop-show');
+  });
+
+  // 单品取消
+  $('.js-mercury-cont').delegate('.J_DeleteItem_Close', 'click', function() {
+    $(this).parents('.J_FavListItem').removeClass('del-pop-show');
+  });
+
+  // 全选
+  $('.js-mercury-cont').delegate('.J_SelectAll', 'click', function() {
+    if ($(this).hasClass('fav-tool-item-selall')) {
+      $(this).removeClass('fav-tool-item-selall');
+      $('.J_FavListItem').removeClass('edit-pop-select');
+    } else {
+      $(this).addClass('fav-tool-item-selall');
+      $('.J_FavListItem').addClass('edit-pop-select');
+    };
+  });
+
+  // 删除（取消收藏）
+  function unfavorite(keyId) {
+    dialog.confirm('您确定要取消当前选项收藏吗？',function() {
+      $.ajax({
+        type: 'get',
+        url: '/index.php/Admin/Mall/MyCollection/del?collect_id=' + keyId,
+        dataType: 'json',
+        success: function(msg) {
+          if( msg.status == 1 ) {
+            dialog.success(msg.info,function() {
+              hide_form();
+              fnAjax(url + $('#hide_form').serialize());
+              parent.layer.closeAll();
+              $('.J_SelectAll').removeClass('fav-tool-item-selall');
+            });
+          } else {
+            dialog.error(msg.info);
+          }
+        },
+        error: function(msg) {
+          dialog.error('请求服务器异常！');
+        }
+      });
+    });
+  }
+  // 取消收藏（多选取消）
+  $('.js-mercury-cont').delegate('.J_DeleteItems', 'click', function() {
+    if ($('.J_FavList').find('.edit-pop-select').length > 0) {
+      var arr = [];
+      $('.J_FavList .edit-pop-select').each(function(index, el) {
+        arr.push($(this).find('.js_hide_keyid').attr('keyid'));
+      });
+      var ids = arr.join();
+      unfavorite(ids);
+    } else {
+      dialog.notify('请选择要取消收藏的商品！');
+    };
+  });
+  // 取消收藏（单选取消）
+  $('.js-mercury-cont').delegate('.J_DeleteItem_Ok', 'click', function() {
+    var id = $(this).parents('.J_FavListItem').find('.js_hide_keyid').attr('keyid');
+    unfavorite(id);
+  });
+});
+</script>
+</body>
+</html>
